@@ -6,5 +6,6 @@ export interface IPromotion {
   description: String;
   images: String[];
   name: String;
+  lastPrice?: number;
   _id?: String;
 }

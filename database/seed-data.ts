@@ -23,6 +23,7 @@ interface SeedPromotion {
   description: string;
   images: Array<String>;
   name: string;
+  lastPrice?: number;
 }
 
 type ValidType = "envelope" | "filling" | "sauce";
@@ -117,10 +118,11 @@ export const initialData: SeedData = {
     {
       promotionItems: ["30 piezas palta", "40 Salmon camaron"],
       description: "La segunda mejor promocion de todas",
-      inOffer: false,
+      inOffer: true,
       inStock: true,
       name: "Promo el mar",
       price: 18000,
+      lastPrice: 20000,
       images: [
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528935/SushiApp/descarga_3_urwkds.jpg",
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528978/SushiApp/zeisushi-promo5-55-bocados-mixtos_tbwtzf.jpg",
@@ -149,7 +151,7 @@ export const initialData: SeedData = {
       promotionItems: ["30 piezas palta", "40 Salmon camaron"],
       description: "La segunda mejor ",
       inOffer: false,
-      inStock: true,
+      inStock: false,
       name: "Promo el mar 2",
       price: 18000,
       images: [

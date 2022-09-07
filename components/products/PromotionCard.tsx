@@ -16,6 +16,7 @@ import CardInfo from "./CardInfo";
 import { DeleteOutline, Mode } from "@mui/icons-material";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
+import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 
 interface Props {
   promotion: IPromotion;
@@ -62,6 +63,23 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                   height: "50px",
                 }}
               ></Box>
+              {/* si esta en oferta */}
+              {promotion?.lastPrice && (
+                <Chip
+                  variant="outlined"
+                  color="error"
+                  icon={<LocalOfferIcon />}
+                  label="OFERTA"
+                  size="small"
+                  sx={{
+                    position: "absolute",
+                    zIndex: 99,
+                    top: 10,
+                    left: 10,
+                    fontWeight: "600",
+                  }}
+                />
+              )}
               {!promotion.inStock ? (
                 <>
                   <Box

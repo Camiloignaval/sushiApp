@@ -9,6 +9,7 @@ import {
 } from "@mui/material";
 import React, { FC, Dispatch, SetStateAction } from "react";
 import { IPromotion } from "../../interfaces";
+import { TbDiscount2 } from "react-icons/tb";
 
 interface Props {
   promotion: IPromotion;
@@ -54,15 +55,40 @@ const CardInfo: FC<Props> = ({ promotion }) => {
       </CardContent>
 
       <CardActions sx={{ position: "absolute", bottom: 0, right: 0 }}>
-        <Box>
-          <Typography
-            display={"flex"}
-            justifyContent="end"
-            variant="h5"
-            fontWeight={500}
-            fontStyle="italic"
-          >{`$${promotion.price}`}</Typography>
-        </Box>
+        {promotion?.inOffer ? (
+          <Box>
+            <Typography
+              display={"flex"}
+              justifyContent="end"
+              variant="h6"
+              fontWeight={500}
+              fontStyle="italic"
+            >{`Antes $${promotion?.lastPrice}`}</Typography>
+
+            <Typography
+              display={"flex"}
+              justifyContent="end"
+              variant="h5"
+              fontWeight={500}
+              fontStyle="italic"
+              color={"red"}
+            >
+              {<TbDiscount2 style={{ marginRight: "5px", fontSize: "2rem" }} />}
+              {`Precio oferta $${promotion.price}`}
+            </Typography>
+          </Box>
+        ) : (
+          <Box>
+            <Typography
+              display={"flex"}
+              justifyContent="end"
+              variant="h5"
+              fontWeight={500}
+              fontStyle="italic"
+            >{`$${promotion.price}`}</Typography>
+          </Box>
+        )}
+
         {/* </Grid> */}
       </CardActions>
     </Grid>

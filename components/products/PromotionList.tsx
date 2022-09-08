@@ -9,7 +9,6 @@ interface Props {
 }
 
 export const PromotionsList: FC<Props> = ({ promotions }) => {
-  console.log({ promotions });
   return (
     <Grid container spacing={3} flexGrow={1} display="flex">
       {(promotions ?? []).map((promotion, i) => (

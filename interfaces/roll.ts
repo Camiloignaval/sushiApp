@@ -1,7 +1,6 @@
-export interface IProduct {
+export interface IRoll {
   _id?: string;
   image: string;
-  name: string;
   inStock: boolean;
   price: number;
   type: IType;

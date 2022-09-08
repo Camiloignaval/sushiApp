@@ -26,19 +26,10 @@ export default function handler(
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { gender } = req.query;
-  let condition = {};
-  if (gender !== "all" && SHOP_CONSTANT.validGenders.includes(`${gender}`)) {
-    condition = { gender };
-  }
-
   await db.connect();
-  const products = await Product.find(condition)
-    .select("title slug price inStock images -_id")
-    .lean();
+  const products = await Product.find().lean();
   await db.disconnect();
 
-  const productsConverted = linkConvert(products);
-
-  res.status(200).json(productsConverted);
+  // TODO  must update images
+  return res.status(200).json(products);
 };

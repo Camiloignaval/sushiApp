@@ -62,7 +62,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
               justifyContent="end"
               variant="h6"
               fontWeight={500}
-              fontStyle="italic"
+              // fontStyle="italic"
             >{`Antes $${promotion?.lastPrice}`}</Typography>
 
             <Typography
@@ -70,7 +70,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
               justifyContent="end"
               variant="h5"
               fontWeight={500}
-              fontStyle="italic"
+              // fontStyle="italic"
               color={"red"}
             >
               {<TbDiscount2 style={{ marginRight: "5px", fontSize: "2rem" }} />}
@@ -84,7 +84,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
               justifyContent="end"
               variant="h5"
               fontWeight={500}
-              fontStyle="italic"
+              // fontStyle="italic"
             >{`$${promotion.price}`}</Typography>
           </Box>
         )}

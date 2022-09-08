@@ -6,18 +6,18 @@ import { FC, useState, useEffect } from "react";
 interface Props {
   currentValue: number;
   maxValue: number;
-  updatedQuantity: (quantity: number) => void;
+  // updatedQuantity: (quantity: number) => void;
 }
 
 export const ItemCounter: FC<Props> = ({
   currentValue,
   maxValue,
-  updatedQuantity,
+  // updatedQuantity,
 }) => {
   const [quantity, setQuantity] = useState(currentValue ?? 1);
 
   useEffect(() => {
-    updatedQuantity(quantity);
+    // updatedQuantity(quantity);
   }, [quantity]);
 
   return (

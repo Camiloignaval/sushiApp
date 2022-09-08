@@ -1,4 +1,10 @@
-import { FormGroup, Grid, FormControlLabel, Checkbox } from "@mui/material";
+import {
+  FormGroup,
+  Grid,
+  FormControlLabel,
+  Checkbox,
+  Chip,
+} from "@mui/material";
 import React, { FC } from "react";
 import { IProduct } from "../../interfaces";
 import { SushiFilled } from "../../public/Icons/SushiFilled";
@@ -26,7 +32,6 @@ export const CustomRollCategoryOption: FC<Props> = ({
         sx={{
           display: "flex",
           width: { xs: "100vw", sm: "70vw", md: "50vw", lg: "40vw" },
-          //   justifyContent: "space-evenly",
         }}
       >
         {listProducts?.map((product) => (
@@ -77,25 +82,22 @@ export const CustomRollCategoryOption: FC<Props> = ({
                     {product.name}
                   </Grid>
                   {showPrice && (
-                    <Grid
-                      item
+                    <Chip
+                      label={`$${product.price}`}
+                      //   color=""
+                      variant="outlined"
+                      size="small"
                       sx={{
                         position: "absolute",
-                        marginTop: "-20px",
-                        left: -8,
-                        bottom: 0,
-                        textAlign: "center",
-                        width: "0px",
-                        fontSize: ".9rem",
+                        marginLeft: "40px",
+                        //   zIndex: 400,
+                        //   bottom: 0,
+                        //   fontSize: ".9rem",
+                        //   userSelect: "none",
+                        fontWeight: "500",
                         backdropFilter: "blur(5.8px)",
-                        fontWeight: 800,
-                        userSelect: "none",
-                        textShadow: "0px 5px 6px #FFFFFF;",
                       }}
-                      xs={12}
-                    >
-                      ${product.price}
-                    </Grid>
+                    />
                   )}
                 </Grid>
               }

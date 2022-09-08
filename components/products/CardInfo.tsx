@@ -62,6 +62,9 @@ const CardInfo: FC<Props> = ({ promotion }) => {
               justifyContent="end"
               variant="h6"
               fontWeight={500}
+              sx={{
+                textDecoration: "line-through",
+              }}
               // fontStyle="italic"
             >{`Antes $${promotion?.lastPrice}`}</Typography>
 

@@ -1,12 +1,17 @@
-import { ISize } from ".";
-
 export interface ICartProduct {
-  _id: string;
-  image: string;
-  price: number;
-  size?: ISize;
-  slug: string;
-  title: string;
-  gender: "men" | "women" | "kid" | "unisex";
+  _id: String;
+  image: String;
+  price: Number;
+  name: String;
+  quantity: Number;
+  extraProduct: IExtraProduct[];
+  note?: String;
+}
+
+export interface IExtraProduct {
+  _id: String;
+  image: String;
+  price: Number;
+  name: String;
   quantity: number;
 }

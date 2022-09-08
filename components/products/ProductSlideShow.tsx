@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Slide } from "react-slideshow-image";
+import { Slide, Zoom } from "react-slideshow-image";
 import styles from "./ProductSlideShow.module.css";
 import "react-slideshow-image/dist/styles.css";
 
@@ -9,7 +9,7 @@ interface Props {
 
 export const ProductSlideShow: FC<Props> = ({ images }) => {
   return (
-    <Slide easing="ease" duration={7000} indicators>
+    <Zoom scale={1.4} easing="ease" duration={5000}>
       {images.map((image) => {
         return (
           <div className={styles["each-slide"]} key={image}>
@@ -17,11 +17,12 @@ export const ProductSlideShow: FC<Props> = ({ images }) => {
               style={{
                 backgroundImage: `url(${image})`,
                 backgroundSize: "cover",
+                height: "300px",
               }}
             ></div>
           </div>
         );
       })}
-    </Slide>
+    </Zoom>
   );
 };

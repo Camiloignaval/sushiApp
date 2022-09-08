@@ -5,19 +5,19 @@ import { FC, useState, useEffect } from "react";
 
 interface Props {
   currentValue: number;
-  maxValue: number;
-  // updatedQuantity: (quantity: number) => void;
+  maxValue?: number;
+  updatedQuantity: (quantity: number) => void;
 }
 
 export const ItemCounter: FC<Props> = ({
   currentValue,
-  maxValue,
-  // updatedQuantity,
+  maxValue = undefined,
+  updatedQuantity,
 }) => {
   const [quantity, setQuantity] = useState(currentValue ?? 1);
 
   useEffect(() => {
-    // updatedQuantity(quantity);
+    updatedQuantity(quantity);
   }, [quantity]);
 
   return (
@@ -32,7 +32,7 @@ export const ItemCounter: FC<Props> = ({
         {currentValue}
       </Typography>
       <IconButton
-        disabled={maxValue === quantity}
+        disabled={maxValue ? maxValue === quantity : false}
         onClick={() => setQuantity((prev) => prev + 1)}
       >
         <AddCircleOutline />

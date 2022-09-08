@@ -9,7 +9,7 @@ import {
   Box,
 } from "@mui/material";
 // import NextLink from "next/link";
-import React, { FC, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import style from "./PromotionCard.module.css";
 import { IPromotion } from "../../interfaces";
 import CardInfo from "./CardInfo";
@@ -18,26 +18,54 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import LocalOfferIcon from "@mui/icons-material/LocalOffer";
 import { ModalOptions } from "./ModalOptions";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import Swal from "sweetalert2";
+import { removeFromCart } from "../../store/Slices/CartSlice";
+import { toast } from "react-hot-toast";
+import { ProductSlideShow } from "./ProductSlideShow";
 
 interface Props {
   promotion: IPromotion;
 }
 
 export const PromotionCard: FC<Props> = ({ promotion }) => {
+  const { cart } = useSelector((state: RootState) => state.cart);
   const [open, setOpen] = React.useState(false);
   const [isHovered, setisHovered] = useState(false);
-  const [isSelected, setIsSelected] = useState(false);
-
+  const [isInCart, setIsInCart] = useState(false);
+  const dispatch = useDispatch();
   const productImage = useMemo(() => {
     return isHovered && promotion.inStock
       ? promotion.images[1]
       : promotion.images[0];
   }, [isHovered, promotion.images]);
 
-  const onClickCard = () => {
-    setIsSelected(!isSelected);
-    setOpen((prev) => !prev);
+  const onDelete = () => {
+    Swal.fire({
+      title: `Eliminaras de la orden ${promotion.name}`,
+      text: "¿Estás seguro?",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      cancelButtonText: "Cancelar",
+      confirmButtonText: "Si, eliminar",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // eliminar del carrito
+        dispatch(removeFromCart(promotion._id!));
+        toast.success(`${promotion.name} ha sido eliminada`, {
+          duration: 3000,
+        });
+      }
+    });
   };
+
+  useEffect(() => {
+    const promoFindInCart = cart.find((promo) => promo?._id === promotion._id);
+    promoFindInCart ? setIsInCart(true) : setIsInCart(false);
+  }, [cart]);
 
   return (
     <>
@@ -53,7 +81,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
         onMouseEnter={() => setisHovered(true)}
         onMouseLeave={() => setisHovered(false)}
       >
-        <Card className={isSelected ? style["borderSelected"] : undefined}>
+        <Card className={isInCart ? style["borderSelected"] : undefined}>
           <Grid item container display={"flex"} alignItems="stretch">
             <Grid item xs={12} /*  sm={6} */>
               <CardActionArea disabled={!promotion.inStock}>
@@ -102,9 +130,9 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                       <p className={style["labelWithoutStock"]}>Agotado</p>
                     </Box>
                   </>
-                ) : !isSelected ? (
+                ) : !isInCart ? (
                   <Button
-                    onClick={onClickCard}
+                    onClick={() => setOpen((prev) => !prev)}
                     variant="contained"
                     color="success"
                     sx={{
@@ -119,7 +147,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                 ) : (
                   <>
                     <Button
-                      onClick={onClickCard}
+                      onClick={onDelete}
                       color="error"
                       className={style["roundedButtonDelete"]}
                       sx={{
@@ -127,16 +155,13 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                         zIndex: 99,
                         top: 10,
                         right: 10,
-                        // width: "5px",
-                        // padding: "2px 0",
-                        // borderRadius: "15px",
                       }}
                     >
                       {" "}
-                      <DeleteIcon />
+                      <DeleteIcon color="info" />
                     </Button>
                     <Button
-                      onClick={onClickCard}
+                      onClick={() => setOpen((prev) => !prev)}
                       className={style["roundedButtonEdit"]}
                       color="warning"
                       sx={{
@@ -146,12 +171,11 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                         right: 90,
                       }}
                     >
-                      {" "}
-                      <ModeEditIcon />
+                      <ModeEditIcon color="info" />
                     </Button>
                   </>
                 )}
-                <CardMedia
+                {/* <CardMedia
                   className="fadeIn"
                   image={productImage}
                   component="img"
@@ -161,14 +185,15 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                   }}
                   height="300px"
                   // onLoad={() => setIsImageLoaded(true)}
-                />
+                /> */}
+                <ProductSlideShow images={promotion.images} />
               </CardActionArea>
             </Grid>
             <Grid item xs={12} /* sm={6} */>
               <CardInfo
                 promotion={promotion}
-                isSelected={isSelected}
-                setIsSelected={setIsSelected}
+                // isSelected={isSelected}
+                // setIsSelected={setIsSelected}
               />
             </Grid>
           </Grid>

@@ -21,6 +21,7 @@ import {
   EscalatorWarningOutlined,
   FemaleOutlined,
   LocalOfferOutlined,
+  LocationCityOutlined,
   LoginOutlined,
   MaleOutlined,
   PlusOne,
@@ -113,9 +114,9 @@ export const SideMenu = () => {
           )}
           <ListItem button onClick={onLogout}>
             <ListItemIcon>
-              <AddShoppingCartOutlined />
+              <LocationCityOutlined />
             </ListItemIcon>
-            <ListItemText primary={"Nueva orden"} />
+            <ListItemText primary={"Consulta tu dirección"} />
           </ListItem>
 
           {/* Admin */}

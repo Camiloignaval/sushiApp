@@ -14,7 +14,10 @@ export const lightTheme = createTheme({
       main: "#fff",
     },
     warning: {
-      main: "#ffff00",
+      main: "#e68a00",
+    },
+    error: {
+      main: "#990000",
     },
   },
   components: {
@@ -67,7 +70,7 @@ export const lightTheme = createTheme({
           boxShadow: "none",
           borderRadius: 10,
           ":hover": {
-            backgroundColor: "rgba(0,0,0,0.05)",
+            backgroundColor: "rgba(0,0,0,0.5)",
             transition: "all 0.3s ease-in-out",
           },
         },

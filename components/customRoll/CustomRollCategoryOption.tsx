@@ -35,7 +35,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
         }}
       >
         {listProducts?.map((product) => (
-          <Grid item xs={6} sm={4} md={3} sx={{ position: "relative" }}>
+          <Grid item xs={6} sm={4} lg={3} sx={{ position: "relative" }}>
             <FormControlLabel
               control={
                 <Checkbox

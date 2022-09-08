@@ -6,26 +6,20 @@ import {
   CardMedia,
   Divider,
   Drawer,
-  Grid,
-  Modal,
+  FormControl,
+  FormLabel,
   TextField,
   Typography,
 } from "@mui/material";
-import React, { FC } from "react";
-import { IPromotion } from "../../interfaces";
-import { ItemCounter } from "../ui";
-const style = {
-  position: "absolute" as "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 400,
-  bgcolor: "white",
-  //   border: "2px solid #000",
-  boxShadow: 24,
-  borderRadius: "5px",
-  //   p: 4,
-};
+import React, { FC, useState, useEffect } from "react";
+import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { ICartProduct, IOrder, IPromotion } from "../../interfaces";
+import { RootState } from "../../store";
+import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
+import { addOrUpdateCart } from "../../store/Slices/CartSlice";
+import { ExtraSauces } from "../customRoll/ExtraSauces";
+import { FullScreenLoading, ItemCounter } from "../ui";
 
 interface Props {
   open: boolean;
@@ -34,17 +28,82 @@ interface Props {
 }
 
 export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
-  const handleClose = () => setOpen(false);
-  console.log(promotion);
+  const dispatch = useDispatch();
+  const [note, setNote] = useState("");
+  const { data: productData } = useGetProductsQuery(null);
+  const { cart } = useSelector((state: RootState) => state.cart);
+  const [isInCart, setisInCart] = useState(false);
+  const [promoToSendCart, setPromoToSendCart] = useState<ICartProduct>({
+    _id: promotion?._id!,
+    image: promotion.images[0]!,
+    price: promotion.price!,
+    name: promotion.name!,
+    quantity: 0,
+    extraProduct: [],
+  });
+
+  //TODO avisar que guarde cambios antes de cerrar modal
+
+  // revisar si esta en carrito
+  useEffect(() => {
+    const promoFindInCart = cart.find((promo) => promo?._id === promotion._id);
+    if (promoFindInCart) {
+      setPromoToSendCart((prev) => ({
+        ...prev,
+        quantity: promoFindInCart?.quantity,
+        extraProduct: promoFindInCart.extraProduct,
+        note: promoFindInCart.note ? promoFindInCart.note : undefined,
+      }));
+      setisInCart(true);
+    } else {
+      setisInCart(false);
+      setPromoToSendCart({
+        _id: promotion?._id!,
+        image: promotion.images[0]!,
+        price: promotion.price!,
+        name: promotion.name!,
+        quantity: 0,
+        extraProduct: [],
+      });
+    }
+  }, [cart]);
 
   const onConfirm = () => {
+    // Buscar siesque ya existe en el carro para actualizarlo y no sobreescribirlo si esque esta
+    const cloneCart = [...cart];
+    const isInCart = cloneCart.some((promo) => promo._id === promotion._id);
+    const newCart = cloneCart.map((promo) => {
+      if (promo._id === promotion._id) {
+        return promoToSendCart;
+      }
+      return promo;
+    });
+    // Si no estaba, se le agrega al carrito
+    !isInCart && newCart.push(promoToSendCart);
+
+    dispatch(addOrUpdateCart(newCart));
     setOpen(false);
+    setisInCart(true);
+    toast.success(`${promotion.name} agregada con éxito`, { duration: 3000 });
   };
+
+  const sauseProduct = productData?.filter(
+    (product) => product?.type === "sauce"
+  );
+
+  const updatedQuantity = (num: number) => {
+    setPromoToSendCart((prev) => ({ ...prev, quantity: num }));
+  };
+
+  if (!productData) {
+    return <FullScreenLoading />;
+  }
+
   return (
     <Drawer
       anchor="right"
       open={open}
-      onClose={handleClose}
+      onClose={() => setOpen(false)}
       sx={{
         backdropFilter: "blur(4px)",
         transition: "all 0.5s ease-out",
@@ -74,22 +133,30 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             Opciones para {promotion.name}
           </Typography>
           <Divider sx={{ mb: 5 }} />
+          <Box display={"flex"} paddingX={3.3}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Cantidad
+            </Typography>
 
-          <Grid
-            container
-            display={"flex"}
-            justifyContent="space-between"
-            // paddingX={2}
-          >
-            <Grid item xs={8}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Cantidad
-              </Typography>
-            </Grid>
-            <Grid xs item>
-              <ItemCounter currentValue={1} maxValue={5} />
-            </Grid>
-          </Grid>
+            <Box sx={{ flexGrow: 1 }} />
+
+            <ItemCounter
+              updatedQuantity={updatedQuantity}
+              currentValue={+promoToSendCart.quantity}
+            />
+          </Box>
+
+          {/* Salsas extras */}
+          <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
+            <FormLabel component="legend" sx={{ mb: 3 }}>
+              Agrega salsas extra
+            </FormLabel>
+            <ExtraSauces
+              sauceProducts={sauseProduct!}
+              setPromoToSendCart={setPromoToSendCart}
+              idPromo={promotion._id!.toString()}
+            />
+          </FormControl>
           <TextField
             id="outlined-multiline-flexible"
             label="Notas extras"
@@ -97,8 +164,9 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             maxRows={4}
             fullWidth
             sx={{ marginTop: "7px" }}
-            //   value={value}
-            //   onChange={handleChange}
+            value={note}
+            onChange={(e) => setNote(e.target.value)}
+            onBlur={() => setPromoToSendCart((prev) => ({ ...prev, note }))}
           />
         </CardContent>
         <CardActions sx={{ margin: "0 20px" }}>
@@ -108,7 +176,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             color="primary"
             sx={{ fontSize: "1.2rem" }}
           >
-            Confirmar
+            {isInCart ? "Actualizar" : "Confirmar"}
           </Button>
         </CardActions>
       </Box>

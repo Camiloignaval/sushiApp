@@ -59,7 +59,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       tax,
       total,
     };
-    dispatch(updateSummary(ordenSummary));
+    // dispatch(updateSummary(ordenSummary));
   }, [cart, dispatch]);
 
   // -----------------

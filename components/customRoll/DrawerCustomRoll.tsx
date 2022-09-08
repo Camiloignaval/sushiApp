@@ -12,7 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { ItemCounter } from "../ui";
 import { FormCustomRoll } from "./FormCustomRoll";
 import CloseIcon from "@mui/icons-material/Close";
@@ -27,6 +27,10 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
 
   const onConfirm = () => {
     setOpen(false);
+  };
+
+  const updatedQuantity = (qty: number) => {
+    console.log(qty);
   };
 
   return (
@@ -73,25 +77,22 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
           >
             Escoge tus ingredientes
           </Typography>
-          {/* <Divider sx={{ mb: 5 }} /> */}
 
           <FormCustomRoll />
           <Divider sx={{ mb: 4 }} />
-          <Grid
-            container
-            display={"flex"}
-            justifyContent="space-between"
-            // paddingX={2}
-          >
-            <Grid item xs={8}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Cantidad
-              </Typography>
-            </Grid>
-            <Grid xs item>
-              <ItemCounter currentValue={1} maxValue={5} />
-            </Grid>
-          </Grid>
+          <Box display={"flex"} paddingX={3.3}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Cantidad
+            </Typography>
+
+            <Box sx={{ flexGrow: 1 }} />
+
+            <ItemCounter
+              updatedQuantity={updatedQuantity}
+              currentValue={1}
+              maxValue={5}
+            />
+          </Box>
           <TextField
             id="outlined-multiline-flexible"
             label="Notas extras"

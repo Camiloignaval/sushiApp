@@ -1,4 +1,3 @@
-import { ISize } from "./products";
 import { IShippingAdress } from "./shippingAddress";
 import { IUser } from "./user";
 
@@ -6,26 +5,38 @@ export interface IOrder {
   _id?: string;
   user?: IUser | string;
   orderItems: IOrderItem[];
+  orderExtraItems?: IOrderExtraItem[];
   shippingAddress: IShippingAdress;
-  paymentResult?: string;
   numberOfItems: number;
+  status: IOrderStatus;
+  promocionalCode?: string;
   subTotal: number;
-  tax: number;
   total: number;
-
+  note: string;
   isPaid: boolean;
   paidAt?: string;
+  deliverPrice: number;
   transactionId?: string;
   createdAt?: string;
 }
 
+export type IOrderStatus =
+  | "ingested"
+  | "inprocess"
+  | "dispatched"
+  | "delivered";
 export interface IOrderItem {
-  _id: string;
-  title: string;
-  size: ISize;
+  _id?: string;
+  name: string;
   quantity: number;
-  slug: string;
   image: string;
   price: Number;
-  gender: string;
+}
+
+export interface IOrderExtraItem {
+  _id?: string;
+  name: string;
+  quantity: number;
+  image: string;
+  price: Number;
 }

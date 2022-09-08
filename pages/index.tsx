@@ -16,7 +16,6 @@ const HomePage: NextPage = () => {
 
   useEffect(() => {
     if (promotions) {
-      console.log(promotions);
       let promosSeparate = {};
 
       promotions?.forEach((promo: IPromotion) => {

@@ -25,6 +25,7 @@ class MyDocument extends Document {
             src="https://kit.fontawesome.com/9896faa838.js"
             crossOrigin="anonymous"
           ></script>
+          <script src="sweetalert2.all.min.js"></script>
         </Head>
         <body>
           <Main />

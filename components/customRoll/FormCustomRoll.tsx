@@ -2,7 +2,7 @@ import { Box, FormControl, FormLabel, Grid } from "@mui/material";
 import React from "react";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { FullScreenLoading } from "../ui";
-import { AddExtraSauce } from "./AddExtraSauce";
+import { ExtraSauces } from "./ExtraSauces";
 import { CustomRollCategoryOption } from "./CustomRollCategoryOption";
 
 export const FormCustomRoll = () => {
@@ -86,7 +86,7 @@ export const FormCustomRoll = () => {
         <FormLabel component="legend" sx={{ mb: 3 }}>
           Agrega salsas extra
         </FormLabel>
-        <AddExtraSauce sauceProducts={sauseProduct!} />
+        <ExtraSauces sauceProducts={sauseProduct!} />
       </FormControl>
     </Box>
   );

@@ -26,6 +26,7 @@ export const Navbar = () => {
   const dispatch = useDispatch();
   // const pathName = useMemo(() => router.pathname, [router]);
   const [searchTerm, setSearchTerm] = useState("");
+  const { scrollIsDown } = useSelector((state: RootState) => state.ui);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const { numberOfItems, total } = useSelector(
     (state: RootState) => state.cart
@@ -38,7 +39,12 @@ export const Navbar = () => {
   };
 
   return (
-    <AppBar>
+    <AppBar
+      sx={{
+        backgroundColor: !scrollIsDown ? "rgba(255, 255, 255, 0.4)" : undefined,
+        backdropFilter: !scrollIsDown ? "blur(9px)" : undefined,
+      }}
+    >
       <Toolbar>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">
@@ -89,22 +95,37 @@ export const Navbar = () => {
             <BiSearchAlt />
           </IconButton>
         )}
-        <Typography color={"primary"} variant="h6">
-          {currency.format(total)}
-        </Typography>
-        <NextLink href="/cart" passHref>
-          <Link>
-            <IconButton>
-              <Badge
-                badgeContent={numberOfItems > 9 ? "+9" : numberOfItems}
-                color="secondary"
+        {!asPath.startsWith("/cart") && (
+          <>
+            <Box sx={{ display: { xs: "none", sm: "flex" } }}>
+              <Typography
+                sx={{ position: "relative", top: 4 }}
+                color={"primary"}
+                variant="h6"
               >
-                <AiOutlineShoppingCart />
-              </Badge>
-            </IconButton>
-          </Link>
-        </NextLink>
-        <Button onClick={() => dispatch(toggleMenu())}>Menú</Button>
+                {currency.format(total)}
+              </Typography>
+              <NextLink href="/cart" passHref>
+                <Link>
+                  <IconButton>
+                    <Badge
+                      badgeContent={numberOfItems > 9 ? "+9" : numberOfItems}
+                      color="secondary"
+                    >
+                      <AiOutlineShoppingCart />
+                    </Badge>
+                  </IconButton>
+                </Link>
+              </NextLink>
+            </Box>
+          </>
+        )}
+        <Button
+          sx={{ backgroundColor: "transparent" }}
+          onClick={() => dispatch(toggleMenu())}
+        >
+          Menú
+        </Button>
       </Toolbar>
     </AppBar>
   );

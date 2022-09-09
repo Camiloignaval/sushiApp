@@ -12,11 +12,11 @@ interface Props {
 
 export const PromotionCategory: FC<Props> = ({ promotions }) => {
   return (
-    <>
+    <div id={promotions[0]}>
       <Typography variant="h2" sx={{ marginBottom: 1, marginTop: 5 }}>
         {promotions[0]}
       </Typography>
       <PromotionsList promotions={promotions[1]} />
-    </>
+    </div>
   );
 };

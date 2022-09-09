@@ -53,9 +53,9 @@ export const CartSlice = createSlice({
         (state.subTotal = action.payload.subTotal),
         (state.total = action.payload.total);
     },
-    // updateAdress: (state, action: PayloadAction<IShippingAdress>) => {
-    //   state.shippingAddress = action.payload;
-    // },
+    updateAdress: (state, action: PayloadAction<IShippingAdress>) => {
+      state.shippingAddress = action.payload;
+    },
     // cleanCart: (state) => {
     //   state.cart = [];
     //   state.numberOfItems = 0;
@@ -72,7 +72,7 @@ export const {
   // udpateCartQuantity,
   removeFromCart,
   updateSummary,
-  // updateAdress,
+  updateAdress,
   // cleanCart,
 } = CartSlice.actions;
 

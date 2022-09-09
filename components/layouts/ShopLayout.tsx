@@ -1,5 +1,8 @@
+import { Box, Typography, IconButton, Badge } from "@mui/material";
 import Head from "next/head";
 import { FC } from "react";
+import { AiOutlineShoppingCart } from "react-icons/ai";
+import { currency } from "../../utils";
 import { Navbar, SideMenu } from "../ui";
 
 interface Props {
@@ -30,9 +33,19 @@ export const ShopLayout: FC<Props> = ({
         <Navbar />
       </nav>
       <SideMenu />
+      <img
+        style={{
+          width: "calc(100vw - 1px)",
+          height: "calc(100vh - 50px)",
+          position: "relative",
+          objectFit: "cover",
+        }}
+        src="/images/sushi-portada.jpg"
+        alt="Imagen portada"
+      />
       <main
         style={{
-          margin: "80px auto",
+          margin: "-6px auto 80px auto",
           maxWidth: "1440px",
           padding: "0 30px",
         }}

@@ -3,7 +3,7 @@ import { IOrder } from "../interfaces";
 
 const orderSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, ref: "User", required: true },
+    user: { type: Schema.Types.ObjectId, ref: "User" },
     orderItems: [
       {
         _id: { type: Schema.Types.ObjectId, ref: "Promotion", required: true },
@@ -23,14 +23,12 @@ const orderSchema = new Schema(
       },
     ],
     shippingAddress: {
-      firstName: { type: String, required: true },
-      lastName: { type: String, required: true },
-      adress: { type: String, required: true },
+      username: { type: String, required: true },
+      address: { type: String, required: true },
       commune: { type: String, required: true },
       city: { type: String, required: true, default: "Santiago" },
       phone: { type: String, required: true },
     },
-    note: { type: String },
     numberOfItems: { type: Number, required: true },
     subTotal: { type: Number, required: true },
     total: { type: Number, required: true },

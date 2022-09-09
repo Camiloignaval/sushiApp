@@ -10,7 +10,7 @@ interface Props {
 
 export const PromotionsList: FC<Props> = ({ promotions }) => {
   return (
-    <Grid container spacing={3} flexGrow={1} display="flex">
+    <Grid id="" container spacing={3} flexGrow={1} display="flex">
       {(promotions ?? []).map((promotion, i) => (
         <PromotionCard key={i} promotion={promotion} />
       ))}

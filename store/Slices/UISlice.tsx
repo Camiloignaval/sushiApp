@@ -3,10 +3,12 @@ import type { PayloadAction } from "@reduxjs/toolkit";
 
 export interface UIState {
   sideBarIsOpen: boolean;
+  scrollIsDown: boolean;
 }
 
 const initialState: UIState = {
   sideBarIsOpen: false,
+  scrollIsDown: false,
 };
 
 export const UISlice = createSlice({
@@ -16,13 +18,17 @@ export const UISlice = createSlice({
     toggleMenu: (state) => {
       state.sideBarIsOpen = !state.sideBarIsOpen;
     },
-    // incrementByAmount: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload
-    // },
+    activeScrollDown: (state) => {
+      state.scrollIsDown = true;
+    },
+    desactiveScrollDown: (state) => {
+      state.scrollIsDown = false;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { toggleMenu } = UISlice.actions;
+export const { toggleMenu, activeScrollDown, desactiveScrollDown } =
+  UISlice.actions;
 
 export default UISlice.reducer;

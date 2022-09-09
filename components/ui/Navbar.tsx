@@ -19,6 +19,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../../store/Slices/UISlice";
 import { IoMdClose } from "react-icons/io";
 import { RootState } from "../../store";
+import { currency } from "../../utils";
 
 export const Navbar = () => {
   const { asPath, push } = useRouter();
@@ -26,7 +27,9 @@ export const Navbar = () => {
   // const pathName = useMemo(() => router.pathname, [router]);
   const [searchTerm, setSearchTerm] = useState("");
   const [isSearchVisible, setIsSearchVisible] = useState(false);
-  const { numberOfItems } = useSelector((state: RootState) => state.cart);
+  const { numberOfItems, total } = useSelector(
+    (state: RootState) => state.cart
+  );
 
   const onSearchTerm = () => {
     if (searchTerm.trim().length === 0) return;
@@ -39,8 +42,11 @@ export const Navbar = () => {
       <Toolbar>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">
-            <Typography variant="h6">Shop |</Typography>
-            <Typography sx={{ marginLeft: 0.5 }}>App</Typography>
+            <img width={40} alt="Logo" src="/logos/logo-sushi-panko.png"></img>
+            <Typography marginLeft={2} variant="h6">
+              SUSHI Panko |
+            </Typography>
+            <Typography sx={{ marginLeft: 0.5 }}>Maipú</Typography>
           </Link>
         </NextLink>
         <Box sx={{ flexGrow: 1 }} />
@@ -53,7 +59,6 @@ export const Navbar = () => {
           <BiSearchAlt />
         </IconButton>
         {/* pantallas grandes */}
-
         {isSearchVisible ? (
           <Input
             sx={{ display: { xs: "none", sm: "flex" } }}
@@ -84,6 +89,9 @@ export const Navbar = () => {
             <BiSearchAlt />
           </IconButton>
         )}
+        <Typography color={"primary"} variant="h6">
+          {currency.format(total)}
+        </Typography>
         <NextLink href="/cart" passHref>
           <Link>
             <IconButton>

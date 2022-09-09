@@ -50,16 +50,15 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       (acc, curr) => acc + curr.price * curr.quantity,
       0
     );
-    const tax =
-      (subTotal * Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)) / 100;
-    const total = subTotal + tax;
+    // const tax =
+    //   (subTotal * Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)) / 100;
+    const total = subTotal;
     const ordenSummary = {
       numberOfItems,
       subTotal,
-      tax,
       total,
     };
-    // dispatch(updateSummary(ordenSummary));
+    dispatch(updateSummary(ordenSummary));
   }, [cart, dispatch]);
 
   // -----------------

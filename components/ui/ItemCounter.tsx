@@ -14,7 +14,7 @@ export const ItemCounter: FC<Props> = ({
   maxValue = undefined,
   updatedQuantity,
 }) => {
-  const [quantity, setQuantity] = useState(currentValue ?? 1);
+  const [quantity, setQuantity] = useState(currentValue ?? 0);
 
   useEffect(() => {
     updatedQuantity(quantity);

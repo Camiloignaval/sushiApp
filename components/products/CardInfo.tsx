@@ -10,6 +10,7 @@ import {
 import React, { FC, Dispatch, SetStateAction } from "react";
 import { IPromotion } from "../../interfaces";
 import { TbDiscount2 } from "react-icons/tb";
+import { currency } from "../../utils";
 
 interface Props {
   promotion: IPromotion;
@@ -66,7 +67,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
                 textDecoration: "line-through",
               }}
               // fontStyle="italic"
-            >{`Antes $${promotion?.lastPrice}`}</Typography>
+            >{`Antes ${currency.format(+promotion?.lastPrice!)}`}</Typography>
 
             <Typography
               display={"flex"}
@@ -77,7 +78,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
               color={"red"}
             >
               {<TbDiscount2 style={{ marginRight: "5px", fontSize: "2rem" }} />}
-              {`Precio oferta $${promotion.price}`}
+              {`Precio oferta ${currency.format(+promotion.price)}`}
             </Typography>
           </Box>
         ) : (
@@ -88,7 +89,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
               variant="h5"
               fontWeight={500}
               // fontStyle="italic"
-            >{`$${promotion.price}`}</Typography>
+            >{`${currency.format(+promotion.price)}`}</Typography>
           </Box>
         )}
 

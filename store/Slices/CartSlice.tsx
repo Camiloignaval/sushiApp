@@ -41,20 +41,18 @@ export const CartSlice = createSlice({
     removeFromCart: (state, action: PayloadAction<String>) => {
       state.cart = state.cart.filter((p) => !(p._id === action.payload));
     },
-    // updateSummary: (
-    //   state,
-    //   action: PayloadAction<{
-    //     numberOfItems: number;
-    //     subTotal: number;
-    //     tax: number;
-    //     total: number;
-    //   }>
-    // ) => {
-    //   (state.numberOfItems = action.payload.numberOfItems),
-    //     (state.subTotal = action.payload.subTotal),
-    //     (state.tax = action.payload.tax),
-    //     (state.total = action.payload.total);
-    // },
+    updateSummary: (
+      state,
+      action: PayloadAction<{
+        numberOfItems: number;
+        subTotal: number;
+        total: number;
+      }>
+    ) => {
+      (state.numberOfItems = action.payload.numberOfItems),
+        (state.subTotal = action.payload.subTotal),
+        (state.total = action.payload.total);
+    },
     // updateAdress: (state, action: PayloadAction<IShippingAdress>) => {
     //   state.shippingAddress = action.payload;
     // },
@@ -73,7 +71,7 @@ export const {
   addOrUpdateCart,
   // udpateCartQuantity,
   removeFromCart,
-  // updateSummary,
+  updateSummary,
   // updateAdress,
   // cleanCart,
 } = CartSlice.actions;

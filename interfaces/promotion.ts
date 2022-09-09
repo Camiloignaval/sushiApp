@@ -13,5 +13,4 @@ export interface IPromotion {
   _id?: String;
 }
 
-export type ICategory = "Promos" | "HandRolls";
 export type IUnit = "Piezas" | "Porciones" | "Rolls";

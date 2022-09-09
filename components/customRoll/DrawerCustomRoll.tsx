@@ -12,10 +12,16 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { ItemCounter } from "../ui";
 import { FormCustomRoll } from "./FormCustomRoll";
 import CloseIcon from "@mui/icons-material/Close";
+import { ICartProduct } from "../../interfaces";
+import { currency } from "../../utils";
+import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
+import { addOrUpdateCart } from "../../store/Slices/CartSlice";
 
 interface Props {
   open: boolean;
@@ -23,15 +29,88 @@ interface Props {
 }
 
 export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
-  const handleClose = () => setOpen(false);
+  const [isError, setisError] = useState(false);
+  const dispatch = useDispatch();
+  const { cart } = useSelector((state: RootState) => state.cart);
+
+  const [promoToSendCart, setPromoToSendCart] = useState<ICartProduct>({
+    image: "",
+    price: 0,
+    name: "Roll personalizado",
+    quantity: 1,
+    extraProduct: [],
+    proteins: [],
+    vegetables: [],
+    envelopes: [],
+    sauces: [],
+  });
+
+  // cambiar imagen de promo
+  useEffect(() => {
+    if (promoToSendCart.envelopes!.length > 0) {
+      setPromoToSendCart((prev) => ({
+        ...prev,
+        image: promoToSendCart.envelopes![0].image,
+      }));
+    }
+  }, [promoToSendCart.envelopes]);
 
   const onConfirm = () => {
+    const cloneCart = [...cart];
+    const newCart = [...cloneCart, promoToSendCart];
+    // const isInCart = cloneCart.some((promo) => promo._id === promotion._id);
+    // const newCart = cloneCart.map((promo) => {
+    //   if (promo._id === promotion._id) {
+    //     return promoToSendCart;
+    //   }
+    //   return promo;
+    // });
+    // // Si no estaba, se le agrega al carrito
+    // !isInCart && newCart.push(promoToSendCart);
+    console.log({ newCart });
+    dispatch(addOrUpdateCart(newCart));
     setOpen(false);
+    setPromoToSendCart({
+      image: "",
+      price: 0,
+      name: "Roll personalizado",
+      quantity: 1,
+      extraProduct: [],
+      proteins: [],
+      vegetables: [],
+      envelopes: [],
+      sauces: [],
+    });
+    // setisInCart(true);
+    toast.success(`Roll agregado con éxito`, { duration: 3000 });
   };
 
-  const updatedQuantity = (qty: number) => {
-    console.log(qty);
-  };
+  // calcular precio
+  useEffect(() => {
+    if (promoToSendCart.envelopes!?.length === 1 && !isError) {
+      const priceExtras = promoToSendCart.extraProduct.reduce(
+        (acc, curr) => acc + curr.price,
+        0
+      );
+
+      setPromoToSendCart((prev) => ({
+        ...prev,
+        price:
+          (+promoToSendCart.envelopes![0].price + priceExtras) *
+          +promoToSendCart!.quantity,
+      }));
+    } else {
+      setPromoToSendCart((prev) => ({
+        ...prev,
+        price: 0,
+      }));
+    }
+  }, [
+    promoToSendCart.envelopes,
+    promoToSendCart!.quantity,
+    isError,
+    promoToSendCart.extraProduct,
+  ]);
 
   return (
     <Drawer
@@ -45,7 +124,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
     >
       <Box
         sx={{
-          width: { xs: "100vw", sm: "70vw", md: "50vw", lg: "40vw" },
+          width: { xs: "100vw", sm: "70vw", md: "50vw", lg: "35vw" },
         }}
       >
         <IconButton
@@ -58,7 +137,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
 
         <CardMedia
           className="fadeIn"
-          image="https://res.cloudinary.com/dc6vako2z/image/upload/v1662584500/SushiApp/concept-tasty-food-with-sushi-rolls-white-background_185193-75532_irognb.jpg"
+          image="/images/logocustomroll.png"
           component="img"
           alt={"handrollImage"}
           sx={{
@@ -78,7 +157,11 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
             Escoge tus ingredientes
           </Typography>
 
-          <FormCustomRoll />
+          <FormCustomRoll
+            setisError={setisError}
+            promoToSendCart={promoToSendCart}
+            setPromoToSendCart={setPromoToSendCart}
+          />
           <Divider sx={{ mb: 4 }} />
           <Box display={"flex"} paddingX={3.3}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -88,9 +171,11 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
             <Box sx={{ flexGrow: 1 }} />
 
             <ItemCounter
-              updatedQuantity={updatedQuantity}
-              currentValue={1}
-              maxValue={5}
+              updatedQuantity={(qty) =>
+                setPromoToSendCart((prev) => ({ ...prev, quantity: qty }))
+              }
+              currentValue={+promoToSendCart.quantity}
+              // maxValue={5}
             />
           </Box>
           <TextField
@@ -103,15 +188,38 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
             //   value={value}
             //   onChange={handleChange}
           />
+          <Typography
+            variant="caption"
+            color="grey"
+            sx={{ fontStyle: "italic", mt: 2 }}
+            display="flex"
+            justifyContent={"end"}
+          >
+            Salsas extra podrán ser agregadas en el carrito*
+          </Typography>
+          {/* {!isError && ( */}
+          <Box
+            sx={{ visibility: isError ? "hidden" : undefined }}
+            className="fadeIn"
+            justifyContent={"end"}
+            display="flex"
+            marginX={4}
+          >
+            <Typography variant="h6">
+              {currency.format(+promoToSendCart.price)}
+            </Typography>
+          </Box>
+          {/* )} */}
         </CardContent>
         <CardActions sx={{ margin: "0 20px" }}>
           <Button
+            disabled={isError || promoToSendCart.envelopes?.length === 0}
             onClick={onConfirm}
             fullWidth
             color="primary"
             sx={{ fontSize: "1.2rem" }}
           >
-            Confirmar
+            Agregar
           </Button>
         </CardActions>
       </Box>

@@ -6,19 +6,57 @@ import {
   Chip,
 } from "@mui/material";
 import React, { FC } from "react";
-import { IProduct } from "../../interfaces";
+import { ICartProduct, IProduct } from "../../interfaces";
 import { SushiFilled } from "../../public/Icons/SushiFilled";
 import { SushiOutlined } from "../../public/Icons/SushiOutlined";
 
 interface Props {
   listProducts: IProduct[];
   showPrice?: boolean;
+  setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
+  label: string;
 }
+
+const dictCategory = {
+  Proteinas: "proteins",
+  Envolturas: "envelopes",
+  Salsas: "sauces",
+  Vegetales: "vegetables",
+  Extras: "extraProduct",
+};
 
 export const CustomRollCategoryOption: FC<Props> = ({
   listProducts,
   showPrice = false,
+  setPromoToSendCart,
+  label,
 }) => {
+  const handleChange = ({
+    target: { name },
+  }: React.ChangeEvent<HTMLInputElement>) => {
+    addOrRemoveProduct(name);
+  };
+
+  const addOrRemoveProduct = (name: string) => {
+    setPromoToSendCart((prev) => {
+      const toSearch: IProduct[] = prev[dictCategory[label]];
+      console.log({ toSearch });
+      console.log(prev);
+      const isInOrder = toSearch!.find((order) => order._id === name);
+      console.log({ isInOrder });
+      const newArrayToSend = isInOrder
+        ? toSearch!.filter((order) => order._id !== name)
+        : [...toSearch!, ...listProducts.filter((prod) => prod._id === name)];
+      return {
+        ...prev,
+        [dictCategory[label]]:
+          toSearch?.length === 0
+            ? listProducts.filter((prod) => prod._id === name)
+            : newArrayToSend,
+      };
+    });
+  };
+
   return (
     <FormGroup
       sx={{
@@ -31,7 +69,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
         rowGap={2}
         sx={{
           display: "flex",
-          width: { xs: "100vw", sm: "70vw", md: "50vw", lg: "40vw" },
+          width: { xs: "100vw", sm: "70vw", md: "50vw", lg: "34vw" },
         }}
       >
         {listProducts?.map((product) => (
@@ -39,7 +77,9 @@ export const CustomRollCategoryOption: FC<Props> = ({
             <FormControlLabel
               control={
                 <Checkbox
+                  onChange={handleChange}
                   disabled={!product.inStock}
+                  name={product._id}
                   icon={
                     product.inStock ? (
                       <SushiOutlined />
@@ -81,19 +121,15 @@ export const CustomRollCategoryOption: FC<Props> = ({
                   >
                     {product.name}
                   </Grid>
-                  {showPrice && (
+                  {label === "Extras" && (
                     <Chip
                       label={`$${product.price}`}
-                      //   color=""
                       variant="outlined"
                       size="small"
                       sx={{
                         position: "absolute",
                         marginLeft: "40px",
-                        //   zIndex: 400,
-                        //   bottom: 0,
-                        //   fontSize: ".9rem",
-                        //   userSelect: "none",
+
                         fontWeight: "500",
                         backdropFilter: "blur(5.8px)",
                       }}

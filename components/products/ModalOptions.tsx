@@ -18,6 +18,7 @@ import { ICartProduct, IOrder, IPromotion } from "../../interfaces";
 import { RootState } from "../../store";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { addOrUpdateCart } from "../../store/Slices/CartSlice";
+import { currency } from "../../utils";
 import { ExtraSauces } from "../customRoll/ExtraSauces";
 import { FullScreenLoading, ItemCounter } from "../ui";
 
@@ -38,7 +39,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
     image: promotion.images[0]!,
     price: promotion.price!,
     name: promotion.name!,
-    quantity: 0,
+    quantity: 1,
     extraProduct: [],
   });
 
@@ -62,7 +63,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
         image: promotion.images[0]!,
         price: promotion.price!,
         name: promotion.name!,
-        quantity: 0,
+        quantity: 1,
         extraProduct: [],
       });
     }
@@ -146,17 +147,23 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             />
           </Box>
 
+          <Box justifyContent={"end"} display="flex" marginX={4}>
+            <Typography variant="h6">
+              {currency.format(+promotion.price * +promoToSendCart.quantity)}
+            </Typography>
+          </Box>
+
           {/* Salsas extras */}
-          <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-            <FormLabel component="legend" sx={{ mb: 3 }}>
+          {/* <FormControl sx={{ m: 3 }} component="fieldset" variant="standard"> */}
+          {/* <FormLabel component="legend" sx={{ mb: 3 }}>
               Agrega salsas extra
-            </FormLabel>
-            <ExtraSauces
+            </FormLabel> */}
+          {/* <ExtraSauces
               sauceProducts={sauseProduct!}
               setPromoToSendCart={setPromoToSendCart}
               idPromo={promotion._id!.toString()}
-            />
-          </FormControl>
+            /> */}
+          {/* </FormControl> */}
           <TextField
             id="outlined-multiline-flexible"
             label="Notas extras"
@@ -168,6 +175,15 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             onChange={(e) => setNote(e.target.value)}
             onBlur={() => setPromoToSendCart((prev) => ({ ...prev, note }))}
           />
+          <Typography
+            variant="caption"
+            color="grey"
+            sx={{ fontStyle: "italic", mt: 2 }}
+            display="flex"
+            justifyContent={"end"}
+          >
+            Salsas extra podrán ser agregadas en el carrito*
+          </Typography>
         </CardContent>
         <CardActions sx={{ margin: "0 20px" }}>
           <Button
@@ -176,9 +192,15 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             color="primary"
             sx={{ fontSize: "1.2rem" }}
           >
-            {isInCart ? "Actualizar" : "Confirmar"}
+            {isInCart ? "Actualizar" : "Agregar"}
           </Button>
         </CardActions>
+        <img
+          width={"100%"}
+          alt="Logo"
+          src="/logos/logo-sushi-panko.png"
+          style={{ opacity: 0.5, marginTop: 20 }}
+        ></img>
       </Box>
     </Drawer>
   );

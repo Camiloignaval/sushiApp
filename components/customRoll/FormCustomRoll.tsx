@@ -1,12 +1,47 @@
 import { Box, FormControl, FormLabel, Grid } from "@mui/material";
-import React from "react";
+import React, { useState, FC, useEffect } from "react";
+import { ICartProduct } from "../../interfaces";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { FullScreenLoading } from "../ui";
-import { ExtraSauces } from "./ExtraSauces";
 import { CustomRollCategoryOption } from "./CustomRollCategoryOption";
+import { FormControlByCategory } from "./FormControlByCategory";
 
-export const FormCustomRoll = () => {
+interface Props {
+  setisError: React.Dispatch<React.SetStateAction<boolean>>;
+  promoToSendCart: ICartProduct;
+  setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
+}
+
+const maxQty = {
+  proteins: 1,
+  vegetables: 2,
+  envelopes: 1,
+  sauces: 1,
+  extraProduct: 2,
+};
+
+export const FormCustomRoll: FC<Props> = ({
+  setisError,
+  promoToSendCart,
+  setPromoToSendCart,
+}) => {
   const { data: productData } = useGetProductsQuery(null);
+
+  useEffect(() => {
+    const { extraProduct, proteins, vegetables, envelopes, sauces } =
+      promoToSendCart;
+    if (
+      extraProduct.length > maxQty.extraProduct ||
+      proteins!.length > maxQty.proteins ||
+      vegetables!.length > maxQty.vegetables ||
+      sauces!.length > maxQty.sauces ||
+      envelopes!.length > maxQty.envelopes
+    ) {
+      setisError(true);
+    } else {
+      setisError(false);
+    }
+  }, [promoToSendCart]);
 
   const proteinProduct = productData?.filter(
     (product) =>
@@ -31,63 +66,57 @@ export const FormCustomRoll = () => {
     <Box>
       {/* envolturas */}
       <Grid container>
-        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-          <FormLabel component="legend" sx={{ mb: 3 }}>
-            Envolturas (1 máx.)
-          </FormLabel>
-          <CustomRollCategoryOption listProducts={envelopeProduct!} />
-        </FormControl>
+        <FormControlByCategory
+          setPromoToSendCart={setPromoToSendCart}
+          promoToSendCart={promoToSendCart}
+          label={"Envolturas"}
+          maxQty={maxQty.envelopes}
+          productList={envelopeProduct!}
+        />
       </Grid>
 
       {/* Proteinas */}
       <Grid container>
-        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-          <FormLabel component="legend" sx={{ mb: 3 }}>
-            Proteína (1 máx.)
-          </FormLabel>
-          <CustomRollCategoryOption listProducts={proteinProduct!} />
-        </FormControl>
+        <FormControlByCategory
+          promoToSendCart={promoToSendCart}
+          setPromoToSendCart={setPromoToSendCart}
+          label={"Proteinas"}
+          maxQty={maxQty.proteins}
+          productList={proteinProduct!}
+        />
       </Grid>
       {/* Vegetales */}
       <Grid container>
-        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-          <FormLabel component="legend" sx={{ mb: 3 }}>
-            Vegetales (2 máx.)
-          </FormLabel>
-          <CustomRollCategoryOption listProducts={vegetableProduct!} />
-        </FormControl>
+        <FormControlByCategory
+          promoToSendCart={promoToSendCart}
+          setPromoToSendCart={setPromoToSendCart}
+          label={"Vegetales"}
+          maxQty={maxQty.vegetables}
+          productList={vegetableProduct!}
+        />
       </Grid>
 
       {/* Salsas */}
       <Grid container>
-        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-          <FormLabel component="legend" sx={{ mb: 3 }}>
-            Salsas (1 máx.)
-          </FormLabel>
-          <CustomRollCategoryOption listProducts={sauseProduct!} />
-        </FormControl>
+        <FormControlByCategory
+          promoToSendCart={promoToSendCart}
+          setPromoToSendCart={setPromoToSendCart}
+          label={"Salsas"}
+          maxQty={maxQty.sauces}
+          productList={sauseProduct!}
+        />
       </Grid>
 
       {/* Extras */}
       <Grid container>
-        <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-          <FormLabel component="legend" sx={{ mb: 3 }}>
-            Extras (2 máx.)
-          </FormLabel>
-          <CustomRollCategoryOption
-            listProducts={[...proteinProduct!, ...vegetableProduct!]}
-            showPrice
-          />
-        </FormControl>
+        <FormControlByCategory
+          promoToSendCart={promoToSendCart}
+          setPromoToSendCart={setPromoToSendCart}
+          label={"Extras"}
+          maxQty={maxQty.extraProduct}
+          productList={[...proteinProduct!, ...vegetableProduct!]}
+        />
       </Grid>
-
-      {/* Salsas extras */}
-      <FormControl sx={{ m: 3 }} component="fieldset" variant="standard">
-        <FormLabel component="legend" sx={{ mb: 3 }}>
-          Agrega salsas extra
-        </FormLabel>
-        <ExtraSauces sauceProducts={sauseProduct!} />
-      </FormControl>
     </Box>
   );
 };

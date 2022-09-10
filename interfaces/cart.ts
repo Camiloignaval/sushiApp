@@ -11,6 +11,8 @@ export interface ICartProduct {
   sauces?: IProduct[];
   envelopes?: IProduct[];
   note?: String;
+  type?: String;
+  inStock?: Boolean;
 }
 
 // export interface IExtraProduct {

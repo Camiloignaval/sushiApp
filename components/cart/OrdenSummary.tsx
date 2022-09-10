@@ -16,6 +16,7 @@ import { format } from "../../utils/currency";
 import { HiOutlineTicket } from "react-icons/hi";
 
 interface Props {
+  editable?: boolean;
   infoPrices?: {
     numberOfItems: number;
     subTotal: number;
@@ -24,7 +25,7 @@ interface Props {
   };
 }
 
-export const OrdenSummary: FC<Props> = ({ infoPrices }) => {
+export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
   const { cart } = useSelector((state: RootState) => state);
   const [infoToShow, setinfoToShow] = useState({
     numberOfItems: 0,
@@ -57,6 +58,19 @@ export const OrdenSummary: FC<Props> = ({ infoPrices }) => {
           {infoToShow.numberOfItems > 1 ? "items" : "item"}
         </Typography>
       </Grid>
+      <Grid item xs={6}>
+        <Typography>Extras</Typography>
+      </Grid>
+      <Grid item xs={6} display="flex" justifyContent="end">
+        <Typography>
+          {currency.format(
+            cart.extraProduct.reduce(
+              (acc, curr) => +acc + +curr.price * +curr.quantity,
+              0
+            )
+          )}
+        </Typography>
+      </Grid>
       <Divider />
       {/* subtotal */}
       <Grid item xs={6}>
@@ -77,27 +91,33 @@ export const OrdenSummary: FC<Props> = ({ infoPrices }) => {
       <Grid item xs={6} mt={2}>
         <Typography variant="subtitle1">Cupón descuento</Typography>
       </Grid>
-      <Grid item xs={6} mt={2} display="flex" justifyContent="end">
-        <Grid container>
-          {/* <Typography>{currency.format(infoToShow.tax)}</Typography> */}
-          <Grid item xs display="flex" justifyContent="end">
-            <TextField
-              label="Ingrese"
-              variant="standard"
-              sx={{
-                position: "relative",
-                top: -20,
-                width: "80px",
-              }}
-            />
-          </Grid>{" "}
-          <Grid item xs={1}>
-            <IconButton size="small">
-              <HiOutlineTicket fontSize="inherit" />
-            </IconButton>
+      {editable ? (
+        <Grid item xs={6} mt={2} display="flex" justifyContent="end">
+          <Grid container>
+            {/* <Typography>{currency.format(infoToShow.tax)}</Typography> */}
+            <Grid item xs display="flex" justifyContent="end">
+              <TextField
+                label="Ingrese"
+                variant="standard"
+                sx={{
+                  position: "relative",
+                  top: -20,
+                  width: "80px",
+                }}
+              />
+            </Grid>{" "}
+            <Grid item xs={1}>
+              <IconButton size="small">
+                <HiOutlineTicket fontSize="inherit" />
+              </IconButton>
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      ) : (
+        <Grid item xs={6} mt={2} display="flex" justifyContent="end">
+          <Typography>EXAMPLE</Typography>
+        </Grid>
+      )}
 
       {/* descuentos */}
       <Grid item xs={6}>

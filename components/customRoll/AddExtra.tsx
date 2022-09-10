@@ -1,4 +1,5 @@
 import { Box, Chip, Grid, Typography } from "@mui/material";
+import { profile } from "console";
 import React, {
   Dispatch,
   FC,
@@ -13,16 +14,19 @@ import { addOrUpdateExtraProducts } from "../../store/Slices/CartSlice";
 import { ItemCounter } from "../ui";
 
 interface Props {
-  prod: IProduct;
+  prod: IProduct | ICartProduct;
+  editable?: boolean;
 }
 
-export const AddExtra: FC<Props> = ({ prod }) => {
+export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
   const { extraProduct } = useSelector((state: RootState) => state.cart);
   const [extraToSendCart, setExtraToSendCart] = useState<ICartProduct>({
     _id: prod?._id!,
     image: prod.image!,
     price: prod.price!,
     name: prod.name!,
+    type: prod.type!,
+    inStock: prod.inStock!,
     quantity: extraProduct?.find((e) => e._id === prod._id)?.quantity ?? 0,
   });
   // const [qty, setQty] = useState(0);
@@ -59,9 +63,9 @@ export const AddExtra: FC<Props> = ({ prod }) => {
   });
   return (
     <Grid item xs={6} md={4} lg={3}>
-      <Box position={"relative"}>
+      <Box position={"relative"} display={"flex"} justifyContent={"center"}>
         <img
-          src={prod.image}
+          src={prod!.image.toString()}
           width="60px"
           height="60px"
           style={{
@@ -88,20 +92,38 @@ export const AddExtra: FC<Props> = ({ prod }) => {
 
       <Typography
         display={"flex"}
-        alignContent="center"
+        justifyContent="center"
         alignItems="center"
-        marginLeft={6}
+        marginLeft={1}
         variant="subtitle2"
       >
         {prod.name}
       </Typography>
       <Box sx={{ flexGrow: 1 }} />
 
-      <ItemCounter
-        updatedQuantity={updatedQuantity}
-        currentValue={+extraToSendCart.quantity}
-        isPossibleZero
-      />
+      {editable ? (
+        <Box display={"flex"} justifyContent="center">
+          <ItemCounter
+            updatedQuantity={updatedQuantity}
+            currentValue={+extraToSendCart.quantity}
+            isPossibleZero
+          />
+        </Box>
+      ) : (
+        <Typography
+          display={"flex"}
+          justifyContent="center"
+          alignItems="center"
+          variant="subtitle2"
+        >
+          <>
+            {extraProduct.find((e) => e._id === prod._id)?.quantity}{" "}
+            {extraProduct.find((e) => e._id === prod._id)?.quantity === 1
+              ? "unidad"
+              : "unidades"}
+          </>
+        </Typography>
+      )}
     </Grid>
   );
 };

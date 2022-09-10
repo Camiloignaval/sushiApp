@@ -22,6 +22,8 @@ import { useCreateOrderMutation } from "../../store/RTKQuery/ordersApi";
 import { IOrder } from "../../interfaces";
 import toast from "react-hot-toast";
 import { cleanCart } from "../../store/Slices/CartSlice";
+import { Extras } from "../../components/cart/Extras";
+import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 
 const SummaryPage = () => {
   const router = useRouter();
@@ -29,6 +31,7 @@ const SummaryPage = () => {
   const { shippingAddress, numberOfItems, cart, subTotal, tax, total } =
     useSelector((state: RootState) => state.cart);
   const [createNewOrder, createNewOrderState] = useCreateOrderMutation();
+  const { data: productData, isLoading } = useGetProductsQuery(null);
 
   useEffect(() => {
     if (!Cookies.get("address")) {
@@ -59,6 +62,9 @@ const SummaryPage = () => {
       dispatch(cleanCart());
     }
   };
+  if (isLoading || !productData) {
+    return <></>;
+  }
 
   return (
     <ShopLayout
@@ -72,6 +78,7 @@ const SummaryPage = () => {
         <Grid item xs={12} sm={7}>
           {/* card list */}
           <CardList />
+          <Extras productData={productData!} />
         </Grid>
         <Grid item xs={12} sm={5}>
           {/* cart */}
@@ -86,25 +93,13 @@ const SummaryPage = () => {
                 <Typography variant="subtitle1">
                   Dirección de entrega
                 </Typography>
-                <NextLink href="/checkout/adress" passHref>
+                <NextLink href="/cart" passHref>
                   <Link underline="always">Editar</Link>
                 </NextLink>
               </Box>
-              <Typography>
-                {shippingAddress?.firstName} {shippingAddress?.lastName}
-              </Typography>
-              <Typography>{shippingAddress?.adress}</Typography>
-              {shippingAddress.adress2 !== "" && (
-                <Typography>{shippingAddress?.adress2}</Typography>
-              )}
-              <Typography>
-                {shippingAddress?.city}{" "}
-                {
-                  countries.find((c) => shippingAddress.country === c.code)
-                    ?.name
-                }
-              </Typography>
-              <Typography>{shippingAddress?.zip}</Typography>
+              <Typography>{shippingAddress?.username}</Typography>
+              <Typography>{shippingAddress?.address}</Typography>
+              <Typography>{shippingAddress?.city}</Typography>
               <Typography>{shippingAddress?.phone}</Typography>
               <Divider sx={{ my: 1 }} />
               <Box display="flex" justifyContent={"end"}>

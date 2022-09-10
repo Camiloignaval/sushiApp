@@ -14,20 +14,16 @@ import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import { CardList, OrdenSummary } from "../../components/cart";
 import { AddressForm } from "../../components/cart/AddressForm";
-import {
-  ExtraProducts,
-  ExtraSauces,
-} from "../../components/customRoll/ExtraProducts";
+import { Extras } from "../../components/cart/Extras";
+import { ExtraProducts } from "../../components/customRoll/ExtraProducts";
 import { ShopLayout } from "../../components/layouts";
-import { IOrder } from "../../interfaces";
 import { RootState } from "../../store";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
-import { useGetAllPromotionsQuery } from "../../store/RTKQuery/promotionApi";
 
 const CartPage = () => {
   const { data: productData, isLoading } = useGetProductsQuery(null);
   const { cart } = useSelector((state: RootState) => state);
-  const { replace } = useRouter();
+  const { replace, push } = useRouter();
 
   useEffect(() => {
     if (cart.isLoaded && cart.cart.length === 0) {
@@ -36,11 +32,7 @@ const CartPage = () => {
   }, [cart.numberOfItems, replace, cart.isLoaded, cart.cart.length]);
 
   const onSubmitOrder = () => {
-    // Preparar orden para enviarla
-    const cartToSend = { ...cart };
-    delete cartToSend?.isLoaded;
-    cartToSend.orderItems = cartToSend.cart;
-    console.log({ cartToSend });
+    push("/checkout/summary");
   };
 
   console.log({ productData });
@@ -61,26 +53,7 @@ const CartPage = () => {
           {/* card list */}
           <CardList editable />
           {/* Salsas extras */}
-          <FormControl
-            sx={{ m: 3, width: "100%" }}
-            component="fieldset"
-            variant="standard"
-          >
-            <FormLabel component="legend" sx={{ mb: 3 }}>
-              Agrega salsas extra
-            </FormLabel>
-            {/* salsas extras */}
-            <ExtraProducts
-              products={productData!?.filter((prod) => prod.type === "sauce")}
-            />
-            {/* otros extras */}
-            <FormLabel component="legend" sx={{ marginY: 3 }}>
-              Agrega otros productos
-            </FormLabel>
-            <ExtraProducts
-              products={productData!?.filter((prod) => prod.type === "other")}
-            />
-          </FormControl>
+          <Extras editable productData={productData!} />
         </Grid>
         <Grid item xs={12} sm={5}>
           {/* cart */}
@@ -92,7 +65,7 @@ const CartPage = () => {
                 Resumen del carrito
               </Typography>
               <Divider sx={{ my: 1 }} />
-              <OrdenSummary />
+              <OrdenSummary editable />
               <Box sx={{ mt: 3 }}>
                 <Button
                   // href="/checkout/adress"
@@ -102,7 +75,7 @@ const CartPage = () => {
                   disabled={cart.shippingAddress ? false : true}
                   onClick={onSubmitOrder}
                 >
-                  Enviar orden
+                  Confirmar datos
                 </Button>
               </Box>
             </CardContent>

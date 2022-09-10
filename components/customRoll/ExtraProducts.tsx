@@ -1,19 +1,20 @@
 import { Grid } from "@mui/material";
 import React, { FC } from "react";
-import { IProduct } from "../../interfaces";
+import { ICartProduct, IProduct } from "../../interfaces";
 
 import { AddExtra } from "./AddExtra";
 
 interface Props {
-  products: IProduct[];
+  products: IProduct[] | ICartProduct[];
+  editable?: boolean;
 }
 
-export const ExtraProducts: FC<Props> = ({ products }) => {
+export const ExtraProducts: FC<Props> = ({ products, editable = false }) => {
   return (
     <>
       <Grid container width={"100%"}>
-        {products.map((prod) => (
-          <AddExtra key={prod._id} prod={prod} />
+        {products!.map((prod, i) => (
+          <AddExtra editable={editable} key={i} prod={prod} />
         ))}
       </Grid>
     </>

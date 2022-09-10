@@ -6,16 +6,13 @@ import {
   Link as MuiLink,
   Badge,
   IconButton,
-  Button,
   Card,
-  Divider,
 } from "@mui/material";
 import type { NextPage } from "next";
 import NextLink from "next/link";
-import { Link, Element, animateScroll as scroll } from "react-scroll";
-import { useEffect, useRef, useState } from "react";
-import { CustomRoll } from "../components/customRoll";
-import { ShopLayout } from "../components/layouts/ShopLayout";
+import { Link } from "react-scroll";
+import { useEffect, useState } from "react";
+
 import { PromotionCategory } from "../components/products/PromotionCategory";
 import { IPromotion } from "../interfaces";
 import { useGetAllPromotionsQuery } from "../store/RTKQuery/promotionApi";
@@ -27,6 +24,12 @@ import { currency } from "../utils";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { MainShopLayout } from "../components/layouts";
 import { FaCircle } from "react-icons/fa";
+
+const categoriesBBDD = ["HandRolls", "Promos"];
+
+interface IObjectKeys {
+  [key: string]: string | number;
+}
 
 const HomePage: NextPage = () => {
   const { data: promotions, isLoading } = useGetAllPromotionsQuery(null);
@@ -40,7 +43,6 @@ const HomePage: NextPage = () => {
 
   function logit() {
     const isDownOfTheScreen = window.pageYOffset > window.innerHeight - 100;
-    console.log(isDownOfTheScreen, window.pageYOffset, window.innerHeight + 50);
     if (isDownOfTheScreen) {
       if (scrollIsDown) {
         return;
@@ -70,7 +72,7 @@ const HomePage: NextPage = () => {
       let promosSeparate = {};
 
       promotions?.forEach((promo: IPromotion) => {
-        const nameCategory = promo.category.toString();
+        const nameCategory = promo.category.name.toString();
         promosSeparate = {
           ...promosSeparate,
           [nameCategory]: promosSeparate[nameCategory]
@@ -95,57 +97,44 @@ const HomePage: NextPage = () => {
           height: "50px",
           top: 60,
           zIndex: 200,
-          // background: "rgb(255,255,255)",
           background: scrollIsDown
             ? "linear-gradient(270deg, rgba(255,255,255,0) 0%, rgba(167,0,0,1) 9%, rgba(167,0,0,1) 54%, rgba(167,0,0,1) 91%, rgba(255,255,255,0) 100%)"
             : undefined,
           color: scrollIsDown ? "white" : "black",
-          // backdropFilter: !scrollIsDown ? "blur(9px)" : undefined,
         }}
         variant="scrollable"
         scrollButtons
         allowScrollButtonsMobile
         aria-label="scrollable force tabs example"
       >
-        <Link
-          activeClass="active"
-          to="HandRolls"
-          spy={true}
-          smooth={true}
-          duration={500}
-          style={{
-            display: "inline-block",
-            margin: "20px",
-            position: "relative",
-            top: -15,
-            fontSize: "1.7rem",
-            letterSpacing: 4,
-          }}
-          offset={-120}
-        >
-          Handroll
-        </Link>
-        <FaCircle style={{ width: "10px", position: "relative", top: 18 }} />
-        <Link
-          activeClass="active"
-          to="Promos"
-          spy={true}
-          smooth={true}
-          duration={250}
-          style={{
-            display: "inline-block",
-            margin: "20px",
-            position: "relative",
-            top: -15,
-            fontSize: "1.7rem",
-            letterSpacing: 4,
-          }}
-          offset={-120}
-        >
-          Promos
-        </Link>
-        <FaCircle style={{ width: "10px", position: "relative", top: 18 }} />
+        {categoriesBBDD.map((category) => (
+          <>
+            <Link
+              activeClass="active"
+              to={category}
+              spy={true}
+              smooth={true}
+              duration={500}
+              style={{
+                display: "inline-block",
+                margin: "20px",
+                position: "relative",
+                top: -15,
+                fontSize: "1.7rem",
+                letterSpacing: 4,
+                cursor: "pointer",
+              }}
+              offset={-120}
+            >
+              {category}
+            </Link>
+            <FaCircle
+              style={{ width: "10px", position: "relative", top: 18 }}
+            />
+          </>
+        ))}
 
+        {/* arma tu roll button */}
         <Box
           sx={{
             display: "inline-block",
@@ -155,7 +144,14 @@ const HomePage: NextPage = () => {
           }}
           onClick={() => setOpen(true)}
         >
-          <Typography sx={{ top: -15, fontSize: "1.7rem", letterSpacing: 4 }}>
+          <Typography
+            sx={{
+              top: -15,
+              fontSize: "1.7rem",
+              letterSpacing: 4,
+              cursor: "pointer",
+            }}
+          >
             Arma tu roll
           </Typography>
         </Box>

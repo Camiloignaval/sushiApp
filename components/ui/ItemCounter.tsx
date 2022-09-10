@@ -7,12 +7,14 @@ interface Props {
   currentValue: number;
   maxValue?: number;
   updatedQuantity: (quantity: number) => void;
+  isPossibleZero?: boolean;
 }
 
 export const ItemCounter: FC<Props> = ({
   currentValue,
   maxValue = undefined,
   updatedQuantity,
+  isPossibleZero = false,
 }) => {
   const [quantity, setQuantity] = useState(currentValue ?? 0);
 
@@ -23,7 +25,7 @@ export const ItemCounter: FC<Props> = ({
   return (
     <Box display="flex" alignItems="center">
       <IconButton
-        disabled={quantity <= 1}
+        disabled={isPossibleZero ? quantity <= 0 : quantity <= 1}
         onClick={() => setQuantity((prev) => prev - 1)}
       >
         <RemoveCircleOutline />

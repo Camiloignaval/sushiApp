@@ -1,3 +1,4 @@
+import { ICategory } from "./category";
 export interface IPromotion {
   promotionItems: String[];
   price: Number;
@@ -7,7 +8,7 @@ export interface IPromotion {
   images: String[];
   name: String;
   lastPrice?: number;
-  category: String;
+  category: ICategory;
   quantity: Number;
   unit: String;
   _id?: String;

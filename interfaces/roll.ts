@@ -9,5 +9,5 @@ export interface IRoll {
   updatedAt?: string;
 }
 
-type IType = "envelope" | "filling" | "sauce";
+type IType = "envelope" | "filling" | "sauce" | "other";
 type IFillingType = "protein" | "vegetable";

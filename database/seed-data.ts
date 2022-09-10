@@ -24,23 +24,35 @@ interface SeedPromotion {
   images: Array<String>;
   name: string;
   lastPrice?: number;
-  category: ValidCategory;
+  category: string;
   quantity: number;
   unit: ValidUnit;
 }
 
-type ValidType = "envelope" | "filling" | "sauce";
+interface SeedCategory {
+  name: string;
+}
+
+type ValidType = "envelope" | "filling" | "sauce" | "other";
 type ValidEnvelopeType = "protein" | "vegetable";
-type ValidCategory = "Promos" | "HandRolls";
 type ValidUnit = "Piezas" | "Porciones" | "Rolls";
 
 interface SeedData {
   products: SeedProduct[];
   users: SeedUser[];
   promotions: SeedPromotion[];
+  categories: SeedCategory[];
 }
 
 export const initialData: SeedData = {
+  categories: [
+    {
+      name: "Promos",
+    },
+    {
+      name: "HandRolls",
+    },
+  ],
   products: [
     {
       fillingType: "protein",
@@ -146,7 +158,7 @@ export const initialData: SeedData = {
     },
     {
       inStock: true,
-      name: "Soja",
+      name: "Salsa de soja",
       image:
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662527168/SushiApp/Soy_sauce_2_lnawfh.jpg",
       price: 700,
@@ -154,11 +166,27 @@ export const initialData: SeedData = {
     },
     {
       inStock: true,
-      name: "Agridulce",
+      name: "Salsa Agridulce",
       image:
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662527168/SushiApp/Soy_sauce_2_lnawfh.jpg",
       price: 700,
       type: "sauce",
+    },
+    {
+      inStock: true,
+      name: "Jengibre",
+      image:
+        "https://res.cloudinary.com/dc6vako2z/image/upload/v1662794132/SushiApp/jengibre-encurtido-sushi_juvosh.jpg",
+      price: 500,
+      type: "other",
+    },
+    {
+      inStock: true,
+      name: "Wasabi",
+      image:
+        "https://res.cloudinary.com/dc6vako2z/image/upload/v1662794253/SushiApp/wasabi-sauce-bowl-isolated-white-background-clipping-path-wasabi-sauce-isolated-white-background-108263059_knpsz1.jpg",
+      price: 500,
+      type: "other",
     },
   ],
   users: [
@@ -185,7 +213,7 @@ export const initialData: SeedData = {
       name: "Promo tempura",
       quantity: 60,
       unit: "Piezas",
-      category: "Promos",
+      category: "507f191e810c19729de860ea",
       images: [
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528515/SushiApp/32-piezas-fritas-e1556327712206_bq4exp.jpg",
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528900/SushiApp/descarga_2_k7mldi.jpg",
@@ -200,7 +228,7 @@ export const initialData: SeedData = {
       name: "Promo tempura 20 piezas",
       quantity: 20,
       unit: "Piezas",
-      category: "Promos",
+      category: "507f191e810c19729de860ea",
       images: [
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528515/SushiApp/32-piezas-fritas-e1556327712206_bq4exp.jpg",
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528900/SushiApp/descarga_2_k7mldi.jpg",
@@ -215,7 +243,7 @@ export const initialData: SeedData = {
       name: "Promo salmon 20 piezas",
       quantity: 20,
       unit: "Piezas",
-      category: "Promos",
+      category: "507f191e810c19729de860ea",
       images: [
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528515/SushiApp/32-piezas-fritas-e1556327712206_bq4exp.jpg",
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528900/SushiApp/descarga_2_k7mldi.jpg",
@@ -231,7 +259,7 @@ export const initialData: SeedData = {
       lastPrice: 20000,
       quantity: 70,
       unit: "Piezas",
-      category: "Promos",
+      category: "507f191e810c19729de860ea",
       images: [
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528935/SushiApp/descarga_3_urwkds.jpg",
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528978/SushiApp/zeisushi-promo5-55-bocados-mixtos_tbwtzf.jpg",
@@ -251,7 +279,7 @@ export const initialData: SeedData = {
       quantity: 100,
       unit: "Piezas",
       name: "Promo tempura 2",
-      category: "Promos",
+      category: "507f191e810c19729de860ea",
 
       images: [
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662528515/SushiApp/32-piezas-fritas-e1556327712206_bq4exp.jpg",
@@ -264,7 +292,7 @@ export const initialData: SeedData = {
       inOffer: false,
       inStock: false,
       name: "Promo el mar 2",
-      category: "Promos",
+      category: "507f191e810c19729de860ea",
       quantity: 70,
       unit: "Piezas",
       price: 18000,
@@ -278,7 +306,7 @@ export const initialData: SeedData = {
       inOffer: false,
       inStock: true,
       name: "Roll envuelto en palta",
-      category: "HandRolls",
+      category: "507f191e810c19729de860ea",
       quantity: 1,
       unit: "Rolls",
       price: 18000,
@@ -293,7 +321,7 @@ export const initialData: SeedData = {
       inOffer: false,
       inStock: true,
       name: "Roll con salsa acevichada",
-      category: "HandRolls",
+      category: "507f191e810c19729de860ea",
       quantity: 1,
       unit: "Rolls",
       price: 18000,

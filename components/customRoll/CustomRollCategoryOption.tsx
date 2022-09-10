@@ -40,10 +40,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
   const addOrRemoveProduct = (name: string) => {
     setPromoToSendCart((prev) => {
       const toSearch: IProduct[] = prev[dictCategory[label]];
-      console.log({ toSearch });
-      console.log(prev);
       const isInOrder = toSearch!.find((order) => order._id === name);
-      console.log({ isInOrder });
       const newArrayToSend = isInOrder
         ? toSearch!.filter((order) => order._id !== name)
         : [...toSearch!, ...listProducts.filter((prod) => prod._id === name)];

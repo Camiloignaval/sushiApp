@@ -1,3 +1,4 @@
+import { IProduct } from "./../interfaces/products";
 import mongoose, { Schema, Model, model } from "mongoose";
 import { IOrder } from "../interfaces";
 
@@ -19,7 +20,14 @@ const orderSchema = new Schema(
         quantity: { type: Number, required: true },
         image: { type: String, required: true },
         price: { type: Number, required: true },
-        ingredients: { type: Array, required: true },
+        ingredients: [
+          {
+            image: { type: String },
+            price: { type: Number, required: true, default: 0 },
+            name: { type: String, required: true, default: "" },
+            type: { type: String, required: true, default: "" },
+          },
+        ],
       },
     ],
     orderExtraItems: [

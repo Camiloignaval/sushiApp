@@ -19,7 +19,7 @@ import { RootState } from "../../store";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { addOrUpdateCart } from "../../store/Slices/CartSlice";
 import { currency } from "../../utils";
-import { ExtraSauces } from "../customRoll/ExtraSauces";
+import { ExtraSauces } from "../customRoll/ExtraProducts";
 import { FullScreenLoading, ItemCounter } from "../ui";
 
 interface Props {
@@ -114,7 +114,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
       <Box sx={{ width: { xs: "100%", md: "550px" } }}>
         <CardMedia
           className="fadeIn"
-          image={promotion.images[0]}
+          image={promotion.images[0] ?? ""}
           component="img"
           alt={promotion.name}
           sx={{

@@ -12,6 +12,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { v4 as uuidv4 } from "uuid";
 import React, { FC, useEffect, useState } from "react";
 import { ItemCounter } from "../ui";
 import { FormCustomRoll } from "./FormCustomRoll";
@@ -34,6 +35,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
   const { cart } = useSelector((state: RootState) => state.cart);
 
   const [promoToSendCart, setPromoToSendCart] = useState<ICartProduct>({
+    _id: uuidv4(),
     image: "",
     price: 0,
     name: "Roll personalizado",
@@ -67,10 +69,10 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
     // });
     // // Si no estaba, se le agrega al carrito
     // !isInCart && newCart.push(promoToSendCart);
-    console.log({ newCart });
     dispatch(addOrUpdateCart(newCart));
     setOpen(false);
     setPromoToSendCart({
+      _id: uuidv4(),
       image: "",
       price: 0,
       name: "Roll personalizado",
@@ -95,9 +97,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
 
       setPromoToSendCart((prev) => ({
         ...prev,
-        price:
-          (+promoToSendCart.envelopes![0].price + priceExtras) *
-          +promoToSendCart!.quantity,
+        price: +promoToSendCart.envelopes![0].price + priceExtras,
       }));
     } else {
       setPromoToSendCart((prev) => ({
@@ -185,8 +185,10 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
             maxRows={4}
             fullWidth
             sx={{ marginTop: "7px" }}
-            //   value={value}
-            //   onChange={handleChange}
+            value={promoToSendCart.note}
+            onChange={(e) =>
+              setPromoToSendCart((prev) => ({ ...prev, note: e.target.value }))
+            }
           />
           <Typography
             variant="caption"
@@ -206,7 +208,9 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
             marginX={4}
           >
             <Typography variant="h6">
-              {currency.format(+promoToSendCart.price)}
+              {currency.format(
+                +promoToSendCart.price * +promoToSendCart.quantity
+              )}
             </Typography>
           </Box>
           {/* )} */}

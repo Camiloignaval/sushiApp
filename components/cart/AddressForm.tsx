@@ -73,7 +73,6 @@ export const AddressForm = () => {
     }
     data.city = "Santiago";
     data.commune = "Maipú";
-    console.log({ data });
     Cookies.set("address", JSON.stringify(data));
     setIsModificable(false);
     dispatch(updateAdress(data));

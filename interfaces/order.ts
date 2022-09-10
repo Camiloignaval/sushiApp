@@ -6,6 +6,7 @@ export interface IOrder {
   user?: IUser | string;
   orderItems: IOrderItem[];
   orderExtraItems?: IOrderExtraItem[];
+  orderCustomRolls?: IOrderCustomRoll[];
   shippingAddress: IShippingAdress;
   numberOfItems: number;
   status: IOrderStatus;
@@ -39,4 +40,19 @@ export interface IOrderExtraItem {
   quantity: number;
   image: string;
   price: Number;
+}
+
+export interface IOrderCustomRoll {
+  name: string;
+  quantity: number;
+  image: string;
+  price: number;
+  ingredients: [
+    {
+      image: number;
+      price: number;
+      name: number;
+      type: number;
+    }
+  ];
 }

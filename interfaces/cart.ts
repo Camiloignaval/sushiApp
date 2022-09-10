@@ -5,7 +5,7 @@ export interface ICartProduct {
   price: Number;
   name: String;
   quantity: Number;
-  extraProduct: IProduct[];
+  extraProduct?: IProduct[];
   proteins?: IProduct[];
   vegetables?: IProduct[];
   sauces?: IProduct[];

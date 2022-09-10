@@ -6,6 +6,5 @@ interface Props {
 }
 
 export const TypeRollCard = ({ rollType }) => {
-  console.log(rollType);
   return <Card>{rollType}</Card>;
 };

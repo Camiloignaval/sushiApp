@@ -1,12 +1,16 @@
 import {
   Grid,
-  Link,
   CardActionArea,
   CardMedia,
   Box,
   Typography,
   Button,
   Divider,
+  IconButton,
+  styled,
+  Tooltip,
+  tooltipClasses,
+  TooltipProps,
 } from "@mui/material";
 import NextLink from "next/link";
 import { FC, useEffect, useState } from "react";
@@ -21,14 +25,28 @@ import {
 } from "../../store/Slices/CartSlice";
 import { currency } from "../../utils";
 import { VscDebugBreakpointLog } from "react-icons/vsc";
+import { TextSnippetOutlined } from "@mui/icons-material";
 
 interface Props {
   editable?: boolean;
   products?: IOrderItem[];
 }
+const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
+  <Tooltip {...props} classes={{ popper: className }} />
+))(({ theme }) => ({
+  [`& .${tooltipClasses.tooltip}`]: {
+    backgroundColor: "#f5f5f9",
+    color: "rgba(0, 0, 0, 0.87)",
+    maxWidth: 220,
+    fontSize: theme.typography.pxToRem(12),
+    border: "1px solid #dadde9",
+  },
+}));
+
 export const CardList: FC<Props> = ({ editable = false, products }) => {
   const dispatch = useDispatch();
   const { cart } = useSelector((state: RootState) => state.cart);
+  const [noteOpen, setNoteOpen] = useState(false);
   // const [productToShow, setproductToShow] = useState<
   //   IOrderItem[] | ICartProduct[]
   // >([]);
@@ -40,7 +58,7 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
   };
 
   const handleDelete = (product: ICartProduct) => {
-    // dispatch(removeFromCart(product));
+    dispatch(removeFromCart(product._id ?? ""));
   };
 
   // useEffect(() => {
@@ -54,7 +72,7 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
   return (
     <>
       {cart.map((product, i) => (
-        <>
+        <Box key={i}>
           <Divider sx={{ mb: 2 }} />
           <Grid container spacing={3} marginBottom={2} key={i}>
             <Grid item xs={3}>
@@ -62,7 +80,7 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
               {/* <Link> */}
               <CardActionArea>
                 <CardMedia
-                  image={product.image}
+                  image={product.image.toString()}
                   component="img"
                   sx={{ borderRadius: "5px" }}
                 />
@@ -72,7 +90,12 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
             </Grid>
             <Grid item xs={7}>
               <Box display="flex" flexDirection="column">
-                <Typography variant="body1">{product.name}</Typography>
+                <Typography variant="body1">
+                  <>
+                    {product.name} ({product.quantity}{" "}
+                    {product.quantity === 1 ? "unidad" : "unidades"})
+                  </>
+                </Typography>
                 <Typography variant="body1">
                   {/* {editable ? ( */}
                   {product.name === "Roll personalizado" && (
@@ -124,13 +147,6 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
                       )}
                     </Box>
                   )}
-
-                  {/* ) : (
-                  <Typography variant="h6">
-                    {product.quantity}
-                    {product.quantity > 1 ? "Productos" : "Producto"}
-                  </Typography>
-                )} */}
                 </Typography>
               </Box>
             </Grid>
@@ -142,28 +158,46 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
               flexDirection="column"
             >
               <Typography variant="subtitle1">
-                {currency.format(+product.price)}
+                {currency.format(+product.price)} <small>c/u</small>
               </Typography>
 
               {editable && (
-                <Button
-                  onClick={() => handleDelete(product as ICartProduct)}
-                  variant="text"
-                  color="secondary"
-                >
-                  Eliminar
-                </Button>
+                <>
+                  <Button
+                    onClick={() => handleDelete(product as ICartProduct)}
+                    variant="text"
+                    color="secondary"
+                  >
+                    Eliminar
+                  </Button>
+                  {/* notas especiales */}
+                  {product.note && (
+                    <>
+                      <HtmlTooltip
+                        title={
+                          <>
+                            <Typography color="inherit">
+                              Notas especiales
+                            </Typography>
+                            {product.note}
+                          </>
+                        }
+                        placement="left-start"
+                      >
+                        <IconButton
+                          onClick={() => setNoteOpen(true)}
+                          aria-label="delete"
+                        >
+                          <TextSnippetOutlined />
+                        </IconButton>
+                      </HtmlTooltip>
+                    </>
+                  )}
+                </>
               )}
-              {/* <ItemCounter
-                updatedQuantity={(qty) =>
-                  onNewCartQty(product as ICartProduct, qty)
-                }
-                currentValue={+product.quantity}
-                // maxValue={10}
-              /> */}
             </Grid>
           </Grid>
-        </>
+        </Box>
       ))}
     </>
   );

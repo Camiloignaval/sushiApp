@@ -6,6 +6,7 @@ import { IProduct, IShippingAdress } from "../../interfaces";
 export interface CartState {
   isLoaded: boolean;
   cart: ICartProduct[];
+  extraProduct: ICartProduct[];
   numberOfItems: number;
   subTotal: number;
   tax: number;
@@ -16,6 +17,7 @@ export interface CartState {
 const initialState: CartState = {
   isLoaded: false,
   cart: [],
+  extraProduct: [],
   numberOfItems: 0,
   subTotal: 0,
   tax: 0,
@@ -30,6 +32,12 @@ export const CartSlice = createSlice({
     addOrUpdateCart: (state, action: PayloadAction<ICartProduct[]>) => {
       state.cart = action.payload;
       state.isLoaded = true;
+    },
+    addOrUpdateExtraProducts: (
+      state,
+      action: PayloadAction<ICartProduct[]>
+    ) => {
+      state.extraProduct = action.payload;
     },
     // udpateCartQuantity: (state, action: PayloadAction<ICartProduct>) => {
     //   state.cart = state.cart.map((p) => {
@@ -70,6 +78,7 @@ export const CartSlice = createSlice({
 export const {
   addOrUpdateCart,
   // udpateCartQuantity,
+  addOrUpdateExtraProducts,
   removeFromCart,
   updateSummary,
   updateAdress,

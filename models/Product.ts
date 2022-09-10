@@ -18,7 +18,7 @@ const productSchema = new Schema(
       type: String,
       required: true,
       enum: {
-        values: ["envelope", "filling", "sauce"],
+        values: ["envelope", "filling", "sauce", "other"],
         message: "{VALUE} is not a valid ingredient",
       },
       default: "filling",

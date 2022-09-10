@@ -5,10 +5,10 @@ export interface IProduct {
   inStock: boolean;
   price: number;
   type: IType;
-  fillingType: IFillingType;
+  fillingType?: IFillingType;
   createdAt?: string;
   updatedAt?: string;
 }
 
-type IType = "envelope" | "filling" | "sauce";
+type IType = "envelope" | "filling" | "sauce" | "other";
 type IFillingType = "protein" | "vegetable";

@@ -39,6 +39,7 @@ const getPromotions = async (
   await db.connect();
   const promotions = await Promotion.find(/* condition */)
     .select("-createdAt -updatedAt")
+    .populate("category")
     .lean();
   console.log(promotions);
   await db.disconnect();

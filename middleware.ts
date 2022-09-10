@@ -35,7 +35,6 @@ export async function middleware(req: NextRequest) {
   //     return NextResponse.redirect(new URL("/api/auth/unauthorized", req.url));
   //   }
   // }
-  console.log("voy a continuar");
   return NextResponse.next();
 }
 

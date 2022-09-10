@@ -8,6 +8,7 @@ import {
   IconButton,
   Button,
   Card,
+  Divider,
 } from "@mui/material";
 import type { NextPage } from "next";
 import NextLink from "next/link";
@@ -24,6 +25,8 @@ import { activeScrollDown, desactiveScrollDown } from "../store/Slices/UISlice";
 import { RootState } from "../store";
 import { currency } from "../utils";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { MainShopLayout } from "../components/layouts";
+import { FaCircle } from "react-icons/fa";
 
 const HomePage: NextPage = () => {
   const { data: promotions, isLoading } = useGetAllPromotionsQuery(null);
@@ -80,7 +83,7 @@ const HomePage: NextPage = () => {
   }, [promotions]);
 
   return (
-    <ShopLayout
+    <MainShopLayout
       title="ShopApp - Home"
       pageDescription="Encuentra los mejores productos aqui"
     >
@@ -114,13 +117,15 @@ const HomePage: NextPage = () => {
             display: "inline-block",
             margin: "20px",
             position: "relative",
-            top: -8,
+            top: -15,
+            fontSize: "1.7rem",
+            letterSpacing: 4,
           }}
           offset={-120}
         >
           Handroll
         </Link>
-        {"|"}
+        <FaCircle style={{ width: "10px", position: "relative", top: 18 }} />
         <Link
           activeClass="active"
           to="Promos"
@@ -131,26 +136,32 @@ const HomePage: NextPage = () => {
             display: "inline-block",
             margin: "20px",
             position: "relative",
-            top: -8,
+            top: -15,
+            fontSize: "1.7rem",
+            letterSpacing: 4,
           }}
           offset={-120}
         >
           Promos
         </Link>
+        <FaCircle style={{ width: "10px", position: "relative", top: 18 }} />
+
         <Box
           sx={{
             display: "inline-block",
             margin: "20px",
             position: "relative",
-            top: -8,
+            top: -15,
           }}
           onClick={() => setOpen(true)}
         >
-          <Typography>Arma tu roll</Typography>
+          <Typography sx={{ top: -15, fontSize: "1.7rem", letterSpacing: 4 }}>
+            Arma tu roll
+          </Typography>
         </Box>
       </Tabs>
       {/* carrito para mobiles */}
-      // TODO POR ALGUNA RAZON AL PONER MOBILE NO FUNCIONA PERO SI EN RESONSIVE
+      {/* // TODO POR ALGUNA RAZON AL PONER MOBILE NO FUNCIONA PERO SI EN RESONSIVE */}
       <Box
         sx={{
           display: { xs: "flex", sm: "none" },
@@ -201,7 +212,7 @@ const HomePage: NextPage = () => {
             <PromotionCategory promotions={promotion} />
           ))
         : undefined}
-    </ShopLayout>
+    </MainShopLayout>
   );
 };
 export default HomePage;

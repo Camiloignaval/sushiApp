@@ -13,6 +13,15 @@ const orderSchema = new Schema(
         price: { type: Number, required: true },
       },
     ],
+    orderCustomRolls: [
+      {
+        name: { type: String, required: true },
+        quantity: { type: Number, required: true },
+        image: { type: String, required: true },
+        price: { type: Number, required: true },
+        ingredients: { type: Array, required: true },
+      },
+    ],
     orderExtraItems: [
       {
         _id: { type: Schema.Types.ObjectId, ref: "Product", required: true },

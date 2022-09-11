@@ -15,6 +15,17 @@ interface SeedUser {
   role: "admin" | "client" | "delivery";
 }
 
+interface SeedCoupon {
+  name: string;
+  code: string;
+  expire: boolean;
+  expireIn?: string;
+  qtyAvailable: number;
+  qtyUsed: number;
+  type: string; //  porcentaje o cantidad de $
+  discount: number;
+  maxDiscount?: number;
+}
 interface SeedPromotion {
   promotionItems?: Array<String>;
   price: number;
@@ -42,15 +53,30 @@ interface SeedData {
   users: SeedUser[];
   promotions: SeedPromotion[];
   categories: SeedCategory[];
+  coupons: SeedCoupon[];
 }
 
 export const initialData: SeedData = {
-  categories: [
+  coupons: [
     {
-      name: "Promos",
+      name: "Dia del niño",
+      code: "SEUNNIÑO",
+      expire: false,
+      qtyAvailable: 5,
+      qtyUsed: 0,
+      type: "percentage", //  porcentaje o cantidad de $
+      discount: 10,
+      maxDiscount: 10000,
     },
     {
-      name: "HandRolls",
+      name: "Inauguracion",
+      code: "PANKO",
+      expire: true,
+      expireIn: "2022-10-10T21:37:34.828+00:00",
+      qtyAvailable: 10,
+      qtyUsed: 0,
+      type: "money", //  porcentaje o cantidad de $
+      discount: 5000,
     },
   ],
   products: [
@@ -187,6 +213,14 @@ export const initialData: SeedData = {
         "https://res.cloudinary.com/dc6vako2z/image/upload/v1662794253/SushiApp/wasabi-sauce-bowl-isolated-white-background-clipping-path-wasabi-sauce-isolated-white-background-108263059_knpsz1.jpg",
       price: 500,
       type: "other",
+    },
+  ],
+  categories: [
+    {
+      name: "Promos",
+    },
+    {
+      name: "HandRolls",
     },
   ],
   users: [

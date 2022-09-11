@@ -1,17 +1,21 @@
 import Cookie from "js-cookie";
 import { useSession } from "next-auth/react";
 import React, { FC, useEffect, useState } from "react";
+import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { IUser } from "../../interfaces";
 import { RootState } from "../../store";
 import { useCheckTokenQuery } from "../../store/RTKQuery/authApi";
 import { LogIn } from "../../store/Slices/AuthSlice";
 import {
+  addCoupon,
   addOrUpdateCart,
   addOrUpdateExtraProducts,
+  removeCoupon,
   updateAdress,
   updateSummary,
 } from "../../store/Slices/CartSlice";
+import { currency } from "../../utils";
 
 interface Props {
   children: React.ReactNode;
@@ -22,7 +26,9 @@ interface Props {
 export const PersonalProvider: FC<Props> = ({ children }) => {
   const [firstRender, setFirstRender] = useState(true);
   const dispatch = useDispatch();
-  const { cart, extraProduct } = useSelector((state: RootState) => state.cart);
+  const { cart, extraProduct, coupon, subTotal } = useSelector(
+    (state: RootState) => state.cart
+  );
   const { data, status } = useSession();
 
   // atento al carrito
@@ -50,16 +56,45 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       console.log(error);
     }
   }, [dispatch]);
+  useEffect(() => {
+    try {
+      setFirstRender(false);
+      const couponSaved = localStorage.getItem("coupon")
+        ? JSON.parse(localStorage.getItem("coupon")!)
+        : [];
+      dispatch(addCoupon(couponSaved));
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch]);
 
   useEffect(() => {
     if (firstRender) return;
     localStorage.setItem("cart", JSON.stringify(cart));
   }, [cart, firstRender]);
+  useEffect(() => {
+    if (firstRender) return;
+    localStorage.setItem("coupon", JSON.stringify(coupon));
+  }, [coupon, firstRender]);
 
   useEffect(() => {
     if (firstRender) return;
     localStorage.setItem("extracart", JSON.stringify(extraProduct));
   }, [extraProduct, firstRender]);
+
+  // atento si baja el precio del cupon con compra minima
+  useEffect(() => {
+    if (coupon && coupon?.minPurchase) {
+      if (subTotal < coupon?.minPurchase) {
+        toast(
+          `Cupón ha sido removido, ya que su compra es inferior a ${currency.format(
+            coupon.minPurchase
+          )}`
+        );
+        dispatch(removeCoupon());
+      }
+    }
+  }, [subTotal]);
 
   // calculo de precios
   useEffect(() => {
@@ -71,16 +106,29 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     const subTotal =
       cart.reduce((acc, curr) => acc + +curr.price * +curr.quantity, 0) +
       priceOfExtras;
+
+    let discount = 0;
+    // cupon
+    if (coupon) {
+      if (coupon.type === "money") {
+        discount = coupon.discount;
+      }
+      if (coupon.type === "percentage") {
+        discount = subTotal * (coupon.discount / 100);
+      }
+    }
+
     // const tax =
     //   (subTotal * Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)) / 100;
-    const total = subTotal;
+    const total = subTotal - discount;
     const ordenSummary = {
       numberOfItems,
       subTotal,
       total,
+      discount,
     };
     dispatch(updateSummary(ordenSummary));
-  }, [cart, extraProduct, dispatch]);
+  }, [cart, extraProduct, dispatch, coupon]);
 
   // -----------------
 

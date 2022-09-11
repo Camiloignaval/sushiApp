@@ -20,9 +20,11 @@ export const Extras: FC<Props> = ({ productData, editable = false }) => {
       component="fieldset"
       variant="standard"
     >
-      <FormLabel component="legend" sx={{ mb: 3 }}>
-        {editable ? "Agrega salsas extra" : "Salsas extra"}
-      </FormLabel>
+      {extraProduct.find((e) => e.type === "sauce" || editable) && (
+        <FormLabel component="legend" sx={{ mb: 3 }}>
+          {editable ? "Agrega salsas extra" : "Salsas extra"}
+        </FormLabel>
+      )}
       {/* salsas extras */}
       <ExtraProducts
         editable={editable}
@@ -35,9 +37,11 @@ export const Extras: FC<Props> = ({ productData, editable = false }) => {
         }
       />
       {/* otros extras */}
-      <FormLabel component="legend" sx={{ marginY: 3 }}>
-        {editable ? "Agrega otros productos" : "Otros productos"}
-      </FormLabel>
+      {extraProduct.find((e) => e.type === "other" || editable) && (
+        <FormLabel component="legend" sx={{ marginY: 3 }}>
+          {editable ? "Agrega otros productos" : "Otros productos"}
+        </FormLabel>
+      )}
       <ExtraProducts
         editable={editable}
         products={

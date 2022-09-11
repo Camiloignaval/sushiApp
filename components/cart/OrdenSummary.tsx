@@ -1,4 +1,4 @@
-import { Search } from "@mui/icons-material";
+import { RemoveCircleOutline, Search } from "@mui/icons-material";
 import {
   Button,
   Divider,
@@ -9,11 +9,14 @@ import {
   IconButton,
 } from "@mui/material";
 import { FC, useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { currency } from "../../utils";
 import { format } from "../../utils/currency";
 import { HiOutlineTicket } from "react-icons/hi";
+import { useValidateCouponMutation } from "../../store/RTKQuery/couponApi";
+import { addCoupon, removeCoupon } from "../../store/Slices/CartSlice";
+import { useRouter } from "next/router";
 
 interface Props {
   editable?: boolean;
@@ -27,12 +30,28 @@ interface Props {
 
 export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
   const { cart } = useSelector((state: RootState) => state);
+  const dispatch = useDispatch();
+  const { asPath } = useRouter();
+  const [validateCoupon] = useValidateCouponMutation();
+  const [inputCoupon, setInputCoupon] = useState("");
   const [infoToShow, setinfoToShow] = useState({
     numberOfItems: 0,
     subTotal: 0,
     tax: 0,
     total: 0,
   });
+
+  const onQueryCoupon = async () => {
+    try {
+      await validateCoupon({
+        code: inputCoupon,
+        amount: cart.subTotal,
+      }).unwrap();
+    } catch (error) {
+      console.log({ error });
+    }
+    setInputCoupon("");
+  };
 
   useEffect(() => {
     if (infoPrices) {
@@ -88,43 +107,82 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
       </Grid> */}
 
       {/* descuentos */}
-      <Grid item xs={6} mt={2}>
-        <Typography variant="subtitle1">Cupón descuento</Typography>
-      </Grid>
+      {(cart?.coupon || asPath === "/cart") && (
+        <Grid item xs={6} mt={2}>
+          <Typography variant="subtitle1">Cupón descuento</Typography>
+        </Grid>
+      )}
       {editable ? (
-        <Grid item xs={6} mt={2} display="flex" justifyContent="end">
-          <Grid container>
-            {/* <Typography>{currency.format(infoToShow.tax)}</Typography> */}
-            <Grid item xs display="flex" justifyContent="end">
-              <TextField
-                label="Ingrese"
-                variant="standard"
-                sx={{
-                  position: "relative",
-                  top: -20,
-                  width: "80px",
-                }}
-              />
-            </Grid>{" "}
-            <Grid item xs={1}>
-              <IconButton size="small">
-                <HiOutlineTicket fontSize="inherit" />
-              </IconButton>
+        !cart?.coupon ? (
+          <Grid item xs={6} mt={2} display="flex" justifyContent="end">
+            <Grid container>
+              {/* <Typography>{currency.format(infoToShow.tax)}</Typography> */}
+              <Grid item xs display="flex" justifyContent="end">
+                <TextField
+                  label="Ingrese"
+                  variant="standard"
+                  onChange={(e) => setInputCoupon(e.target.value.toUpperCase())}
+                  value={inputCoupon}
+                  sx={{
+                    position: "relative",
+                    top: -20,
+                    width: "80px",
+                  }}
+                />
+              </Grid>{" "}
+              <Grid item xs={1}>
+                <IconButton
+                  disabled={inputCoupon === ""}
+                  onClick={onQueryCoupon}
+                  size="small"
+                >
+                  <HiOutlineTicket fontSize="inherit" />
+                </IconButton>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        ) : (
+          // si ya ingreso cupon
+          <Grid item xs={6} mt={2} display="flex" justifyContent="end">
+            <Grid container>
+              {/* <Typography>{currency.format(infoToShow.tax)}</Typography> */}
+              <Grid item xs display="flex" justifyContent="end">
+                <Typography>{cart.coupon.code}</Typography>
+              </Grid>{" "}
+              <Grid item xs={1}>
+                <IconButton
+                  onClick={() => dispatch(removeCoupon())}
+                  size="small"
+                  sx={{ position: "relative", top: -3 }}
+                >
+                  <RemoveCircleOutline fontSize="inherit" />
+                </IconButton>
+              </Grid>
+            </Grid>
+          </Grid>
+        )
       ) : (
-        <Grid item xs={6} mt={2} display="flex" justifyContent="end">
-          <Typography>EXAMPLE</Typography>
-        </Grid>
+        (cart?.coupon || asPath === "/cart") && (
+          <Grid item xs={6} mt={2} display="flex" justifyContent="end">
+            <Typography>{cart?.coupon?.code}</Typography>
+          </Grid>
+        )
       )}
 
       {/* descuentos */}
       <Grid item xs={6}>
         <Typography>Descuentos</Typography>
+        {cart?.coupon && (
+          <Typography variant="caption">
+            Cupon {cart.coupon?.name}{" "}
+            {cart.coupon?.type === "percentage"
+              ? `${cart.coupon.discount}% dscto.`
+              : `${currency.format(cart.coupon!.discount)} dscto.`}
+          </Typography>
+        )}
       </Grid>
       <Grid item xs={6} display="flex" justifyContent="end">
-        <Typography>{currency.format(0)}</Typography>
+        <Typography>{currency.format(cart.discount)}</Typography>
       </Grid>
       <Divider />
       {/* total */}

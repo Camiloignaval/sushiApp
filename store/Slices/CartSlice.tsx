@@ -1,14 +1,16 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import { ICartProduct } from "../../interfaces/cart";
-import { IProduct, IShippingAdress } from "../../interfaces";
+import { ICoupon, IProduct, IShippingAdress } from "../../interfaces";
 
 export interface CartState {
   isLoaded: boolean;
   cart: ICartProduct[];
   extraProduct: ICartProduct[];
   numberOfItems: number;
+  coupon: ICoupon | undefined;
   subTotal: number;
+  discount: number;
   tax: number;
   total: number;
   shippingAddress?: IShippingAdress;
@@ -19,6 +21,8 @@ const initialState: CartState = {
   cart: [],
   extraProduct: [],
   numberOfItems: 0,
+  coupon: undefined,
+  discount: 0,
   subTotal: 0,
   tax: 0,
   total: 0,
@@ -55,14 +59,22 @@ export const CartSlice = createSlice({
         numberOfItems: number;
         subTotal: number;
         total: number;
+        discount: number;
       }>
     ) => {
       (state.numberOfItems = action.payload.numberOfItems),
         (state.subTotal = action.payload.subTotal),
+        (state.discount = action.payload.discount),
         (state.total = action.payload.total);
     },
     updateAdress: (state, action: PayloadAction<IShippingAdress>) => {
       state.shippingAddress = action.payload;
+    },
+    addCoupon: (state, action: PayloadAction<ICoupon>) => {
+      state.coupon = action.payload;
+    },
+    removeCoupon: (state) => {
+      state.coupon = undefined;
     },
     // cleanCart: (state) => {
     //   state.cart = [];
@@ -83,6 +95,8 @@ export const {
   updateSummary,
   updateAdress,
   // cleanCart,
+  addCoupon,
+  removeCoupon,
 } = CartSlice.actions;
 
 export default CartSlice.reducer;

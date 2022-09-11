@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db, seedDataBase } from "../../database";
 import { Product, User } from "../../models";
 import Category from "../../models/Category";
+import Coupon from "../../models/Coupon";
 import Promotion from "../../models/Promotion";
 
 type Data = {
@@ -17,10 +18,12 @@ export default async function handler(
   }
 
   await db.connect();
+  await Coupon.deleteMany();
   await Product.deleteMany();
   await User.deleteMany();
   await Promotion.deleteMany();
   await Category.deleteMany();
+  await Coupon.insertMany(seedDataBase.initialData.coupons);
   await Category.insertMany(seedDataBase.initialData.categories);
   await Product.insertMany(seedDataBase.initialData.products);
   await User.insertMany(seedDataBase.initialData.users);

@@ -30,7 +30,7 @@ export const MainShopLayout: FC<Props> = ({
         {imageFullUrl && <meta name="og:image" content={imageFullUrl} />}
       </Head>
       <nav>
-        <Navbar />
+        <Navbar showPrice />
       </nav>
       <SideMenu />
 

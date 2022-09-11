@@ -122,6 +122,9 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
                   label="Ingrese"
                   variant="standard"
                   onChange={(e) => setInputCoupon(e.target.value.toUpperCase())}
+                  onKeyDown={({ code }) =>
+                    code === "Enter" ? onQueryCoupon() : undefined
+                  }
                   value={inputCoupon}
                   sx={{
                     position: "relative",

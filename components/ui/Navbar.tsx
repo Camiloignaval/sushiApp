@@ -10,7 +10,7 @@ import {
   Toolbar,
   Typography,
 } from "@mui/material";
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import NextLink from "next/link";
 import { BiSearchAlt } from "react-icons/bi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
@@ -21,7 +21,11 @@ import { IoMdClose } from "react-icons/io";
 import { RootState } from "../../store";
 import { currency } from "../../utils";
 
-export const Navbar = () => {
+interface Props {
+  showPrice?: boolean;
+}
+
+export const Navbar: FC<Props> = ({ showPrice = false }) => {
   const { asPath, push } = useRouter();
   const dispatch = useDispatch();
   // const pathName = useMemo(() => router.pathname, [router]);
@@ -95,7 +99,7 @@ export const Navbar = () => {
             <BiSearchAlt />
           </IconButton>
         )}
-        {!asPath.startsWith("/cart") && (
+        {showPrice && (
           <>
             <Box sx={{ display: { xs: "none", sm: "flex" } }}>
               <Typography

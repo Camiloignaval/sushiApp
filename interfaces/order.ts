@@ -1,24 +1,25 @@
+import { ICartProduct } from "./cart";
+import { ICoupon } from "./cupon";
 import { IShippingAdress } from "./shippingAddress";
 import { IUser } from "./user";
 
 export interface IOrder {
   _id?: string;
   user?: IUser | string;
-  orderItems: IOrderItem[];
-  orderExtraItems?: IOrderExtraItem[];
-  orderCustomRolls?: IOrderCustomRoll[];
+  orderItems: ICartProduct[];
+  orderExtraItems?: ICartProduct[];
   shippingAddress: IShippingAdress;
   numberOfItems: number;
   status: IOrderStatus;
-  promocionalCode?: string;
   subTotal: number;
   total: number;
-  note: string;
+  note?: string;
   isPaid: boolean;
   paidAt?: string;
   deliverPrice: number;
   transactionId?: string;
   createdAt?: string;
+  coupon?: ICoupon | string;
 }
 
 export type IOrderStatus =
@@ -26,33 +27,33 @@ export type IOrderStatus =
   | "inprocess"
   | "dispatched"
   | "delivered";
-export interface IOrderItem {
-  _id?: string;
-  name: string;
-  quantity: number;
-  image: string;
-  price: Number;
-}
+// export interface IOrderItem {
+//   _id?: string;
+//   name: string;
+//   quantity: number;
+//   image: string;
+//   price: Number;
+// }
 
-export interface IOrderExtraItem {
-  _id?: string;
-  name: string;
-  quantity: number;
-  image: string;
-  price: Number;
-}
+// export interface IOrderExtraItem {
+//   _id?: string;
+//   name: string;
+//   quantity: number;
+//   image: string;
+//   price: Number;
+// }
 
-export interface IOrderCustomRoll {
-  name: string;
-  quantity: number;
-  image: string;
-  price: number;
-  ingredients: [
-    {
-      image: number;
-      price: number;
-      name: number;
-      type: number;
-    }
-  ];
-}
+// export interface IOrderCustomRoll {
+//   name: string;
+//   quantity: number;
+//   image: string;
+//   price: number;
+//   ingredients: [
+//     {
+//       image: number;
+//       price: number;
+//       name: number;
+//       type: number;
+//     }
+//   ];
+// }

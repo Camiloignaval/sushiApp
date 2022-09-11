@@ -12,7 +12,7 @@ interface IResponse {
 
 // Define a service using a base URL and expected endpoints
 export const promotionApi = createApi({
-  reducerPath: "prpomotionApi",
+  reducerPath: "promotionApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   tagTypes: ["Promotions", "Promotion"],
   endpoints: (builder) => ({

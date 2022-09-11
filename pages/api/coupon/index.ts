@@ -1,3 +1,4 @@
+import { validateCoupon } from "./../../../utils";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db, SHOP_CONSTANT } from "../../../database";
 import { ICoupon, IProduct, IPromotion } from "../../../interfaces";
@@ -19,7 +20,7 @@ export default function handler(
 ) {
   switch (req.method) {
     case "POST":
-      return validateCoupon(req, res);
+      return validCoupon(req, res);
 
     default:
       return res.status(405).json({
@@ -28,45 +29,26 @@ export default function handler(
   }
 }
 
-const validateCoupon = async (
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) => {
+const validCoupon = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { c: code = "", a: amount = 0 } = req.query;
-  console.log({ amount });
-  await db.connect();
-  const cupon = await Coupon.findOne({ code })
-    .select("-__v -createdAt -updatedAt")
-    .lean();
-  await db.disconnect();
 
-  if (!cupon) {
-    return res.status(400).json({ message: "Cupón no valido" });
-  }
-  // si tiene fecha de expiracion
-  if (cupon.expire) {
-    const fechaExp = new Date(cupon.expireIn!);
-    const isCaducated = isAfter(new Date(), fechaExp);
-    if (isCaducated) {
-      return res.status(400).json({ message: "Cupón ha expirado" });
+  try {
+    await db.connect();
+    const cupon = await Coupon.findOne({ code })
+      .select("-__v -createdAt -updatedAt")
+      .lean();
+    await db.disconnect();
+
+    if (!cupon) {
+      return res.status(400).json({ message: "Cupón no valido" });
+    }
+    validateCoupon(cupon, +amount);
+    return res.status(200).json({ cupon });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
     }
   }
-  //   validar que no se haya alcanzado el limite de cupones usados
-  if (cupon.qtyUsed >= cupon.qtyAvailable) {
-    return res.status(400).json({ message: "Cupón ha superado el limite" });
-  }
-
-  //   si hay monto minimo
-  if (cupon.minPurchase) {
-    if (amount < cupon.minPurchase) {
-      return res
-        .status(400)
-        .json({
-          message: `Monto minimo para utilizar cupon es ${currency.format(
-            cupon.minPurchase
-          )}`,
-        });
-    }
-  }
-  return res.status(200).json({ cupon });
 };

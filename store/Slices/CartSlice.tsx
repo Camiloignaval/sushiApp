@@ -9,6 +9,7 @@ export interface CartState {
   extraProduct: ICartProduct[];
   numberOfItems: number;
   coupon: ICoupon | undefined;
+  note: string | undefined;
   subTotal: number;
   discount: number;
   tax: number;
@@ -19,6 +20,7 @@ export interface CartState {
 const initialState: CartState = {
   isLoaded: false,
   cart: [],
+  note: undefined,
   extraProduct: [],
   numberOfItems: 0,
   coupon: undefined,
@@ -76,13 +78,19 @@ export const CartSlice = createSlice({
     removeCoupon: (state) => {
       state.coupon = undefined;
     },
-    // cleanCart: (state) => {
-    //   state.cart = [];
-    //   state.numberOfItems = 0;
-    //   state.subTotal = 0;
-    //   state.tax = 0;
-    //   state.total = 0;
-    // },
+    cleanCart: (state) => {
+      state.isLoaded = false;
+      state.cart = [];
+      state.note = undefined;
+      state.extraProduct = [];
+      state.numberOfItems = 0;
+      state.coupon = undefined;
+      state.discount = 0;
+      state.subTotal = 0;
+      state.tax = 0;
+      state.total = 0;
+      state.shippingAddress = undefined;
+    },
   },
 });
 
@@ -94,7 +102,7 @@ export const {
   removeFromCart,
   updateSummary,
   updateAdress,
-  // cleanCart,
+  cleanCart,
   addCoupon,
   removeCoupon,
 } = CartSlice.actions;

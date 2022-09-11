@@ -28,8 +28,16 @@ import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 const SummaryPage = () => {
   const router = useRouter();
   const dispatch = useDispatch();
-  const { shippingAddress, numberOfItems, cart, subTotal, tax, total } =
-    useSelector((state: RootState) => state.cart);
+  const {
+    shippingAddress,
+    numberOfItems,
+    cart,
+    subTotal,
+    total,
+    extraProduct,
+    note,
+    coupon,
+  } = useSelector((state: RootState) => state.cart);
   const [createNewOrder, createNewOrderState] = useCreateOrderMutation();
   const { data: productData, isLoading } = useGetProductsQuery(null);
 
@@ -46,20 +54,33 @@ const SummaryPage = () => {
   const createOrder = async () => {
     if (!shippingAddress) {
       toast.error("No hay dirección de entrega");
+      return;
     }
     const orderToSend: IOrder = {
-      orderItems: cart.map((c) => ({ ...c, size: c.size! })),
       shippingAddress,
       numberOfItems,
       subTotal,
-      tax,
       total,
       isPaid: false,
+      orderItems: cart,
+      orderExtraItems:
+        extraProduct.length > 0
+          ? extraProduct.filter((e) => e.quantity !== 0)
+          : undefined,
+      status: "ingested",
+      note: !["", undefined].includes(note) ? note : undefined,
+      deliverPrice: 0,
+      coupon: coupon,
     };
-    const resp: any = await createNewOrder(orderToSend);
-    if (!resp?.error) {
-      router.replace(`/orders/${resp?.data?._id}`);
+
+    try {
+      await createNewOrder(orderToSend).unwrap();
+      // localStorage.removeItem()
       dispatch(cleanCart());
+      // TODO hacer lo que se necesite como enviar whatsap o en backend
+      router.replace("/");
+    } catch (error) {
+      console.log({ error });
     }
   };
   if (isLoading || !productData) {
@@ -116,7 +137,7 @@ const SummaryPage = () => {
                   className="circular-btn"
                   fullWidth
                 >
-                  Confirmar orden{" "}
+                  Confirmar orden
                 </Button>
               </Box>
             </CardContent>

@@ -47,8 +47,8 @@ const CardInfo: FC<Props> = ({ promotion }) => {
         <Grid item xs={12} marginBottom={5}>
           <Typography variant="body2" color="text.secondary">
             <ul>
-              {promotion?.promotionItems?.map((item) => (
-                <li>{item}</li>
+              {promotion?.promotionItems?.map((item, i) => (
+                <li key={i}>{item}</li>
               ))}
             </ul>
           </Typography>

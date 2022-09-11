@@ -35,7 +35,7 @@ const getPromotions = async (
   // if (gender !== "all" && SHOP_CONSTANT.validGenders.includes(`${gender}`)) {
   //   condition = { gender };
   // }
-
+  console.log({ mesageee: "llegue aquiii" });
   await db.connect();
   const promotions = await Promotion.find(/* condition */)
     .select("-createdAt -updatedAt")

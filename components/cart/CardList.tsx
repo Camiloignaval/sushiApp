@@ -105,7 +105,7 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
                       </Typography>
                       <Grid container style={{ margin: "0", display: "flex" }}>
                         {product.envelopes!.map((env, i) => (
-                          <Grid item style={{ margin: "0 30px 0 0" }}>
+                          <Grid key={i} item style={{ margin: "0 30px 0 0" }}>
                             <Typography variant="caption">
                               <VscDebugBreakpointLog /> {env.name}
                             </Typography>

@@ -47,7 +47,7 @@ export const ordersApi = createApi({
       }),
       onQueryStarted(_, { queryFulfilled, dispatch }) {
         toast.promise(queryFulfilled, {
-          loading: "Registrando usuario...",
+          loading: "Creando orden...",
           success: ({ data }) => {
             // limpiar el carrito y sacarlo de la pagina
             // const router = useRouter();

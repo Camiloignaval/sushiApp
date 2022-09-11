@@ -25,6 +25,7 @@ interface SeedCoupon {
   type: string; //  porcentaje o cantidad de $
   discount: number;
   maxDiscount?: number;
+  minPurchase?: number;
 }
 interface SeedPromotion {
   promotionItems?: Array<String>;
@@ -77,6 +78,7 @@ export const initialData: SeedData = {
       qtyUsed: 0,
       type: "money", //  porcentaje o cantidad de $
       discount: 5000,
+      minPurchase: 30000,
     },
   ],
   products: [

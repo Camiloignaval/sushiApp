@@ -69,8 +69,8 @@ export const CustomRollCategoryOption: FC<Props> = ({
           width: { xs: "100vw", sm: "70vw", md: "50vw", lg: "34vw" },
         }}
       >
-        {listProducts?.map((product) => (
-          <Grid item xs={6} sm={4} lg={3} sx={{ position: "relative" }}>
+        {listProducts?.map((product, i) => (
+          <Grid key={i} item xs={6} sm={4} lg={3} sx={{ position: "relative" }}>
             <FormControlLabel
               control={
                 <Checkbox

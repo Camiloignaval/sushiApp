@@ -7,27 +7,11 @@ const orderSchema = new Schema(
     user: { type: Schema.Types.ObjectId, ref: "User" },
     orderItems: [
       {
-        _id: { type: Schema.Types.ObjectId, ref: "Promotion", required: true },
+        _id: { type: String, required: true },
         name: { type: String, required: true },
         quantity: { type: Number, required: true },
         image: { type: String, required: true },
         price: { type: Number, required: true },
-      },
-    ],
-    orderCustomRolls: [
-      {
-        name: { type: String, required: true },
-        quantity: { type: Number, required: true },
-        image: { type: String, required: true },
-        price: { type: Number, required: true },
-        ingredients: [
-          {
-            image: { type: String },
-            price: { type: Number, required: true, default: 0 },
-            name: { type: String, required: true, default: "" },
-            type: { type: String, required: true, default: "" },
-          },
-        ],
       },
     ],
     orderExtraItems: [
@@ -46,6 +30,7 @@ const orderSchema = new Schema(
       city: { type: String, required: true, default: "Santiago" },
       phone: { type: String, required: true },
     },
+    coupon: { type: Schema.Types.ObjectId, ref: "Coupon" },
     numberOfItems: { type: Number, required: true },
     subTotal: { type: Number, required: true },
     total: { type: Number, required: true },

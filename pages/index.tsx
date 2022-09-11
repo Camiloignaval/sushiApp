@@ -72,7 +72,7 @@ const HomePage: NextPage = () => {
       let promosSeparate = {};
 
       promotions?.forEach((promo: IPromotion) => {
-        const nameCategory = promo.category.name.toString();
+        const nameCategory = promo?.category?.name.toString();
         promosSeparate = {
           ...promosSeparate,
           [nameCategory]: promosSeparate[nameCategory]
@@ -107,8 +107,8 @@ const HomePage: NextPage = () => {
         allowScrollButtonsMobile
         aria-label="scrollable force tabs example"
       >
-        {categoriesBBDD.map((category) => (
-          <>
+        {categoriesBBDD.map((category, i) => (
+          <Box key={i}>
             <Link
               activeClass="active"
               to={category}
@@ -131,7 +131,7 @@ const HomePage: NextPage = () => {
             <FaCircle
               style={{ width: "10px", position: "relative", top: 18 }}
             />
-          </>
+          </Box>
         ))}
 
         {/* arma tu roll button */}

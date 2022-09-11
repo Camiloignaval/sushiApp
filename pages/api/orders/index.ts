@@ -1,8 +1,11 @@
+import { validateCoupon } from "./../../../utils/validateCoupon";
+import { ro } from "date-fns/locale";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { db } from "../../../database";
 import { IOrder, IProduct } from "../../../interfaces";
-import { Order, Product } from "../../../models";
+import { Order, Product, Promotion } from "../../../models";
+import Coupon from "../../../models/Coupon";
 
 type Data =
   | {
@@ -28,48 +31,116 @@ const createNewOrder = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
-  const { orderItems, total } = req.body as IOrder;
+  const body = req.body as IOrder;
 
-  //Verificar que tengamos un usuario
-
-  const session: any = await getSession({ req });
-  if (!session) {
-    return res
-      .status(401)
-      .json({ message: "Debe estar autenticado para realizar una orden" });
-  }
-
-  //   crear un arreglo con los productos que la persona quiere
-  const productsIds = orderItems.map((p) => p._id);
-  db.connect();
-  const dbProduct = await Product.find({ _id: { $in: productsIds } });
   try {
-    const subTotal = orderItems.reduce((acc, curr) => {
-      const currentPrice = dbProduct.find(
-        (prod) => prod.id === curr._id
-      )?.price;
-      if (!currentPrice) {
-        throw new Error("Verifique carrito, producto no existe");
-      }
-      return acc + currentPrice * curr.quantity;
-    }, 0);
-    const tax =
-      (subTotal * Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)) / 100;
-    const backendTotal = subTotal + tax;
+    db.connect();
+    // calcular precio de customs roll
+    let priceFinalOfRollsPersonalized = 0;
 
-    if (backendTotal !== total) {
-      throw new Error("El total no cuadra con monto enviado");
+    const customRolls = body.orderItems.filter(
+      (item) => item.name === "Roll personalizado"
+    );
+    if (customRolls.length > 0) {
+      await Promise.all(
+        customRolls.map(async (p) => {
+          const idsToSearch = [
+            ...(p.envelopes ?? []),
+            ...(p?.extraProduct ?? []),
+          ].map((e) => e._id);
+          const prod = await Product.find({ _id: { $in: idsToSearch } }).select(
+            "price"
+          );
+          if (prod) {
+            priceFinalOfRollsPersonalized +=
+              prod.reduce((acc, curr) => acc + curr.price, 0) * +p.quantity;
+          }
+        })
+      );
+    }
+    // calculo de promociones
+    let priceTotalPromos = 0;
+    const promos = body.orderItems.filter(
+      (item) => item.name !== "Roll personalizado"
+    );
+
+    if (promos.length > 0) {
+      await Promise.all(
+        promos.map(async (promo) => {
+          const promoFound = await Promotion.findById(promo._id).select(
+            "price"
+          );
+          if (promoFound) {
+            priceTotalPromos += +promoFound.price * +promo.quantity;
+          }
+        })
+      );
+    }
+    // calculo extras
+    let priceExtras = 0;
+
+    if (body?.orderExtraItems && body?.orderExtraItems.length > 0) {
+      await Promise.all(
+        body?.orderExtraItems.map(async (prod) => {
+          const prodFound = await Product.findById(prod._id).select("price");
+          if (prodFound) {
+            priceExtras += +prodFound.price * +prod.quantity;
+          }
+        })
+      );
     }
 
-    // si todo sale bien crear orden
-    const userId = session.user._id;
-    const newOrder = new Order({ ...req.body, isPaid: false, user: userId });
-    await newOrder.save();
-    newOrder.total = Number(newOrder.total.toFixed(2));
-    await db.disconnect();
+    const subTotal =
+      priceFinalOfRollsPersonalized + priceTotalPromos + priceExtras;
 
-    return res.status(201).json(newOrder);
+    // TODO falta sumar despacho
+    if (subTotal !== body.subTotal) {
+      throw new Error("Ha ocurrido un error, valores han sido alterados");
+    }
+
+    // validar cupon
+    let discount = 0;
+    let cuponType = "";
+    if (body?.coupon) {
+      const cupon = await Coupon.findById(body?.coupon._id)
+        .select("-__v -createdAt -updatedAt")
+        .lean();
+      if (!cupon) {
+        throw new Error("Cupón no existe");
+      }
+      validateCoupon(cupon, subTotal);
+      discount = cupon.discount;
+      cuponType = cupon.type;
+    }
+    let total = subTotal;
+    if (discount != 0) {
+      if (cuponType === "percentage") {
+        total = total - total * (discount / 100);
+      } else {
+        total -= discount;
+      }
+    }
+    if (total !== body.total) {
+      throw new Error("Ha ocurrido un error, valores han sido alterados");
+    }
+
+    // si todo ha salido bien
+    if (body.coupon) {
+      await Coupon.findByIdAndUpdate(body.coupon!._id, {
+        $inc: { qtyUsed: 1 },
+      });
+    }
+    const orderToCreate: IOrder = { ...body };
+    if (body?.coupon) {
+      orderToCreate.coupon = body.coupon!._id.toString();
+    }
+
+    const newOrder = new Order(orderToCreate);
+    await newOrder.save();
+
+    return res.status(201).json({ message: "creada" });
   } catch (error) {
+    console.log(error);
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

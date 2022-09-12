@@ -18,8 +18,8 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
     case "GET":
       return getProducts(req, res);
 
-    // case "PUT":
-    //   return updateProduct(req, res);
+    case "PUT":
+      return updateProduct(req, res);
     // case "POST":
     //   return createProduct(req, res);
 
@@ -37,6 +37,27 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   // TODO  must update images
   return res.status(200).json(products);
+};
+const updateProduct = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const body = req.body;
+  try {
+    await db.connect();
+
+    console.log(body.id, { [body.category]: body.value });
+    await Product.findByIdAndUpdate(body.id, { [body.category]: body.value });
+    await db.disconnect();
+
+    return res.status(200).json({ message: "Actualizado con éxito" });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
 };
 
 // const updateProduct = async (

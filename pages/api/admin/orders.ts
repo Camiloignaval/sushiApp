@@ -27,10 +27,7 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   await db.connect();
-  const orders = await Order.find()
-    .sort({ createdAt: "desc" })
-    .populate("user", "name email")
-    .lean();
+  const orders = await Order.find().sort({ createdAt: "desc" }).lean();
   await db.disconnect();
   return res.status(200).json(orders);
 };

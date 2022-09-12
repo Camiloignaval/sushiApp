@@ -75,7 +75,6 @@ const SummaryPage = () => {
 
     try {
       await createNewOrder(orderToSend).unwrap();
-      // localStorage.removeItem()
       dispatch(cleanCart());
       // TODO hacer lo que se necesite como enviar whatsap o en backend
       router.replace("/");

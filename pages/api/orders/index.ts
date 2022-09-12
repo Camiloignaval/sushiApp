@@ -6,6 +6,9 @@ import { db } from "../../../database";
 import { IOrder, IProduct } from "../../../interfaces";
 import { Order, Product, Promotion } from "../../../models";
 import Coupon from "../../../models/Coupon";
+import { Client } from "whatsapp-web.js";
+import { wspMessage } from "../../../utils/whatsapp";
+const client = new Client();
 
 type Data =
   | {
@@ -101,6 +104,7 @@ const createNewOrder = async (
     // validar cupon
     let discount = 0;
     let cuponType = "";
+    let maxDiscount = undefined;
     if (body?.coupon) {
       const cupon = await Coupon.findById(body?.coupon._id)
         .select("-__v -createdAt -updatedAt")
@@ -111,11 +115,19 @@ const createNewOrder = async (
       validateCoupon(cupon, subTotal);
       discount = cupon.discount;
       cuponType = cupon.type;
+      maxDiscount = cupon?.maxDiscount;
     }
     let total = subTotal;
     if (discount != 0) {
       if (cuponType === "percentage") {
-        total = total - total * (discount / 100);
+        const discountAmount = total * (discount / 100);
+        if (maxDiscount) {
+          if (discountAmount > maxDiscount) {
+            total = total - maxDiscount;
+          }
+        } else {
+          total = total - total * (discount / 100);
+        }
       } else {
         total -= discount;
       }
@@ -125,6 +137,7 @@ const createNewOrder = async (
     }
 
     // si todo ha salido bien
+
     if (body.coupon) {
       await Coupon.findByIdAndUpdate(body.coupon!._id, {
         $inc: { qtyUsed: 1 },
@@ -134,6 +147,11 @@ const createNewOrder = async (
     if (body?.coupon) {
       orderToCreate.coupon = body.coupon!._id.toString();
     }
+
+    console.log({ message: "llamar a api wsp" });
+    // prueba whatsap
+    // TODO ENVIAR WHATSAPP CON DETALLE ORDEN Y LINK DE SEGUIMIENTO
+    // wspMessage();
 
     const newOrder = new Order(orderToCreate);
     await newOrder.save();

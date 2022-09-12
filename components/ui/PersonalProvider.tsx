@@ -110,11 +110,17 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     let discount = 0;
     // cupon
     if (coupon) {
+      console.log({ coupon });
       if (coupon.type === "money") {
         discount = coupon.discount;
       }
       if (coupon.type === "percentage") {
         discount = subTotal * (coupon.discount / 100);
+        if (coupon.maxDiscount) {
+          if (discount > coupon.maxDiscount) {
+            discount = coupon.maxDiscount;
+          }
+        }
       }
     }
 

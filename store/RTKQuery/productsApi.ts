@@ -27,6 +27,24 @@ export const productsApi = createApi({
         });
       },
     }),
+    updateProductByProperty: builder.mutation<
+      IProduct[],
+      { id: string; category: string; value: string }
+    >({
+      query: (body) => ({
+        url: `/admin/products`,
+        method: "put",
+        body: body,
+      }),
+      invalidatesTags: ["Products"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Actualizando producto...",
+          success: `Producto actualizado con éxito`,
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
     // updateProduct: builder.mutation<IProduct[], any>({
     //   query: (body) => ({
     //     url: `/admin/products`,
@@ -49,4 +67,5 @@ export const productsApi = createApi({
   }),
 });
 
-export const { useGetProductsQuery } = productsApi;
+export const { useGetProductsQuery, useUpdateProductByPropertyMutation } =
+  productsApi;

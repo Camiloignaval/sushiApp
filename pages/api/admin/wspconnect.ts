@@ -16,6 +16,7 @@ const client = new Client({
 
 type Data = {
   message: string;
+  qr?: any;
 };
 
 export default function handler(
@@ -36,8 +37,11 @@ export default function handler(
 const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     client.initialize();
+    let qr;
     client.on("qr", (qr) => {
-      qrcode.generate(qr, { small: true });
+      qrcode.generate(qr, { small: true }, (qrcode) => {
+        qr = qrcode;
+      });
     });
 
     client.on("authenticated", async (session) => {
@@ -48,7 +52,7 @@ const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       console.error("AUTHENTICATION FAILURE", msg);
     });
 
-    return res.status(200).json({ message: "Conected" });
+    return res.status(200).json({ message: "Conected", qr });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
@@ -63,7 +67,7 @@ const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 const sendMassage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { number = "569457061950" } = req.body;
   try {
-    // console.log("llegue aqui");
+    console.log("llegue al endpoint");
     // const resp = await client.sendMessage(
     //   `${number.replaceAll("+", "")}@c.us`,
     //   'mensaje'

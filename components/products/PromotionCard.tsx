@@ -39,7 +39,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
     return isHovered && promotion.inStock
       ? promotion.images[1]
       : promotion.images[0];
-  }, [isHovered, promotion.images]);
+  }, [isHovered, promotion.images, promotion.inStock]);
 
   const onDelete = () => {
     Swal.fire({
@@ -65,7 +65,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
   useEffect(() => {
     const promoFindInCart = cart.find((promo) => promo?._id === promotion._id);
     promoFindInCart ? setIsInCart(true) : setIsInCart(false);
-  }, [cart]);
+  }, [cart, promotion._id]);
 
   return (
     <>

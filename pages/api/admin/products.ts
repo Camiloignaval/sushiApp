@@ -1,10 +1,8 @@
-import { isValidObjectId } from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { IProduct } from "../../../interfaces";
-import { Product, User } from "../../../models";
+import { Product } from "../../../models";
 import { v2 as cloudinary } from "cloudinary";
-import { linkConvert } from "../../../utils";
 cloudinary.config(process.env.CLOUDINARY_URL || "");
 
 type Data =
@@ -46,7 +44,6 @@ const updateProduct = async (
   try {
     await db.connect();
 
-    console.log(body.id, { [body.category]: body.value });
     await Product.findByIdAndUpdate(body.id, { [body.category]: body.value });
     await db.disconnect();
 

@@ -41,7 +41,7 @@ const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     });
 
     client.on("authenticated", async (session) => {
-      console.log({ message: "Estoy atenticado ya" });
+      console.log({ message: "Estoy autenticado ya" });
     });
 
     client.on("auth_failure", (msg) => {

@@ -1,12 +1,8 @@
 import { validateCoupon } from "./../../../utils";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db, SHOP_CONSTANT } from "../../../database";
-import { ICoupon, IProduct, IPromotion } from "../../../interfaces";
-import { Product } from "../../../models";
+import { db } from "../../../database";
+import { ICoupon } from "../../../interfaces";
 import Coupon from "../../../models/Coupon";
-import Promotion from "../../../models/Promotion";
-import { currency, linkConvert } from "../../../utils";
-import { compareAsc, format, isAfter } from "date-fns";
 
 type Data =
   | {

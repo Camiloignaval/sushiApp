@@ -1,8 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db, SHOP_CONSTANT } from "../../../database";
+import { db } from "../../../database";
 import { IProduct } from "../../../interfaces";
 import { Product } from "../../../models";
-import { linkConvert } from "../../../utils";
 
 type Data =
   | {

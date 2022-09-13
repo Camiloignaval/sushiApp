@@ -35,7 +35,6 @@ const CartPage = () => {
     push("/checkout/summary");
   };
 
-  console.log({ productData });
   if (!cart.isLoaded || cart.cart.length === 0 || isLoading) {
     return <></>;
   }

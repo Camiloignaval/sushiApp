@@ -27,16 +27,14 @@ import { FaCircle } from "react-icons/fa";
 
 const categoriesBBDD = ["HandRolls", "Promos"];
 
-interface IObjectKeys {
-  [key: string]: string | number;
-}
+type categories = "HandRolls" | "Promos";
 
 const HomePage: NextPage = () => {
   const { data: promotions, isLoading } = useGetAllPromotionsQuery(null);
-  const { scrollIsDown } = useSelector((state: RootState) => state.ui);
-  const { numberOfItems, total } = useSelector(
-    (state: RootState) => state.cart
-  );
+  const {
+    ui: { scrollIsDown },
+    cart: { numberOfItems, total },
+  } = useSelector((state: RootState) => state);
   const [promosByCategory, setPromosByCategory] = useState({});
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
@@ -69,7 +67,7 @@ const HomePage: NextPage = () => {
 
   useEffect(() => {
     if (promotions) {
-      let promosSeparate = {};
+      let promosSeparate: any = {};
 
       promotions?.forEach((promo: IPromotion) => {
         const nameCategory = promo?.category?.name.toString();

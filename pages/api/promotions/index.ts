@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db, SHOP_CONSTANT } from "../../../database";
-import { IProduct, IPromotion } from "../../../interfaces";
-import { Product } from "../../../models";
+import { db } from "../../../database";
+import { IPromotion } from "../../../interfaces";
 import Promotion from "../../../models/Promotion";
-import { linkConvert } from "../../../utils";
 
 type Data =
   | {
@@ -35,13 +33,11 @@ const getPromotions = async (
   // if (gender !== "all" && SHOP_CONSTANT.validGenders.includes(`${gender}`)) {
   //   condition = { gender };
   // }
-  console.log({ mesageee: "llegue aquiii" });
   await db.connect();
   const promotions = await Promotion.find(/* condition */)
     .select("-createdAt -updatedAt")
     .populate("category")
     .lean();
-  console.log(promotions);
   await db.disconnect();
 
   res.status(200).json(promotions);

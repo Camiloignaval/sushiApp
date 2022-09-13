@@ -67,7 +67,6 @@ export const AddressForm = () => {
 
   const onSubmitAddress = (data: IShippingAdress) => {
     if (!isModificable) {
-      console.log("entre");
       setIsModificable(true);
       return;
     }

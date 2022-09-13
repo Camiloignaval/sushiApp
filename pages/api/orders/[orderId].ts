@@ -17,7 +17,6 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const getOrder = (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  console.log(req);
   return res.status(200).json({
     message: "bien",
   });

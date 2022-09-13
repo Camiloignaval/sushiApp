@@ -67,7 +67,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
         extraProduct: [],
       });
     }
-  }, [cart]);
+  }, [cart, promotion]);
 
   const onConfirm = () => {
     // Buscar siesque ya existe en el carro para actualizarlo y no sobreescribirlo si esque esta

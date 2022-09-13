@@ -1,7 +1,6 @@
 import { db } from ".";
 import { IProduct } from "../interfaces";
 import { Product } from "../models";
-import { linkConvert } from "../utils";
 
 export const getProductBySlug = async (
   slug: string
@@ -32,20 +31,6 @@ interface ProductSlugs {
 //   return slugs;
 // };
 
-export const getProductsByTerm = async (term: string): Promise<IProduct[]> => {
-  term = term.toString().toLowerCase();
-
-  db.connect();
-  const products = await Product.find({ $text: { $search: term } })
-    .select("title slug price inStock images -_id")
-    .lean();
-  db.disconnect();
-
-  const updatedProducts = linkConvert(products);
-
-  return JSON.parse(JSON.stringify(updatedProducts));
-};
-
 export const getAllProducts = async (): Promise<IProduct[]> => {
   db.connect();
   const products = await Product.find({})
@@ -53,7 +38,5 @@ export const getAllProducts = async (): Promise<IProduct[]> => {
     .lean();
   db.disconnect();
 
-  const updatedProducts = linkConvert(products);
-
-  return JSON.parse(JSON.stringify(updatedProducts));
+  return JSON.parse(JSON.stringify(products));
 };

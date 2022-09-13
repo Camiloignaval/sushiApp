@@ -13,7 +13,6 @@ interface Props {
 export const Extras: FC<Props> = ({ productData, editable = false }) => {
   const { extraProduct } = useSelector((state: RootState) => state.cart);
 
-  console.log({ extraProduct });
   return (
     <FormControl
       sx={{ m: 3, width: "100%" }}

@@ -102,7 +102,6 @@ const columns: GridColDef[] = [
 const OrdersPage = () => {
   const { data: dataOrders } = useGetAllOrdersQuery(null);
 
-  console.log(dataOrders);
   if (!dataOrders) return <FullScreenLoading />;
 
   const rows = dataOrders!.map((order: IOrder) => ({

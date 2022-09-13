@@ -58,9 +58,6 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
     }
   }, [extraToSendCart.quantity]);
 
-  console.log({
-    qty: extraProduct!.find((p) => p._id === prod._id)?.quantity!,
-  });
   return (
     <Grid item xs={6} md={4} lg={3}>
       <Box position={"relative"} display={"flex"} justifyContent={"center"}>

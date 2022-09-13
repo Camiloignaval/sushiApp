@@ -72,7 +72,7 @@ export const CartSlice = createSlice({
     updateAdress: (state, action: PayloadAction<IShippingAdress>) => {
       state.shippingAddress = action.payload;
     },
-    addCoupon: (state, action: PayloadAction<ICoupon>) => {
+    addCoupon: (state, action: PayloadAction<any>) => {
       state.coupon = action.payload;
     },
     removeCoupon: (state) => {

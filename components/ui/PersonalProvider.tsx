@@ -94,7 +94,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
         dispatch(removeCoupon());
       }
     }
-  }, [subTotal]);
+  }, [subTotal, dispatch, coupon]);
 
   // calculo de precios
   useEffect(() => {
@@ -110,7 +110,6 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     let discount = 0;
     // cupon
     if (coupon) {
-      console.log({ coupon });
       if (coupon.type === "money") {
         discount = coupon.discount;
       }

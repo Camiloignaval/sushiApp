@@ -21,11 +21,6 @@ class MyDocument extends Document {
             rel="stylesheet"
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
-          <script
-            src="https://kit.fontawesome.com/9896faa838.js"
-            crossOrigin="anonymous"
-          ></script>
-          <script src="sweetalert2.all.min.js"></script>
         </Head>
         <body>
           <Main />

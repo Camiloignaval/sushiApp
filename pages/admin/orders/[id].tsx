@@ -56,7 +56,7 @@ const OrderPage: FC<Props> = ({ order }) => {
       <Grid container spacing={3} className="fadeIn">
         <Grid item xs={12} sm={7}>
           {/* card list */}
-          <CardList products={order.orderItems} />
+          {/* <CardList products={order.orderItems} /> */}
         </Grid>
         <Grid item xs={12} sm={5}>
           {/* cart */}
@@ -72,22 +72,21 @@ const OrderPage: FC<Props> = ({ order }) => {
                   Dirección de entrega
                 </Typography>
               </Box>
-              <Typography>{sa.firstName}</Typography>
+              {/* <Typography>{sa.firstName}</Typography>
               <Typography>{sa.lastName}</Typography>
               <Typography>{sa.adress}</Typography>
-              {sa.adress2 && <Typography>{sa.adress2}</Typography>}
+              {sa.adress2 && <Typography>{sa.adress2}</Typography>} */}
               <Typography>{sa.city}</Typography>
               <Typography>{sa.phone}</Typography>
               <Divider sx={{ my: 1 }} />
 
-              <OrdenSummary
+              {/* <OrdenSummary
                 infoPrices={{
                   numberOfItems: order.numberOfItems,
                   subTotal: order.subTotal,
-                  tax: order.tax,
                   total: order.total,
                 }}
-              />
+              /> */}
               <Box sx={{ mt: 3, display: "flex", flexDirection: "column" }}>
                 {order.isPaid ? (
                   <Chip

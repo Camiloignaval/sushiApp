@@ -11,6 +11,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import Image from "next/image";
 import React, { FC, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -19,7 +20,6 @@ import { RootState } from "../../store";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { addOrUpdateCart } from "../../store/Slices/CartSlice";
 import { currency } from "../../utils";
-import { ExtraSauces } from "../customRoll/ExtraProducts";
 import { FullScreenLoading, ItemCounter } from "../ui";
 
 interface Props {
@@ -88,10 +88,6 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
     toast.success(`${promotion.name} agregada con éxito`, { duration: 3000 });
   };
 
-  const sauseProduct = productData?.filter(
-    (product) => product?.type === "sauce"
-  );
-
   const updatedQuantity = (num: number) => {
     setPromoToSendCart((prev) => ({ ...prev, quantity: num }));
   };
@@ -112,15 +108,19 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
       }}
     >
       <Box sx={{ width: { xs: "100%", md: "550px" } }}>
-        <CardMedia
+        <Image
           className="fadeIn"
-          image={promotion.images[0] ?? ""}
-          component="img"
-          alt={promotion.name}
-          sx={{
-            objectFit: "cover",
-          }}
-          height="300px"
+          // image={promotion?.images[0].toString() ?? ""}
+          src={promotion?.images[0].toString()}
+          // component="img"
+          alt={promotion.name.toString()}
+          // sx={{
+          //   objectFit: "cover",
+          // }}
+          layout="responsive"
+          width="100%"
+          objectFit="cover"
+          height="70px"
           // onLoad={() => setIsImageLoaded(true)}
         />
         <CardContent>

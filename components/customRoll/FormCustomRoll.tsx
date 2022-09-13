@@ -31,7 +31,7 @@ export const FormCustomRoll: FC<Props> = ({
     const { extraProduct, proteins, vegetables, envelopes, sauces } =
       promoToSendCart;
     if (
-      extraProduct.length > maxQty.extraProduct ||
+      extraProduct!.length > maxQty.extraProduct ||
       proteins!.length > maxQty.proteins ||
       vegetables!.length > maxQty.vegetables ||
       sauces!.length > maxQty.sauces ||

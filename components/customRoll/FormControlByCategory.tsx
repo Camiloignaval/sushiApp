@@ -4,20 +4,31 @@ import { ICartProduct, IProduct } from "../../interfaces";
 import { CustomRollCategoryOption } from "./CustomRollCategoryOption";
 
 interface Props {
-  label: string;
+  label: any;
   maxQty: number;
   productList: IProduct[];
   setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
-  promoToSendCart: ICartProduct;
+  promoToSendCart: any;
 }
 
-const dictCategory = {
+// type Labels =
+//   | "proteins"
+//   | "envelopes"
+//   | "sauces"
+//   | "vegetables"
+//   | "extraProduct";
+
+const dictCategory: indexType = {
   Proteinas: "proteins",
   Envolturas: "envelopes",
   Salsas: "sauces",
   Vegetales: "vegetables",
   Extras: "extraProduct",
 };
+
+interface indexType {
+  [key: string]: string;
+}
 
 export const FormControlByCategory: FC<Props> = ({
   label,
@@ -29,10 +40,8 @@ export const FormControlByCategory: FC<Props> = ({
   const [error, setError] = useState(false);
 
   useEffect(() => {
-    const isLessThanMax: boolean =
-      promoToSendCart[dictCategory[label]].length > maxQty;
+    const isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty;
     setError(isLessThanMax);
-    // isLessThanMax ? setisError(true) : setisError(false);
   }, [promoToSendCart[dictCategory[label]]]);
 
   return (

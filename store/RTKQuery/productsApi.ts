@@ -29,7 +29,7 @@ export const productsApi = createApi({
     }),
     updateProductByProperty: builder.mutation<
       IProduct[],
-      { id: string; category: string; value: string }
+      { id: string; category: string; value: string | boolean }
     >({
       query: (body) => ({
         url: `/admin/products`,

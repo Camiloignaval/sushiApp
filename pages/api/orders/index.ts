@@ -1,12 +1,13 @@
+import { Shipping } from "./../../../interfaces/paypal";
 import { validateCoupon } from "./../../../utils/validateCoupon";
 import { ro } from "date-fns/locale";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { db } from "../../../database";
-import { IOrder, IProduct } from "../../../interfaces";
+import { ICoupon, IOrder, IProduct } from "../../../interfaces";
 import { Order, Product, Promotion } from "../../../models";
 import Coupon from "../../../models/Coupon";
-import { sendMessage, wspMessage } from "../../../utils/whatsapp";
+import { sendMessage } from "../../../utils/whatsapp";
 type Data =
   | {
       message: string;
@@ -102,8 +103,8 @@ const createNewOrder = async (
     let discount = 0;
     let cuponType = "";
     let maxDiscount = undefined;
-    if (body?.coupon) {
-      const cupon = await Coupon.findById(body?.coupon._id)
+    if (body?.coupon as ICoupon) {
+      const cupon = await Coupon.findById(body?.coupon!._id ?? "")
         .select("-__v -createdAt -updatedAt")
         .lean();
       if (!cupon) {

@@ -27,33 +27,33 @@ export type IOrderStatus =
   | "inprocess"
   | "dispatched"
   | "delivered";
-// export interface IOrderItem {
-//   _id?: string;
-//   name: string;
-//   quantity: number;
-//   image: string;
-//   price: Number;
-// }
+export interface IOrderItem {
+  _id?: string;
+  name: string;
+  quantity: number;
+  image: string;
+  price: Number;
+}
 
-// export interface IOrderExtraItem {
-//   _id?: string;
-//   name: string;
-//   quantity: number;
-//   image: string;
-//   price: Number;
-// }
+export interface IOrderExtraItem {
+  _id?: string;
+  name: string;
+  quantity: number;
+  image: string;
+  price: Number;
+}
 
-// export interface IOrderCustomRoll {
-//   name: string;
-//   quantity: number;
-//   image: string;
-//   price: number;
-//   ingredients: [
-//     {
-//       image: number;
-//       price: number;
-//       name: number;
-//       type: number;
-//     }
-//   ];
-// }
+export interface IOrderCustomRoll {
+  name: string;
+  quantity: number;
+  image: string;
+  price: number;
+  ingredients: [
+    {
+      image: number;
+      price: number;
+      name: number;
+      type: number;
+    }
+  ];
+}

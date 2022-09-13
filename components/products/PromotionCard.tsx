@@ -186,7 +186,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                   height="300px"
                   // onLoad={() => setIsImageLoaded(true)}
                 /> */}
-                <ProductSlideShow images={promotion.images} />
+                <ProductSlideShow images={promotion.images as string[]} />
               </CardActionArea>
             </Grid>
             <Grid item xs={12} /* sm={6} */>

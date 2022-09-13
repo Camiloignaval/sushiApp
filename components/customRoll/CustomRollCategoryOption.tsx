@@ -14,10 +14,17 @@ interface Props {
   listProducts: IProduct[];
   showPrice?: boolean;
   setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
-  label: string;
+  label: Label;
 }
 
-const dictCategory = {
+type Label =
+  | "proteins"
+  | "envelopes"
+  | "sauces"
+  | "vegetables"
+  | "extraProduct";
+
+const dictCategory: any = {
   Proteinas: "proteins",
   Envolturas: "envelopes",
   Salsas: "sauces",
@@ -39,7 +46,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
 
   const addOrRemoveProduct = (name: string) => {
     setPromoToSendCart((prev) => {
-      const toSearch: IProduct[] = prev[dictCategory[label]];
+      const toSearch = prev[label];
       const isInOrder = toSearch!.find((order) => order._id === name);
       const newArrayToSend = isInOrder
         ? toSearch!.filter((order) => order._id !== name)
@@ -118,7 +125,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
                   >
                     {product.name}
                   </Grid>
-                  {label === "Extras" && (
+                  {dictCategory[label] === "extraProduct" && (
                     <Chip
                       label={`$${product.price}`}
                       variant="outlined"

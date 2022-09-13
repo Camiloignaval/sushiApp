@@ -1,17 +1,17 @@
 import { ICategory } from "./category";
 export interface IPromotion {
-  promotionItems: String[];
-  price: Number;
-  inOffer: Boolean;
-  inStock: Boolean;
-  description: String;
-  images: String[];
-  name: String;
+  promotionItems: string[];
+  price: number;
+  inOffer: boolean;
+  inStock: boolean;
+  description: string;
+  images: string[];
+  name: string;
   lastPrice?: number;
   category: ICategory;
-  quantity: Number;
-  unit: String;
-  _id?: String;
+  quantity: number;
+  unit: string;
+  _id?: string;
 }
 
 export type IUnit = "Piezas" | "Porciones" | "Rolls";

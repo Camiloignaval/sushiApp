@@ -89,8 +89,8 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
 
   // calcular precio
   useEffect(() => {
-    if (promoToSendCart.envelopes!?.length === 1 && !isError) {
-      const priceExtras = promoToSendCart.extraProduct.reduce(
+    if (promoToSendCart.envelopes!?.length > 0 && !isError) {
+      const priceExtras = promoToSendCart.extraProduct!.reduce(
         (acc, curr) => acc + curr.price,
         0
       );

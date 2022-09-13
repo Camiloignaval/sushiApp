@@ -204,8 +204,8 @@ const HomePage: NextPage = () => {
         </Card>
       </Box>
       {Object.values(promosByCategory).length > 0
-        ? Object.entries(promosByCategory)?.map((promotion) => (
-            <PromotionCategory promotions={promotion} />
+        ? Object.entries(promosByCategory)?.map((promotion, i) => (
+            <PromotionCategory key={i} promotions={promotion} />
           ))
         : undefined}
     </MainShopLayout>

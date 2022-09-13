@@ -58,11 +58,11 @@ const ProductsPage = () => {
         return (
           <Switch
             checked={row.inStock}
-            onClick={(e) =>
+            onClick={({ target }) =>
               updateProduct({
                 id: row.id,
                 category: "inStock",
-                value: e.target.checked,
+                value: (target as HTMLInputElement).checked,
               })
             }
           />

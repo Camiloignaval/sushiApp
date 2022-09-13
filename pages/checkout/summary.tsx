@@ -75,9 +75,9 @@ const SummaryPage = () => {
 
     try {
       await createNewOrder(orderToSend).unwrap();
-      dispatch(cleanCart());
-      // TODO hacer lo que se necesite como enviar whatsap o en backend
-      router.replace("/");
+      // dispatch(cleanCart());
+      // // TODO hacer lo que se necesite como enviar whatsap o en backend
+      // router.replace("/");
     } catch (error) {
       console.log({ error });
     }

@@ -39,25 +39,20 @@ export const ordersApi = createApi({
     //     });
     //   },
     // }),
-    // createOrder: builder.mutation<IResponse, IOrder>({
-    //   query: (body) => ({
-    //     url: `/orders`,
-    //     method: "post",
-    //     body,
-    //   }),
-    //   onQueryStarted(_, { queryFulfilled, dispatch }) {
-    //     toast.promise(queryFulfilled, {
-    //       loading: "Creando orden...",
-    //       success: ({ data }) => {
-    //         // limpiar el carrito y sacarlo de la pagina
-    //         // const router = useRouter();
-    //         // console.log(router);
-    //         return "Orden creada con éxito";
-    //       },
-    //       error: ({ error }) => error.data.message.toString(),
-    //     });
-    //   },
-    // }),
+    createOrder: builder.mutation<IResponse, IOrder>({
+      query: (body) => ({
+        url: `/orders`,
+        method: "post",
+        body,
+      }),
+      onQueryStarted(_, { queryFulfilled, dispatch }) {
+        toast.promise(queryFulfilled, {
+          loading: "Creando orden...",
+          success: ({ data }) => "Orden creada con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
     // payOrder: builder.mutation<
     //   IResponse,
     //   { transactionId: string; orderId: string }
@@ -79,7 +74,7 @@ export const ordersApi = createApi({
 });
 
 export const {
-  // useCreateOrderMutation,
+  useCreateOrderMutation,
   // useGetOrderQuery,
   // usePayOrderMutation,
   useGetAllOrdersQuery,

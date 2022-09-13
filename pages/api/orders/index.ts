@@ -6,10 +6,7 @@ import { db } from "../../../database";
 import { IOrder, IProduct } from "../../../interfaces";
 import { Order, Product, Promotion } from "../../../models";
 import Coupon from "../../../models/Coupon";
-import { Client } from "whatsapp-web.js";
-import { wspMessage } from "../../../utils/whatsapp";
-const client = new Client();
-
+import { sendMessage, wspMessage } from "../../../utils/whatsapp";
 type Data =
   | {
       message: string;
@@ -138,23 +135,27 @@ const createNewOrder = async (
 
     // si todo ha salido bien
 
-    if (body.coupon) {
-      await Coupon.findByIdAndUpdate(body.coupon!._id, {
-        $inc: { qtyUsed: 1 },
-      });
-    }
-    const orderToCreate: IOrder = { ...body };
-    if (body?.coupon) {
-      orderToCreate.coupon = body.coupon!._id.toString();
-    }
+    // if (body.coupon) {
+    //   await Coupon.findByIdAndUpdate(body.coupon!._id, {
+    //     $inc: { qtyUsed: 1 },
+    //   });
+    // }
+    // const orderToCreate: IOrder = { ...body };
+    // if (body?.coupon) {
+    //   orderToCreate.coupon = body.coupon!._id.toString();
+    // }
 
-    console.log({ message: "llamar a api wsp" });
     // prueba whatsap
     // TODO ENVIAR WHATSAPP CON DETALLE ORDEN Y LINK DE SEGUIMIENTO
+    sendMessage(body.shippingAddress.phone);
+    // client.on("message", (message) => {
+    //   message.reply("hola probando");
+    // });
+
     // wspMessage();
 
-    const newOrder = new Order(orderToCreate);
-    await newOrder.save();
+    // const newOrder = new Order(orderToCreate);
+    // await newOrder.save();
 
     return res.status(201).json({ message: "creada" });
   } catch (error) {

@@ -5,12 +5,12 @@ import { lightTheme } from "../themes";
 import { SWRConfig } from "swr";
 import { Provider } from "react-redux";
 import { store } from "../store";
-import { useState, useEffect } from "react";
-import Cookies from "js-cookie";
+
 import { Toaster } from "react-hot-toast";
 import { PersonalProvider } from "../components/ui/PersonalProvider";
 import { SessionProvider } from "next-auth/react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
+
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -54,5 +54,6 @@ function MyApp({ Component, pageProps }: AppProps) {
     </SessionProvider>
   );
 }
+
 
 export default MyApp;

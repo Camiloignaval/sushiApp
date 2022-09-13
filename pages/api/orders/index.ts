@@ -148,7 +148,7 @@ const createNewOrder = async (
 
     // prueba whatsap
     // TODO ENVIAR WHATSAPP CON DETALLE ORDEN Y LINK DE SEGUIMIENTO
-    sendMessage(body.shippingAddress.phone);
+    sendMessage(body.shippingAddress.phone, "Su orden xxxxxxx");
     // client.on("message", (message) => {
     //   message.reply("hola probando");
     // });

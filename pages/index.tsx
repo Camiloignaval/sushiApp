@@ -27,8 +27,6 @@ import { FaCircle } from "react-icons/fa";
 
 const categoriesBBDD = ["HandRolls", "Promos"];
 
-type categories = "HandRolls" | "Promos";
-
 const HomePage: NextPage = () => {
   const { data: promotions, isLoading } = useGetAllPromotionsQuery(null);
   const {
@@ -38,6 +36,8 @@ const HomePage: NextPage = () => {
   const [promosByCategory, setPromosByCategory] = useState({});
   const [open, setOpen] = useState(false);
   const dispatch = useDispatch();
+
+  console.log({ promotions });
 
   function logit() {
     const isDownOfTheScreen = window.pageYOffset > window.innerHeight - 100;

@@ -63,6 +63,7 @@ const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     client.on("disconnected", (reason) => {
       console.log("Client was logged out", reason);
+      client.initialize(); // this what i was need
     });
 
     return res.status(200).json({ message: "Conected" });
@@ -78,7 +79,7 @@ const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 // * posible endpoint para envio de mensajes
 
 const sendMassage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { number = "569457061950" } = req.body;
+  const { number = "569457061950", msg = "" } = req.body;
   try {
     console.log("llegue al endpoint");
     // const resp = await client.sendMessage(
@@ -88,7 +89,7 @@ const sendMassage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     // if (resp.id.fromMe) {
     //   console.log({ success: "The message has been send" });
     // }
-    sendMessage(number);
+    sendMessage(number, msg);
 
     return res.status(200).json({ message: "Message Send" });
   } catch (error) {

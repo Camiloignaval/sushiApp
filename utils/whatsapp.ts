@@ -1,6 +1,6 @@
 import { client } from "../pages/api/admin/wspconnect";
 
-export const sendMessage = async (number: string) => {
+export const sendMessage = async (number: string, msg: string) => {
   try {
     console.log(
       "voy a enviar el mensaje!",
@@ -9,7 +9,7 @@ export const sendMessage = async (number: string) => {
 
     const resp = await client.sendMessage(
       `${number.replaceAll("+", "")}@c.us`,
-      "El seguimiento de tu orden es xxxxx"
+      msg
     );
     if (resp.id.fromMe) {
       console.log({ success: "The message has been send" });

@@ -2,13 +2,25 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import qrcode from "qrcode-terminal";
 import { Client, LocalAuth } from "whatsapp-web.js";
 import { sendMessage } from "../../../utils/whatsapp";
+import ora from "ora";
+import chalk from "chalk";
+
+// const withSession = () => {
+// Si existe el archivo de sesion
+const spinner = ora(
+  `${chalk.yellow("Validando session con Whatsapp ... ")}`
+).start();
+const type = "withSession";
 
 const client = new Client({
   authStrategy: new LocalAuth({
     clientId: "client-one",
     dataPath: "./.wwebjs_auth",
   }),
+  restartOnAuthFail: true,
+
   puppeteer: {
+    headless: true,
     handleSIGINT: false,
     args: ["--no-sandbox", "--disable-setuid-sandbox"],
   },
@@ -16,7 +28,6 @@ const client = new Client({
 
 type Data = {
   message: string;
-  qr?: any;
 };
 
 export default function handler(
@@ -37,22 +48,24 @@ export default function handler(
 const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     client.initialize();
-    let qr;
     client.on("qr", (qr) => {
-      qrcode.generate(qr, { small: true }, (qrcode) => {
-        qr = qrcode;
-      });
+      qrcode.generate(qr, { small: true });
     });
-
-    client.on("authenticated", async (session) => {
-      console.log({ message: "Estoy autenticado ya" });
+    client.on("authenticated", async () => {
+      console.log({ message: "Already authenticated" });
+      spinner.stop();
     });
 
     client.on("auth_failure", (msg) => {
       console.error("AUTHENTICATION FAILURE", msg);
+      spinner.stop();
     });
 
-    return res.status(200).json({ message: "Conected", qr });
+    client.on("disconnected", (reason) => {
+      console.log("Client was logged out", reason);
+    });
+
+    return res.status(200).json({ message: "Conected" });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

@@ -36,8 +36,16 @@ interface Props {
   product: IProduct;
 }
 
-const validTypes = ["envelope", "filling", "sauce", "other"];
-const validFillingTypes = ["protein", "vegetable"];
+const validTypes = [
+  { code: "envelope", friendly: "envoltura" },
+  { code: "filling", friendly: "relleno" },
+  { code: "sauce", friendly: "salsa" },
+  { code: "other", friendly: "otros" },
+];
+const validFillingTypes = [
+  { code: "protein", friendly: "proteina" },
+  { code: "vegetable", friendly: "vegetal" },
+];
 
 interface FormData {
   _id?: string;
@@ -197,10 +205,10 @@ const OrderInfoPage: FC<Props> = ({ product }) => {
               >
                 {validTypes.map((option) => (
                   <FormControlLabel
-                    key={option}
-                    value={option}
+                    key={option.code}
+                    value={option.code}
                     control={<Radio color="secondary" />}
-                    label={capitalize(option)}
+                    label={capitalize(option.friendly)}
                   />
                 ))}
               </RadioGroup>
@@ -221,10 +229,10 @@ const OrderInfoPage: FC<Props> = ({ product }) => {
                 >
                   {validFillingTypes.map((option) => (
                     <FormControlLabel
-                      key={option}
-                      value={option}
+                      key={option.code}
+                      value={option.code}
                       control={<Radio color="secondary" />}
-                      label={capitalize(option)}
+                      label={capitalize(option.friendly)}
                     />
                   ))}
                 </RadioGroup>

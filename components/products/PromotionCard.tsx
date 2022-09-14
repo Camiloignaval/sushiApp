@@ -96,7 +96,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                   }}
                 ></Box>
                 {/* si esta en oferta */}
-                {promotion?.lastPrice && (
+                {promotion?.inOffer && (
                   <Chip
                     variant="outlined"
                     color="error"

@@ -28,6 +28,25 @@ export const promotionApi = createApi({
         });
       },
     }),
+    updatePromotion: builder.mutation<IPromotion[], any>({
+      query: (body) => ({
+        url: `/admin/promotions`,
+        method: body._id ? "put" : "post",
+        body,
+      }),
+      invalidatesTags: ["Promotions"],
+      onQueryStarted(data, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: data._id
+            ? "Actualizando promoción..."
+            : "Creando promoción...",
+          success: data._id
+            ? "Actualizado con éxito"
+            : "promoción creada con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
     // getOrder: builder.query<IResponse, IOrder>({
     //   query: (orderId) => ({
     //     url: `/orders/${orderId}`,
@@ -42,4 +61,5 @@ export const promotionApi = createApi({
   }),
 });
 
-export const { useGetAllPromotionsQuery } = promotionApi;
+export const { useGetAllPromotionsQuery, useUpdatePromotionMutation } =
+  promotionApi;

@@ -1,14 +1,22 @@
 import { db } from ".";
-import { IProduct } from "../interfaces";
+import { IProduct, IPromotion } from "../interfaces";
 import { Product, Promotion } from "../models";
 
-export const getProductById = async (id: string): Promise<IProduct | null> => {
+export const getPromotionById = async (
+  id: string
+): Promise<IPromotion | null> => {
   await db.connect();
   const promotion = await Promotion.findById(id).lean();
   await db.disconnect();
   if (!promotion) {
     return null;
   }
+
+  // product.images = product.images.map((image) => {
+  //   return image.includes("http")
+  //     ? image
+  //     : `${process.env.HOST_NAME}products/${image}`;
+  // });
 
   return JSON.parse(JSON.stringify(promotion));
 };
@@ -32,6 +40,3 @@ export const getAllProducts = async (): Promise<IProduct[]> => {
 
   return JSON.parse(JSON.stringify(products));
 };
-export function getPromotionById(arg0: string) {
-  throw new Error("Function not implemented.");
-}

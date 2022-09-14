@@ -67,7 +67,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
                 textDecoration: "line-through",
               }}
               // fontStyle="italic"
-            >{`Antes ${currency.format(+promotion?.lastPrice!)}`}</Typography>
+            >{`Antes ${currency.format(+promotion?.price!)}`}</Typography>
 
             <Typography
               display={"flex"}
@@ -78,7 +78,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
               color={"red"}
             >
               {<TbDiscount2 style={{ marginRight: "5px", fontSize: "2rem" }} />}
-              {`Precio oferta ${currency.format(+promotion.price)}`}
+              {`Precio oferta ${currency.format(+promotion?.offerPrice!)}`}
             </Typography>
           </Box>
         ) : (

@@ -7,7 +7,7 @@ export interface IPromotion {
   description: string;
   images: string[];
   name: string;
-  lastPrice?: number;
+  offerPrice?: number;
   category: ICategory;
   quantity: number;
   unit: string;

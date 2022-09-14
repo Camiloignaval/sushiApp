@@ -36,34 +36,19 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   // TODO  must update images
   return res.status(200).json(products);
 };
-const updateProductStatus = async (
-  req: NextApiRequest,
-  res: NextApiResponse<Data>
-) => {
-  const body = req.body;
-  try {
-    await db.connect();
 
-    await Product.findByIdAndUpdate(body.id, { [body.category]: body.value });
-    await db.disconnect();
-
-    return res.status(200).json({ message: "Actualizado con éxito" });
-  } catch (error) {
-    if (error instanceof Error) {
-      return res.status(400).json({ message: error.message });
-    } else {
-      return res.status(400).json({ message: "Error desconocido" });
-    }
-  }
-};
 const updateProduct = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
   const body = req.body;
+  console.log("llegue a update product");
   try {
     await db.connect();
     const prod = await Product.findById(body._id).select("image");
+    if (!prod) {
+      throw new Error("No existe producto con id indicado");
+    }
     if (prod?.image !== body.image) {
       const [fileId, extension] = (prod!.image as string)
         .substring(prod!.image.lastIndexOf("/") + 1)
@@ -85,52 +70,6 @@ const updateProduct = async (
   }
 };
 
-// const updateProduct = async (
-//   req: NextApiRequest,
-//   res: NextApiResponse<Data>
-// ) => {
-//   const { _id = "", images = [] } = req.body as IProduct;
-
-//   if (!isValidObjectId(_id)) {
-//     return res.status(400).json({ message: "Id de producto no es valido" });
-//   }
-
-//   if (images.length < 2) {
-//     return res
-//       .status(400)
-//       .json({ message: "Es necesario al menos 2 imágenes" });
-//   }
-
-//   try {
-//     await db.connect();
-//     const product = await Product.findById(_id);
-
-//     if (!product) {
-//       return res
-//         .status(400)
-//         .json({ message: "Producto no existe en registros" });
-//     }
-
-//     product.images.forEach(async (image) => {
-//       if (!images.includes(image)) {
-//         // borrar de cloudinary
-//         const [fileId, extension] = image
-//           .substring(image.lastIndexOf("/") + 1)
-//           .split(".");
-//         console.log({ fileId });
-//         await cloudinary.uploader.destroy(fileId);
-//       }
-//     });
-
-//     await product.updateOne(req.body);
-//     await db.disconnect();
-
-//     res.status(200).json({ message: "Usuario actualizado" });
-//   } catch (error) {
-//     await db.disconnect();
-//     res.status(500).json({ message: "Algo ha salido mal..." });
-//   }
-// };
 const createProduct = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -142,11 +81,9 @@ const createProduct = async (
     const findBySameTypeAndName = await Product.findOne({ name, type });
     if (findBySameTypeAndName) {
       await db.disconnect();
-      return res
-        .status(400)
-        .json({
-          message: "Ya existe un producto de este tipo con el mismo nombre",
-        });
+      return res.status(400).json({
+        message: "Ya existe un producto de este tipo con el mismo nombre",
+      });
     }
     const product = new Product(req.body);
     await product.save();

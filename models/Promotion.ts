@@ -10,7 +10,7 @@ const promotionSchema = new Schema(
     name: { type: String, unique: true },
     description: { type: String },
     images: { type: Array },
-    lastPrice: { type: Number },
+    offerPrice: { type: Number },
     category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     quantity: { type: Number },
     unit: { type: String },

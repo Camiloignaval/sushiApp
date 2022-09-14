@@ -56,6 +56,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       console.log(error);
     }
   }, [dispatch]);
+
   useEffect(() => {
     try {
       setFirstRender(false);

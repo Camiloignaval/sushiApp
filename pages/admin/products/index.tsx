@@ -3,15 +3,15 @@ import { Box, Button, CardMedia, Grid, Link, Switch } from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import NextLink from "next/link";
 import React, { useEffect, useState } from "react";
-import { AdminLayout } from "../../components/layouts";
-import { FullScreenLoading } from "../../components/ui";
-import { IProduct } from "../../interfaces";
+import { AdminLayout } from "../../../components/layouts";
+import { FullScreenLoading } from "../../../components/ui";
+import { IProduct } from "../../../interfaces";
 
 import {
   useGetProductsQuery,
   useUpdateProductByPropertyMutation,
-} from "../../store/RTKQuery/productsApi";
-import { currency } from "../../utils";
+} from "../../../store/RTKQuery/productsApi";
+import { currency } from "../../../utils";
 
 const dictType = {
   filling: "Relleno",
@@ -22,6 +22,7 @@ const dictType = {
 
 const ProductsPage = () => {
   const { data: dataProducts } = useGetProductsQuery(null);
+  console.log({ dataProducts });
   const [updateProduct] = useUpdateProductByPropertyMutation();
   const columns: GridColDef[] = [
     {
@@ -44,7 +45,7 @@ const ProductsPage = () => {
       width: 150,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
-          <NextLink href={`/admin/products/${row.slug}`} passHref>
+          <NextLink href={`/admin/products/${row.id}`} passHref>
             <Link underline="always">{row.name}</Link>
           </NextLink>
         );

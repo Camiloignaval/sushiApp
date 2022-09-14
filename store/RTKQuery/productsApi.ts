@@ -32,7 +32,7 @@ export const productsApi = createApi({
       { id: string; category: string; value: string | boolean }
     >({
       query: (body) => ({
-        url: `/admin/products`,
+        url: `/admin/product`,
         method: "put",
         body: body,
       }),
@@ -45,27 +45,30 @@ export const productsApi = createApi({
         });
       },
     }),
-    // updateProduct: builder.mutation<IProduct[], any>({
-    //   query: (body) => ({
-    //     url: `/admin/products`,
-    //     method: body._id ? "put" : "post",
-    //     body,
-    //   }),
-    //   invalidatesTags: ["Products"],
-    //   onQueryStarted(data, { queryFulfilled }) {
-    //     toast.promise(queryFulfilled, {
-    //       loading: data._id
-    //         ? "Actualizando producto..."
-    //         : "Creando producto...",
-    //       success: data._id
-    //         ? "Actualizado con éxito"
-    //         : "Producto creado con éxito",
-    //       error: ({ error }) => error.data.message.toString(),
-    //     });
-    //   },
-    // }),
+    updateProduct: builder.mutation<IProduct[], any>({
+      query: (body) => ({
+        url: `/admin/products`,
+        method: body._id ? "put" : "post",
+        body,
+      }),
+      invalidatesTags: ["Products"],
+      onQueryStarted(data, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: data._id
+            ? "Actualizando producto..."
+            : "Creando producto...",
+          success: data._id
+            ? "Actualizado con éxito"
+            : "Producto creado con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
-export const { useGetProductsQuery, useUpdateProductByPropertyMutation } =
-  productsApi;
+export const {
+  useGetProductsQuery,
+  useUpdateProductByPropertyMutation,
+  useUpdateProductMutation,
+} = productsApi;

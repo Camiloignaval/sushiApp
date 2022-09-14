@@ -8,7 +8,9 @@ export const getOrderById = async (id: string): Promise<IOrder | null> => {
     return null;
   }
   await db.connect();
-  const order = await Order.findById(id).lean();
+  const order = await Order.findById(id)
+    .select("status shippingAddress")
+    .lean();
   await db.disconnect();
 
   if (!order) {

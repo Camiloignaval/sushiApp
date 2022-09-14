@@ -18,8 +18,8 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
     case "PUT":
       return updateProduct(req, res);
-    // case "POST":
-    //   return createProduct(req, res);
+    case "POST":
+      return createProduct(req, res);
 
     default:
       return res.status(400).json({
@@ -36,7 +36,7 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   // TODO  must update images
   return res.status(200).json(products);
 };
-const updateProduct = async (
+const updateProductStatus = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
@@ -46,6 +46,34 @@ const updateProduct = async (
 
     await Product.findByIdAndUpdate(body.id, { [body.category]: body.value });
     await db.disconnect();
+
+    return res.status(200).json({ message: "Actualizado con éxito" });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
+};
+const updateProduct = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const body = req.body;
+  try {
+    await db.connect();
+    const prod = await Product.findById(body._id).select("image");
+    if (prod?.image !== body.image) {
+      const [fileId, extension] = (prod!.image as string)
+        .substring(prod!.image.lastIndexOf("/") + 1)
+        .split(".");
+      console.log("entre y destruire el anterior", fileId);
+      await cloudinary.uploader.destroy(fileId);
+      cloudinary.api.delete_resources_by_prefix(`SushiApp/${fileId}`);
+    }
+    await Product.findByIdAndUpdate(body._id, body);
+    // await db.disconnect();
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
@@ -103,32 +131,28 @@ const updateProduct = async (
 //     res.status(500).json({ message: "Algo ha salido mal..." });
 //   }
 // };
-// const createProduct = async (
-//   req: NextApiRequest,
-//   res: NextApiResponse<Data>
-// ) => {
-//   const { images = [], slug = "" } = req.body as IProduct;
-
-//   if (images.length < 2) {
-//     return res
-//       .status(400)
-//       .json({ message: "Es necesario al menos 2 imágenes" });
-//   }
-
-//   try {
-//     await db.connect();
-//     const slugInBd = await Product.findOne({ slug });
-//     if (slugInBd) {
-//       await db.disconnect();
-//       return res
-//         .status(400)
-//         .json({ message: "Slug ya existe en los registros, debe ser único" });
-//     }
-//     const product = new Product(req.body);
-//     await product.save();
-//     res.status(201).json({ message: "Creado con éxito" });
-//   } catch (error) {
-//     await db.disconnect();
-//     res.status(500).json({ message: "Algo ha salido mal..." });
-//   }
-// };
+const createProduct = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  try {
+    console.log({ llegue: req.body });
+    const { name = "", type = "", fillingType = "" } = req.body;
+    await db.connect();
+    const findBySameTypeAndName = await Product.findOne({ name, type });
+    if (findBySameTypeAndName) {
+      await db.disconnect();
+      return res
+        .status(400)
+        .json({
+          message: "Ya existe un producto de este tipo con el mismo nombre",
+        });
+    }
+    const product = new Product(req.body);
+    await product.save();
+    res.status(201).json({ message: "Creado con éxito" });
+  } catch (error) {
+    await db.disconnect();
+    res.status(500).json({ message: "Algo ha salido mal..." });
+  }
+};

@@ -2,11 +2,9 @@ import { db } from ".";
 import { IProduct } from "../interfaces";
 import { Product } from "../models";
 
-export const getProductBySlug = async (
-  slug: string
-): Promise<IProduct | null> => {
+export const getProductById = async (id: string): Promise<IProduct | null> => {
   await db.connect();
-  const product = await Product.findOne({ slug }).lean();
+  const product = await Product.findById(id).lean();
   await db.disconnect();
   if (!product) {
     return null;

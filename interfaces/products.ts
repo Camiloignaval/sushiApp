@@ -10,5 +10,5 @@ export interface IProduct {
   updatedAt?: string;
 }
 
-type IType = "envelope" | "filling" | "sauce" | "other";
-type IFillingType = "protein" | "vegetable";
+export type IType = "envelope" | "filling" | "sauce" | "other";
+export type IFillingType = "protein" | "vegetable";

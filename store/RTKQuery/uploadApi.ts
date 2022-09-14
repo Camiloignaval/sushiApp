@@ -20,6 +20,7 @@ export const uploadApi = createApi({
         url: `/admin/upload`,
         method: "post",
         body,
+        // headers: { "Content-Type": "x-www-form-urlencoded" },
       }),
       // onQueryStarted(data, { queryFulfilled }) {
       //   queryFulfilled.catch(() => {

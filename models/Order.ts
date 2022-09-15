@@ -1,6 +1,7 @@
 import { IProduct } from "./../interfaces/products";
 import mongoose, { Schema, Model, model } from "mongoose";
 import { IOrder } from "../interfaces";
+import mongoose_delete from "mongoose-delete";
 
 const orderSchema = new Schema(
   {
@@ -46,8 +47,11 @@ const orderSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
+
+orderSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 const Order: Model<IOrder> =
   mongoose.models.Order || model("Order", orderSchema);

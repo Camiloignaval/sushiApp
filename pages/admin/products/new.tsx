@@ -3,11 +3,17 @@ import { GetServerSideProps } from "next";
 
 const link = "https://api.cloudinary.com/v1_1/dc6vako2z/image/upload";
 
-import { ShopLayout } from "../../../components/layouts";
+import { AdminLayout, ShopLayout } from "../../../components/layouts";
 import { dbProducts } from "../../../database";
 import { IFillingType, IProduct, IType } from "../../../interfaces";
 import { Controller, useForm } from "react-hook-form";
-import { SaveOutlined, UploadOutlined } from "@mui/icons-material";
+import {
+  CategoryOutlined,
+  PlaylistAddCheckCircleOutlined,
+  SaveOutlined,
+  UploadOutlined,
+} from "@mui/icons-material";
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
 import {
   Box,
   Grid,
@@ -25,6 +31,7 @@ import {
   CardActions,
   Button,
   Switch,
+  Typography,
 } from "@mui/material";
 import { useUpdateProductMutation } from "../../../store/RTKQuery/productsApi";
 import toast from "react-hot-toast";
@@ -52,7 +59,7 @@ interface FormData {
   fillingType?: string;
 }
 
-const OrderInfoPage = () => {
+const NewProductPage = () => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadFiles] = useUploadFilesMutation();
@@ -109,9 +116,10 @@ const OrderInfoPage = () => {
     return true;
   };
   return (
-    <ShopLayout
-      title={"Sigue tu pedido"}
-      pageDescription={"Pagina para seguir el estado del pedido"}
+    <AdminLayout
+      icon={<PlaylistAddIcon />}
+      title={`Nuevo producto`}
+      subTitle={"Mantenimiento de productos"}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
@@ -249,7 +257,7 @@ const OrderInfoPage = () => {
                 sx={{ mb: 3 }}
                 onClick={() => fileInputRef.current?.click()}
               >
-                Cargar otra imagen
+                Cargar imágen
               </Button>
               <input
                 ref={fileInputRef}
@@ -272,8 +280,8 @@ const OrderInfoPage = () => {
           </Grid>
         </Grid>
       </form>
-    </ShopLayout>
+    </AdminLayout>
   );
 };
 
-export default OrderInfoPage;
+export default NewProductPage;

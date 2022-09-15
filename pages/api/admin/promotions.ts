@@ -44,7 +44,6 @@ const updatePromotion = async (
   const body = req.body;
   try {
     await db.connect();
-    console.log("llegue a updatepromotion");
     const prod = await Promotion.findById(body._id).select("images");
     //todo validar que tenga 2 imagenes minimo
     if (!prod) {
@@ -78,68 +77,27 @@ const updatePromotion = async (
   }
 };
 
-// const updateProduct = async (
-//   req: NextApiRequest,
-//   res: NextApiResponse<Data>
-// ) => {
-//   const { _id = "", images = [] } = req.body as IProduct;
-
-//   if (!isValidObjectId(_id)) {
-//     return res.status(400).json({ message: "Id de producto no es valido" });
-//   }
-
-//   if (images.length < 2) {
-//     return res
-//       .status(400)
-//       .json({ message: "Es necesario al menos 2 imágenes" });
-//   }
-
-//   try {
-//     await db.connect();
-//     const product = await Product.findById(_id);
-
-//     if (!product) {
-//       return res
-//         .status(400)
-//         .json({ message: "Producto no existe en registros" });
-//     }
-
-//     product.images.forEach(async (image) => {
-//       if (!images.includes(image)) {
-//         // borrar de cloudinary
-//         const [fileId, extension] = image
-//           .substring(image.lastIndexOf("/") + 1)
-//           .split(".");
-//         console.log({ fileId });
-//         await cloudinary.uploader.destroy(fileId);
-//       }
-//     });
-
-//     await product.updateOne(req.body);
-//     await db.disconnect();
-
-//     res.status(200).json({ message: "Usuario actualizado" });
-//   } catch (error) {
-//     await db.disconnect();
-//     res.status(500).json({ message: "Algo ha salido mal..." });
-//   }
-// };
 const createPromotion = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
   try {
     console.log({ llegue: req.body });
-    const { name = "", type = "", fillingType = "" } = req.body;
+    const { name = "" } = req.body;
     await db.connect();
-    const findBySameTypeAndName = await Product.findOne({ name, type });
-    if (findBySameTypeAndName) {
+    const findBySameName = await Promotion.findOne({ name });
+    if (findBySameName) {
       await db.disconnect();
       return res.status(400).json({
-        message: "Ya existe un producto de este tipo con el mismo nombre",
+        message: "Ya existe una promoción con este nombre",
       });
     }
-    const product = new Product(req.body);
+    if (req.body.images.length === 0) {
+      return res.status(400).json({
+        message: "Debe seleccionar a lo menos 1 imágen",
+      });
+    }
+    const product = new Promotion(req.body);
     await product.save();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {

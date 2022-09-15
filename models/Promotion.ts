@@ -1,5 +1,6 @@
 import mongoose, { Schema, Model, model } from "mongoose";
 import { IPromotion } from "../interfaces";
+import mongoose_delete from "mongoose-delete";
 
 const promotionSchema = new Schema(
   {
@@ -17,8 +18,11 @@ const promotionSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: true,
   }
 );
+
+promotionSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 const Promotion: Model<IPromotion> =
   mongoose.models.Promotion || model("Promotion", promotionSchema);

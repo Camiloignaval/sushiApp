@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 
 const link = "https://api.cloudinary.com/v1_1/dc6vako2z/image/upload";
 
-import { ShopLayout } from "../../../components/layouts";
+import { AdminLayout, ShopLayout } from "../../../components/layouts";
 import { dbCategories, dbProducts, dbPromotions } from "../../../database";
 import {
   ICategory,
@@ -14,6 +14,8 @@ import {
 } from "../../../interfaces";
 import { useForm } from "react-hook-form";
 import { Category, SaveOutlined, UploadOutlined } from "@mui/icons-material";
+import EditIcon from "@mui/icons-material/Edit";
+
 import {
   Box,
   Grid,
@@ -33,6 +35,8 @@ import {
   Switch,
   MenuItem,
   Select,
+  Typography,
+  InputLabel,
 } from "@mui/material";
 import { useUpdateProductMutation } from "../../../store/RTKQuery/productsApi";
 import toast from "react-hot-toast";
@@ -75,7 +79,7 @@ interface FormData {
   _id?: string;
 }
 
-const OrderInfoPage: FC<Props> = ({ promotion, categories }) => {
+const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newItemValue, setNewItemValue] = useState("");
@@ -127,14 +131,19 @@ const OrderInfoPage: FC<Props> = ({ promotion, categories }) => {
     if (e.code !== "Period") return;
     if (newItemValue === "") return;
     if (getValues("promotionItems").includes(newItemValue.trim())) return;
-
-    setValue(
-      "promotionItems",
-      [...getValues("promotionItems"), newItemValue.trim()],
-      {
+    if (getValues("promotionItems")) {
+      setValue(
+        "promotionItems",
+        [...getValues("promotionItems"), newItemValue.trim().replace(".", "")],
+        {
+          shouldValidate: true,
+        }
+      );
+    } else {
+      setValue("promotionItems", [newItemValue.trim()], {
         shouldValidate: true,
-      }
-    );
+      });
+    }
     setNewItemValue("");
     return;
   };
@@ -169,9 +178,10 @@ const OrderInfoPage: FC<Props> = ({ promotion, categories }) => {
     return true;
   };
   return (
-    <ShopLayout
-      title={"Sigue tu pedido"}
-      pageDescription={"Pagina para seguir el estado del pedido"}
+    <AdminLayout
+      icon={<EditIcon />}
+      title={`Editar ${promotion.name}`}
+      subTitle={"Mantenimiento de promociones"}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
@@ -232,24 +242,27 @@ const OrderInfoPage: FC<Props> = ({ promotion, categories }) => {
             <Divider sx={{ my: 1 }} />
             {/* tipo de producto */}
             <FormControl fullWidth sx={{ mb: 1 }}>
-              <FormLabel>Categoría</FormLabel>
+              <InputLabel id="demo-simple-select-label">Categoría </InputLabel>
               <Select
-                value={getValues("category")}
+                {...register("category", { required: "Unidad es requerida" })}
                 label="Categoría"
+                value={getValues("category")}
                 onChange={({ target: { value } }) =>
                   setValue("category", value as any, { shouldValidate: true })
                 }
               >
-                {categories.map((cat: ICategory) => (
-                  <MenuItem value={cat._id}>{cat.name}</MenuItem>
+                {categories.map((cat: ICategory, i) => (
+                  <MenuItem key={i} value={cat._id}>
+                    {cat.name}
+                  </MenuItem>
                 ))}
               </Select>
             </FormControl>
             <Grid container spacing={2}>
               <Grid item xs>
                 <FormControl fullWidth sx={{ mb: 1 }}>
-                  <FormLabel>Cantidad</FormLabel>
                   <TextField
+                    label="Cantidad"
                     type="number"
                     variant="filled"
                     fullWidth
@@ -265,18 +278,22 @@ const OrderInfoPage: FC<Props> = ({ promotion, categories }) => {
               </Grid>
               <Grid item xs>
                 <FormControl fullWidth sx={{ mb: 1 }}>
-                  <FormLabel>Tipo de unidad</FormLabel>
+                  <InputLabel id="demo-simple-select-label">Unidad </InputLabel>
+
                   <Select
+                    {...register("unit", { required: "Unidad es requerida" })}
                     value={getValues("unit")}
-                    label="Categoría"
+                    label="Unidad"
                     onChange={({ target: { value } }) =>
                       setValue("unit", value as any, {
                         shouldValidate: true,
                       })
                     }
                   >
-                    {units.map((unit) => (
-                      <MenuItem value={unit}>{unit}</MenuItem>
+                    {units.map((unit, i) => (
+                      <MenuItem key={i} value={unit}>
+                        {unit}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>
@@ -414,8 +431,8 @@ const OrderInfoPage: FC<Props> = ({ promotion, categories }) => {
 
             {/* imagenes */}
             <Grid item container spacing={2} xs={12}>
-              {getValues("images").map((img) => (
-                <Grid className="fadeIn" item xs={6} md={4} lg={3}>
+              {getValues("images").map((img, i) => (
+                <Grid className="fadeIn" key={i} item xs={6} md={4} lg={3}>
                   <Card>
                     <CardMedia
                       component="img"
@@ -445,7 +462,7 @@ const OrderInfoPage: FC<Props> = ({ promotion, categories }) => {
                   sx={{ mb: 3 }}
                   onClick={() => fileInputRef.current?.click()}
                 >
-                  Cargar otra imagen
+                  Cargar imágen
                 </Button>
                 <input
                   ref={fileInputRef}
@@ -460,7 +477,7 @@ const OrderInfoPage: FC<Props> = ({ promotion, categories }) => {
           </Grid>
         </Grid>
       </form>
-    </ShopLayout>
+    </AdminLayout>
   );
 };
 
@@ -483,4 +500,4 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   };
 };
 
-export default OrderInfoPage;
+export default PromotionInfoPage;

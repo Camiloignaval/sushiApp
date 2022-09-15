@@ -1,5 +1,6 @@
 import mongoose, { Schema, Model, model } from "mongoose";
 import { IUser } from "../interfaces";
+import mongoose_delete from "mongoose-delete";
 
 const userSchema = new Schema(
   {
@@ -18,8 +19,11 @@ const userSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: true,
   }
 );
+
+userSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 const User: Model<IUser> = mongoose.models.User || model("User", userSchema);
 

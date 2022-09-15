@@ -28,6 +28,7 @@ const client = new Client({
 
 type Data = {
   message: string;
+  qr?: any;
 };
 
 export default function handler(
@@ -48,9 +49,16 @@ export default function handler(
 const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     client.initialize();
-    client.on("qr", (qr) => {
-      qrcode.generate(qr, { small: true });
+    // client.on("qr", (qr) => {
+    //   qrcode.generate(qr, { small: true });
+    // });
+    let qr = await new Promise((resolve, reject) => {
+      client.once("qr", (qr) => resolve(qr));
+      setTimeout(() => {
+        reject(new Error("QR event wasn't emitted in 15 seconds."));
+      }, 60000);
     });
+
     client.on("authenticated", async () => {
       console.log({ message: "Already authenticated" });
       spinner.stop();
@@ -66,7 +74,7 @@ const connectWsp = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       client.initialize(); // this what i was need
     });
 
-    return res.status(200).json({ message: "Conected" });
+    return res.status(200).json({ message: "Conected", qr });
   } catch (error) {
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

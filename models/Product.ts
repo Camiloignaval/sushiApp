@@ -1,5 +1,6 @@
 import mongoose, { Schema, Model, model } from "mongoose";
 import { IProduct } from "../interfaces";
+import mongoose_delete from "mongoose-delete";
 
 const productSchema = new Schema(
   {
@@ -24,8 +25,10 @@ const productSchema = new Schema(
       default: "filling",
     },
   },
-  { timestamps: true }
+  { timestamps: true, versionKey: false }
 );
+
+productSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 const Product: Model<IProduct> =
   mongoose.models.Product || model("Product", productSchema);

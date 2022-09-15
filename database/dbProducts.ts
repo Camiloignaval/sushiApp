@@ -1,10 +1,10 @@
 import { db } from ".";
 import { IProduct } from "../interfaces";
-import { Product, Promotion } from "../models";
+import { Product } from "../models";
 
 export const getProductById = async (id: string): Promise<IProduct | null> => {
   await db.connect();
-  const promotion = await Promotion.findById(id).lean();
+  const promotion = await Product.findById(id).lean();
   await db.disconnect();
   if (!promotion) {
     return null;

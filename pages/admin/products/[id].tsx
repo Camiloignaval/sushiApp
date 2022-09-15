@@ -3,7 +3,7 @@ import { GetServerSideProps } from "next";
 
 const link = "https://api.cloudinary.com/v1_1/dc6vako2z/image/upload";
 
-import { ShopLayout } from "../../../components/layouts";
+import { AdminLayout, ShopLayout } from "../../../components/layouts";
 import { dbProducts } from "../../../database";
 import { IFillingType, IProduct, IType } from "../../../interfaces";
 import { useForm } from "react-hook-form";
@@ -25,12 +25,15 @@ import {
   CardActions,
   Button,
   Switch,
+  Typography,
 } from "@mui/material";
+
 import { useUpdateProductMutation } from "../../../store/RTKQuery/productsApi";
 import toast from "react-hot-toast";
 import { useUploadFilesMutation } from "../../../store/RTKQuery/uploadApi";
 import axios from "axios";
 import { useRouter } from "next/router";
+import EditIcon from "@mui/icons-material/Edit";
 
 interface Props {
   product: IProduct;
@@ -57,7 +60,7 @@ interface FormData {
   fillingType?: string;
 }
 
-const OrderInfoPage: FC<Props> = ({ product }) => {
+const ProductInfoPage: FC<Props> = ({ product }) => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadFiles] = useUploadFilesMutation();
@@ -113,9 +116,10 @@ const OrderInfoPage: FC<Props> = ({ product }) => {
     return true;
   };
   return (
-    <ShopLayout
-      title={"Sigue tu pedido"}
-      pageDescription={"Pagina para seguir el estado del pedido"}
+    <AdminLayout
+      icon={<EditIcon />}
+      title={`Editar ${product.name}`}
+      subTitle={"Mantenimiento de productos"}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
         <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
@@ -271,7 +275,7 @@ const OrderInfoPage: FC<Props> = ({ product }) => {
                 sx={{ mb: 3 }}
                 onClick={() => fileInputRef.current?.click()}
               >
-                Cargar otra imagen
+                Cargar imágen
               </Button>
               <input
                 ref={fileInputRef}
@@ -286,13 +290,14 @@ const OrderInfoPage: FC<Props> = ({ product }) => {
           </Grid>
         </Grid>
       </form>
-    </ShopLayout>
+    </AdminLayout>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id = "" } = query;
   const product = await dbProducts.getProductById(id.toString());
+  console.log({ product });
 
   if (!product) {
     return {
@@ -307,4 +312,4 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   };
 };
 
-export default OrderInfoPage;
+export default ProductInfoPage;

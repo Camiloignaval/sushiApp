@@ -1,5 +1,6 @@
 import mongoose, { Schema, Model, model } from "mongoose";
 import { ICoupon, IPromotion } from "../interfaces";
+import mongoose_delete from "mongoose-delete";
 
 const couponSchema = new Schema(
   {
@@ -16,8 +17,11 @@ const couponSchema = new Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
+
+couponSchema.plugin(mongoose_delete, { overrideMethods: "all" });
 
 const Coupon: Model<ICoupon> =
   mongoose.models.Coupon || model("Coupon", couponSchema);

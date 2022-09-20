@@ -13,7 +13,12 @@ import {
   IType,
 } from "../../../interfaces";
 import { useForm } from "react-hook-form";
-import { Category, SaveOutlined, UploadOutlined } from "@mui/icons-material";
+import {
+  Category,
+  Delete,
+  SaveOutlined,
+  UploadOutlined,
+} from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 
 import {
@@ -37,6 +42,7 @@ import {
   Select,
   Typography,
   InputLabel,
+  IconButton,
 } from "@mui/material";
 import { useUpdateProductMutation } from "../../../store/RTKQuery/productsApi";
 import toast from "react-hot-toast";
@@ -45,6 +51,8 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { TextareaAutosize } from "@mui/base";
 import { useUpdatePromotionMutation } from "../../../store/RTKQuery/promotionApi";
+import { useDeletePromotion } from "../../../hooks";
+import product from "../../api/admin/product";
 
 interface Props {
   promotion: IPromotion;
@@ -83,6 +91,7 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newItemValue, setNewItemValue] = useState("");
+  const { onDeletePromotion, deletePromotionStatus } = useDeletePromotion();
 
   const [updatePromotion, updatePromotionState] = useUpdatePromotionMutation();
   const {
@@ -477,6 +486,22 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
           </Grid>
         </Grid>
       </form>
+      <Box sx={{ position: "absolute", right: 50, bottom: 50 }}>
+        <IconButton
+          disabled={deletePromotionStatus.isLoading}
+          onClick={() =>
+            onDeletePromotion({
+              id: promotion._id!,
+              img: promotion.images[0],
+              name: promotion.name,
+            })
+          }
+          color="error"
+          aria-label="delete"
+        >
+          <Delete sx={{ fontSize: "2rem" }} />
+        </IconButton>
+      </Box>
     </AdminLayout>
   );
 };

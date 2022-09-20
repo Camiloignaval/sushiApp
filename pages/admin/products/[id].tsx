@@ -7,7 +7,7 @@ import { AdminLayout, ShopLayout } from "../../../components/layouts";
 import { dbProducts } from "../../../database";
 import { IFillingType, IProduct, IType } from "../../../interfaces";
 import { useForm } from "react-hook-form";
-import { SaveOutlined, UploadOutlined } from "@mui/icons-material";
+import { Delete, SaveOutlined, UploadOutlined } from "@mui/icons-material";
 import {
   Box,
   Grid,
@@ -26,6 +26,7 @@ import {
   Button,
   Switch,
   Typography,
+  IconButton,
 } from "@mui/material";
 
 import { useUpdateProductMutation } from "../../../store/RTKQuery/productsApi";
@@ -34,6 +35,7 @@ import { useUploadFilesMutation } from "../../../store/RTKQuery/uploadApi";
 import axios from "axios";
 import { useRouter } from "next/router";
 import EditIcon from "@mui/icons-material/Edit";
+import { useDeleteProduct } from "../../../hooks";
 
 interface Props {
   product: IProduct;
@@ -65,6 +67,8 @@ const ProductInfoPage: FC<Props> = ({ product }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploadFiles] = useUploadFilesMutation();
   const [updateProduct, updateProductState] = useUpdateProductMutation();
+  const { onDeleteProduct, deleteProductStatus } = useDeleteProduct();
+
   const {
     register,
     handleSubmit,
@@ -290,6 +294,22 @@ const ProductInfoPage: FC<Props> = ({ product }) => {
           </Grid>
         </Grid>
       </form>
+      <Box sx={{ position: "absolute", right: 50, bottom: 50 }}>
+        <IconButton
+          disabled={deleteProductStatus.isLoading}
+          onClick={() =>
+            onDeleteProduct({
+              id: product._id!,
+              img: product.image,
+              name: product.name,
+            })
+          }
+          color="error"
+          aria-label="delete"
+        >
+          <Delete sx={{ fontSize: "2rem" }} />
+        </IconButton>
+      </Box>
     </AdminLayout>
   );
 };

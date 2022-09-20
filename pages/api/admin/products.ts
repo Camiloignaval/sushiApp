@@ -15,11 +15,12 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
     case "GET":
       return getProducts(req, res);
-
     case "PUT":
       return updateProduct(req, res);
     case "POST":
       return createProduct(req, res);
+    case "DELETE":
+      return deleteProduct(req, res);
 
     default:
       return res.status(400).json({
@@ -42,7 +43,6 @@ const updateProduct = async (
   res: NextApiResponse<Data>
 ) => {
   const body = req.body;
-  console.log("llegue a update product");
   try {
     await db.connect();
     const prod = await Product.findById(body._id).select("image");
@@ -53,7 +53,6 @@ const updateProduct = async (
       const [fileId, extension] = (prod!.image as string)
         .substring(prod!.image.lastIndexOf("/") + 1)
         .split(".");
-      console.log("entre y destruire el anterior", fileId);
       await cloudinary.uploader.destroy(fileId);
       cloudinary.api.delete_resources_by_prefix(`SushiApp/${fileId}`);
     }
@@ -75,7 +74,6 @@ const createProduct = async (
   res: NextApiResponse<Data>
 ) => {
   try {
-    console.log({ llegue: req.body });
     const { name = "", type = "", fillingType = "" } = req.body;
     await db.connect();
     const findBySameTypeAndName = await Product.findOne({ name, type });
@@ -89,6 +87,28 @@ const createProduct = async (
     await product.save();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
+    await db.disconnect();
+    res.status(500).json({ message: "Algo ha salido mal..." });
+  }
+};
+const deleteProduct = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const { body: id = "" } = req;
+
+  try {
+    await db.connect();
+    const deletedProduct = await Product.findByIdAndDelete(id);
+    if (!deletedProduct) {
+      return res.status(400).json({
+        message: "No existe producto con id indicado",
+      });
+    }
+    res.status(200).json({ message: "Producto eliminado con éxito" });
+    console.log({ deletedProduct });
+  } catch (error) {
+    console.log({ error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }

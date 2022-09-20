@@ -1,16 +1,22 @@
-import { AddOutlined, CategoryOutlined } from "@mui/icons-material";
-import { Box, Button, CardMedia, Grid, Link, Switch } from "@mui/material";
+import { AddOutlined, CategoryOutlined, Delete } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  CardMedia,
+  Grid,
+  IconButton,
+  Link,
+  Switch,
+} from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import NextLink from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AdminLayout } from "../../../components/layouts";
 import { FullScreenLoading } from "../../../components/ui";
-import { IProduct, IPromotion } from "../../../interfaces";
+import { useDeletePromotion } from "../../../hooks";
+import { IPromotion } from "../../../interfaces";
 
-import {
-  useGetProductsQuery,
-  useUpdateProductByPropertyMutation,
-} from "../../../store/RTKQuery/productsApi";
+import { useUpdateProductByPropertyMutation } from "../../../store/RTKQuery/productsApi";
 import { useGetAllPromotionsQuery } from "../../../store/RTKQuery/promotionApi";
 import { currency } from "../../../utils";
 
@@ -24,6 +30,8 @@ const dictType = {
 const ProductsPage = () => {
   const { data: dataPromotions } = useGetAllPromotionsQuery(null);
   const [updateProduct] = useUpdateProductByPropertyMutation();
+  const { onDeletePromotion, deletePromotionStatus } = useDeletePromotion();
+
   const columns: GridColDef[] = [
     {
       field: "img",
@@ -75,6 +83,25 @@ const ProductsPage = () => {
       headerName: "Precio",
       renderCell: ({ row }: GridValueGetterParams) => {
         return currency.format(row.price);
+      },
+    },
+    {
+      field: "delete",
+      headerName: "Eliminar",
+      width: 70,
+      renderCell: ({ row }: GridValueGetterParams) => {
+        return (
+          <IconButton
+            disabled={deletePromotionStatus.isLoading}
+            onClick={() =>
+              onDeletePromotion({ id: row.id, img: row.img, name: row.name })
+            }
+            color="error"
+            aria-label="delete"
+          >
+            <Delete />
+          </IconButton>
+        );
       },
     },
   ];

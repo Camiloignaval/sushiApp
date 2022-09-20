@@ -11,7 +11,6 @@ import { PersonalProvider } from "../components/ui/PersonalProvider";
 import { SessionProvider } from "next-auth/react";
 import { PayPalScriptProvider } from "@paypal/react-paypal-js";
 
-
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <SessionProvider>
@@ -31,21 +30,21 @@ function MyApp({ Component, pageProps }: AppProps) {
                 <Component {...pageProps} />
               </PersonalProvider>
               <Toaster
-                toastOptions={{
-                  success: {
-                    style: {
-                      background: "green",
-                      color: "white",
-                    },
-                  },
-                  error: {
-                    style: {
-                      background: "white",
-                      color: "black",
-                      fontWeight: "500",
-                    },
-                  },
-                }}
+              // toastOptions={{
+              //   success: {
+              //     style: {
+              //       background: "green",
+              //       color: "white",
+              //     },
+              //   },
+              //   error: {
+              //     style: {
+              //       background: "white",
+              //       color: "black",
+              //       fontWeight: "500",
+              //     },
+              //   },
+              // }}
               />
             </ThemeProvider>
           </SWRConfig>
@@ -54,6 +53,5 @@ function MyApp({ Component, pageProps }: AppProps) {
     </SessionProvider>
   );
 }
-
 
 export default MyApp;

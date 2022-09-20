@@ -1,10 +1,19 @@
-import { AddOutlined, CategoryOutlined } from "@mui/icons-material";
-import { Box, Button, CardMedia, Grid, Link, Switch } from "@mui/material";
+import { AddOutlined, CategoryOutlined, Delete } from "@mui/icons-material";
+import {
+  Box,
+  Button,
+  CardMedia,
+  Grid,
+  IconButton,
+  Link,
+  Switch,
+} from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import NextLink from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { AdminLayout } from "../../../components/layouts";
 import { FullScreenLoading } from "../../../components/ui";
+import { useDeleteProduct } from "../../../hooks";
 import { IProduct } from "../../../interfaces";
 
 import {
@@ -24,6 +33,7 @@ const ProductsPage = () => {
   const { data: dataProducts } = useGetProductsQuery(null);
   console.log({ dataProducts });
   const [updateProduct] = useUpdateProductByPropertyMutation();
+  const { onDeleteProduct, deleteProductStatus } = useDeleteProduct();
   const columns: GridColDef[] = [
     {
       field: "img",
@@ -75,6 +85,23 @@ const ProductsPage = () => {
       headerName: "Precio",
       renderCell: ({ row }: GridValueGetterParams) => {
         return currency.format(row.price);
+      },
+    },
+    {
+      field: "delete",
+      headerName: "Eliminar",
+      width: 70,
+      renderCell: ({ row }: GridValueGetterParams) => {
+        return (
+          <IconButton
+            disabled={deleteProductStatus.isLoading}
+            onClick={() => onDeleteProduct(row)}
+            color="error"
+            aria-label="delete"
+          >
+            <Delete />
+          </IconButton>
+        );
       },
     },
   ];

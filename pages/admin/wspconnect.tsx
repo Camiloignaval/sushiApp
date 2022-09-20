@@ -5,16 +5,16 @@ import { Button } from "@mui/material";
 
 const WspconnectPage = () => {
   useEffect(() => {
-    (async () => {
-      try {
-        const resp = await axios.post(
-          "http://localhost:3000/api/admin/wspconnect"
-        );
-        qrcode.generate(resp?.data?.qr, { small: true });
-      } catch (error) {
-        console.log({ error });
-      }
-    })();
+    // (async () => {
+    //   try {
+    //     const resp = await axios.post(
+    //       "http://localhost:3000/api/admin/wspconnect"
+    //     );
+    //     qrcode.generate(resp?.data?.qr, { small: true });
+    //   } catch (error) {
+    //     console.log({ error });
+    //   }
+    // })();
   }, []);
 
   return (

@@ -47,19 +47,26 @@ export const promotionApi = createApi({
         });
       },
     }),
-    // getOrder: builder.query<IResponse, IOrder>({
-    //   query: (orderId) => ({
-    //     url: `/orders/${orderId}`,
-    //     method: "get",
-    //   }),
-    //   onQueryStarted(_, { queryFulfilled }) {
-    //     queryFulfilled.catch(() => {
-    //       toast.error("Ha ocurrido un error al obtener orden");
-    //     });
-    //   },
-    // }),
+    deletePromotion: builder.mutation<IResponse, string>({
+      query: (body) => ({
+        url: `/admin/promotions`,
+        method: "delete",
+        body,
+      }),
+      invalidatesTags: ["Promotions"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Eliminando promoción...",
+          success: "Eliminada con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
-export const { useGetAllPromotionsQuery, useUpdatePromotionMutation } =
-  promotionApi;
+export const {
+  useGetAllPromotionsQuery,
+  useUpdatePromotionMutation,
+  useDeletePromotionMutation,
+} = promotionApi;

@@ -20,6 +20,8 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
       return updatePromotion(req, res);
     case "POST":
       return createPromotion(req, res);
+    case "DELETE":
+      return deletePromotion(req, res);
 
     default:
       return res.status(400).json({
@@ -101,6 +103,28 @@ const createPromotion = async (
     await product.save();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
+    await db.disconnect();
+    res.status(500).json({ message: "Algo ha salido mal..." });
+  }
+};
+
+const deletePromotion = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const { body: id = "" } = req;
+
+  try {
+    await db.connect();
+    const deletedPromotion = await Promotion.findByIdAndDelete(id);
+    if (!deletedPromotion) {
+      return res.status(400).json({
+        message: "No existe promoción con id indicado",
+      });
+    }
+    res.status(200).json({ message: "Promoción eliminada con éxito" });
+  } catch (error) {
+    console.log({ error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }

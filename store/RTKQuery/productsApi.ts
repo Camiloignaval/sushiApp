@@ -64,6 +64,21 @@ export const productsApi = createApi({
         });
       },
     }),
+    deleteProduct: builder.mutation<IProduct[], string>({
+      query: (body) => ({
+        url: `/admin/products`,
+        method: "delete",
+        body,
+      }),
+      invalidatesTags: ["Products"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Eliminando producto...",
+          success: "Eliminado con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
@@ -71,4 +86,5 @@ export const {
   useGetProductsQuery,
   useUpdateProductByPropertyMutation,
   useUpdateProductMutation,
+  useDeleteProductMutation,
 } = productsApi;

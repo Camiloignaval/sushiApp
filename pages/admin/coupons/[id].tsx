@@ -25,6 +25,7 @@ import {
 import { useRouter } from "next/router";
 
 import { useUpdateCouponMutation } from "../../../store/RTKQuery/couponApi";
+import { format } from "date-fns";
 
 interface Props {
   cupon: ICoupon | any;
@@ -189,12 +190,12 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
                     labelPlacement="top"
                     control={
                       <Switch
+                        checked={getValues("expire")}
                         onChange={(e) =>
                           setValue("expire", e.target.checked, {
                             shouldValidate: true,
                           })
                         }
-                        // checked={getValues("inStock")}
                       />
                     }
                   />
@@ -345,7 +346,7 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
           </Grid>
         </Grid>
       </form>
-      <Box sx={{ position: "absolute", right: 50, bottom: 50 }}>
+      {/* <Box sx={{ position: "absolute", right: 50, bottom: 50 }}>
         <IconButton
           //   disabled={deletePromotionStatus.isLoading}
           //   onClick={() =>
@@ -360,7 +361,7 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
         >
           <Delete sx={{ fontSize: "2rem" }} />
         </IconButton>
-      </Box>
+      </Box> */}
     </AdminLayout>
   );
 };
@@ -377,12 +378,15 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
       },
     };
   }
+  //   todo revisar los que se crean no estan tomando el cambio de hora desde utc a cl
   return {
     props: {
       cupon: {
         ...cupon,
-        startIn: cupon.startIn.slice(0, 16),
-        expireIn: cupon?.expire ? cupon?.expireIn!.slice(0, 16) : null,
+        startIn: format(new Date(cupon.startIn), "yyyy-MM-dd'T'HH:mm"),
+        expireIn: cupon?.expire
+          ? format(new Date(cupon.expireIn!), "yyyy-MM-dd'T'HH:mm")
+          : null,
       },
     },
   };

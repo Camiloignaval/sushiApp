@@ -30,7 +30,7 @@ import {
 } from "../../../store/RTKQuery/productsApi";
 import { currency } from "../../../utils";
 import { dbCoupons } from "../../../database";
-import { format, isAfter, isBefore } from "date-fns";
+import { format, isAfter, isBefore, isFuture } from "date-fns";
 import { es } from "date-fns/locale";
 
 interface Props {
@@ -108,7 +108,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
         }
         if (
           row.expire &&
-          isBefore(new Date(row.startIn), new Date(row?.expireIn))
+          isAfter(new Date(row.startIn), new Date(row?.expireIn))
         ) {
           return (
             <Chip
@@ -119,13 +119,25 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
             />
           );
         }
-        if (!isBefore(new Date(row.startIn), new Date(row?.expireIn))) {
-          <Chip
-            sx={{ width: "100%" }}
-            label="Vigente"
-            variant="outlined"
-            color="success"
-          />;
+        if (isFuture(new Date(row.startIn))) {
+          return (
+            <Chip
+              sx={{ width: "100%" }}
+              label="Próximo"
+              variant="outlined"
+              color="primary"
+            />
+          );
+        }
+        if (isBefore(new Date(row.startIn), new Date(row?.expireIn))) {
+          return (
+            <Chip
+              sx={{ width: "100%" }}
+              label="Vigente"
+              variant="outlined"
+              color="success"
+            />
+          );
         }
       },
     },
@@ -177,23 +189,23 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
         return row?.maxDiscount ? currency.format(row?.maxDiscount) : "";
       },
     },
-    {
-      field: "delete",
-      headerName: "Eliminar",
-      width: 70,
-      renderCell: ({ row }: GridValueGetterParams) => {
-        return (
-          <IconButton
-            disabled={deleteProductStatus.isLoading}
-            onClick={() => onDeleteProduct(row)}
-            color="error"
-            aria-label="delete"
-          >
-            <Delete />
-          </IconButton>
-        );
-      },
-    },
+    // {
+    //   field: "delete",
+    //   headerName: "Eliminar",
+    //   width: 70,
+    //   renderCell: ({ row }: GridValueGetterParams) => {
+    //     return (
+    //       <IconButton
+    //         disabled={deleteProductStatus.isLoading}
+    //         onClick={() => onDeleteProduct(row)}
+    //         color="error"
+    //         aria-label="delete"
+    //       >
+    //         <Delete />
+    //       </IconButton>
+    //     );
+    //   },
+    // },
   ];
 
   if (!dataProducts) return <FullScreenLoading />;

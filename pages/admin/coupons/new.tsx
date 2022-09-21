@@ -1,8 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
-import { GetServerSideProps } from "next";
 
 import { AdminLayout } from "../../../components/layouts";
-import { dbCoupons } from "../../../database";
 import { ICoupon, ITypeCoupon } from "../../../interfaces";
 import { useForm } from "react-hook-form";
 import { Delete, SaveOutlined } from "@mui/icons-material";
@@ -22,13 +20,13 @@ import {
   IconButton,
   InputAdornment,
 } from "@mui/material";
+
 import { useRouter } from "next/router";
 
 import { useUpdateCouponMutation } from "../../../store/RTKQuery/couponApi";
-
-interface Props {
-  cupon: ICoupon | any;
-}
+import Typography from "@mui/material/Typography";
+import { format, isAfter, isBefore } from "date-fns";
+import toast from "react-hot-toast";
 
 interface FormData {
   _id?: string;
@@ -42,17 +40,14 @@ interface FormData {
   discount: number;
   maxDiscount?: number;
   minPurchase?: number;
+  qtyUsed?: number;
 }
 
-const PromotionInfoPage: FC<Props> = ({ cupon }) => {
+const newCuponPage = () => {
   const router = useRouter();
 
-  const [activeMaxDiscount, setActiveMaxDiscount] = useState(
-    !!cupon.maxDiscount
-  );
-  const [activeMinPurchase, setActiveMinPurchase] = useState(
-    !!cupon.minPurchase
-  );
+  const [activeMaxDiscount, setActiveMaxDiscount] = useState(false);
+  const [activeMinPurchase, setActiveMinPurchase] = useState(false);
   //   const { onDeletePromotion, deletePromotionStatus } = useDeletePromotion();
   const [updateCoupon, updateCouponState] = useUpdateCouponMutation();
   const {
@@ -61,10 +56,7 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
     formState: { errors },
     getValues,
     setValue,
-    control,
-  } = useForm<FormData>({
-    defaultValues: cupon,
-  });
+  } = useForm<FormData>({});
 
   useEffect(() => {
     if (!activeMaxDiscount) {
@@ -79,12 +71,16 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
   }, [activeMinPurchase]);
 
   const onSubmit = async (formData: FormData) => {
-    console.log("llegue a submit");
     formData.startIn = new Date(formData.startIn).toISOString();
     // eliminar expireIn
     if (!formData.expire && formData?.expireIn) {
       delete formData.expireIn;
     } else {
+      // verificar que fechaexpiracion no es mayor a inicio
+      if (isAfter(new Date(formData.startIn), new Date(formData.expireIn!))) {
+        toast.error("Fecha de expiracion no puede ser mayor a inicio");
+        return;
+      }
       formData.expireIn = formData.expireIn
         ? new Date(formData.expireIn).toISOString()
         : undefined;
@@ -97,11 +93,10 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
       });
     return true;
   };
-
   return (
     <AdminLayout
       icon={<EditIcon />}
-      title={`Editar ${cupon.name}`}
+      title={`Nuevo cupón`}
       subTitle={"Mantenimiento de cupones"}
     >
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -175,6 +170,9 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
                   InputLabelProps={{
                     shrink: true,
                   }}
+                  inputProps={{
+                    min: format(new Date(), "yyyy-MM-dd'T'HH:mm").slice(0, 16),
+                  }}
                   {...register("startIn", {
                     required: "Este campo es requerido",
                   })}
@@ -189,12 +187,12 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
                     labelPlacement="top"
                     control={
                       <Switch
+                        defaultChecked={false}
                         onChange={(e) =>
                           setValue("expire", e.target.checked, {
                             shouldValidate: true,
                           })
                         }
-                        // checked={getValues("inStock")}
                       />
                     }
                   />
@@ -214,6 +212,12 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
                     {...register("expireIn", {
                       required: "Este campo es requerido",
                     })}
+                    inputProps={{
+                      min: format(new Date(), "yyyy-MM-dd'T'HH:mm").slice(
+                        0,
+                        16
+                      ),
+                    }}
                     error={!!errors.expireIn}
                     helperText={errors.expireIn?.message}
                   />
@@ -242,7 +246,8 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
                 <FormControl fullWidth>
                   <InputLabel>Categoría</InputLabel>
                   <Select
-                    {...register("type", { required: "Unidad es requerida" })}
+                    error={!!errors.type}
+                    {...register("type", { required: "Tipo es requerido" })}
                     label="Categoría"
                     value={getValues("type")}
                     onChange={({ target: { value } }) =>
@@ -252,6 +257,9 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
                     <MenuItem value={"money"}>Dinero</MenuItem>
                     <MenuItem value={"percentage"}>Porcentaje</MenuItem>
                   </Select>
+                  <Typography variant="caption" color={"error"}>
+                    {errors.type?.message}
+                  </Typography>
                 </FormControl>
               </Grid>
               <Grid item xs={12} md={6} mb={1}>
@@ -264,6 +272,8 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
                   {...register("discount", {
                     required: "Descuento es requerido",
                   })}
+                  error={!!errors.discount}
+                  helperText={errors.discount?.message}
                   InputProps={{
                     endAdornment: (
                       <InputAdornment position="start">
@@ -365,27 +375,4 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { id = "" } = query;
-  const cupon = await dbCoupons.getCouponById(id.toString());
-
-  if (!cupon) {
-    return {
-      redirect: {
-        destination: `/admin/coupons`,
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: {
-      cupon: {
-        ...cupon,
-        startIn: cupon.startIn.slice(0, 16),
-        expireIn: cupon?.expire ? cupon?.expireIn!.slice(0, 16) : null,
-      },
-    },
-  };
-};
-
-export default PromotionInfoPage;
+export default newCuponPage;

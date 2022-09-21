@@ -66,25 +66,21 @@ const createCoupon = async (
   res: NextApiResponse<Data>
 ) => {
   try {
-    console.log({ llegue: req.body });
-    const { name = "" } = req.body;
+    const { name = "", code = "" } = req.body;
     await db.connect();
-    const findBySameName = await Promotion.findOne({ name });
-    if (findBySameName) {
+    const findSameCoupon = await Coupon.find({ $or: [{ name }, { code }] });
+    console.log({ findSameCoupon });
+    if (findSameCoupon.length > 0) {
       await db.disconnect();
       return res.status(400).json({
-        message: "Ya existe una promoción con este nombre",
+        message: "Ya existe una cupón con ese nombre o código",
       });
     }
-    if (req.body.images.length === 0) {
-      return res.status(400).json({
-        message: "Debe seleccionar a lo menos 1 imágen",
-      });
-    }
-    const product = new Promotion(req.body);
-    await product.save();
+    const cupon = new Coupon(req.body);
+    await cupon.save();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
+    console.log({ error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }

@@ -221,7 +221,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
         <Button
           startIcon={<AddOutlined />}
           color="secondary"
-          href="/admin/products/new"
+          href="/admin/coupons/new"
         >
           Nuevo cupón
         </Button>

@@ -20,6 +20,7 @@ interface SeedCoupon {
   code: string;
   expire: boolean;
   expireIn?: string;
+  startIn: string;
   qtyAvailable: number;
   qtyUsed: number;
   type: string; //  porcentaje o cantidad de $
@@ -64,6 +65,7 @@ export const initialData: SeedData = {
       code: "SEUNNIÑO",
       expire: false,
       qtyAvailable: 5,
+      startIn: "2022-10-10T21:37:34.828+00:00",
       qtyUsed: 0,
       type: "percentage", //  porcentaje o cantidad de $
       discount: 10,
@@ -72,6 +74,7 @@ export const initialData: SeedData = {
     {
       name: "Inauguracion",
       code: "PANKO",
+      startIn: "2022-09-10T21:37:34.828+00:00",
       expire: true,
       expireIn: "2022-10-10T21:37:34.828+00:00",
       qtyAvailable: 10,

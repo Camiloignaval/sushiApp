@@ -16,7 +16,7 @@ interface IResponse {
 export const couponApi = createApi({
   reducerPath: "couponApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
-  tagTypes: ["Coupon"],
+  tagTypes: ["Coupons"],
   endpoints: (builder) => ({
     validateCoupon: builder.mutation<
       IResponse,
@@ -37,26 +37,26 @@ export const couponApi = createApi({
         });
       },
     }),
-    // updateProduct: builder.mutation<IProduct[], any>({
-    //   query: (body) => ({
-    //     url: `/admin/products`,
-    //     method: body._id ? "put" : "post",
-    //     body,
-    //   }),
-    //   invalidatesTags: ["Products"],
-    //   onQueryStarted(data, { queryFulfilled }) {
-    //     toast.promise(queryFulfilled, {
-    //       loading: data._id
-    //         ? "Actualizando producto..."
-    //         : "Creando producto...",
-    //       success: data._id
-    //         ? "Actualizado con éxito"
-    //         : "Producto creado con éxito",
-    //       error: ({ error }) => error.data.message.toString(),
-    //     });
-    //   },
-    // }),
+    updateCoupon: builder.mutation<ICoupon, ICoupon>({
+      query: (body) => ({
+        url: `/admin/coupons`,
+        method: body._id ? "put" : "post",
+        body,
+      }),
+      invalidatesTags: ["Coupons"],
+      onQueryStarted(data, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: data._id
+            ? "Actualizando producto..."
+            : "Creando producto...",
+          success: data._id
+            ? "Actualizado con éxito"
+            : "Producto creado con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
-export const { useValidateCouponMutation } = couponApi;
+export const { useValidateCouponMutation, useUpdateCouponMutation } = couponApi;

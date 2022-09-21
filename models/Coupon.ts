@@ -8,6 +8,7 @@ const couponSchema = new Schema(
     code: { type: String, required: true },
     expire: { type: Boolean, required: true },
     expireIn: { type: String },
+    startIn: { type: String, required: true },
     qtyAvailable: { type: Number, required: true },
     qtyUsed: { type: Number, required: true },
     type: { type: String, required: true }, //  porcentaje o cantidad de $

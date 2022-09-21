@@ -8,13 +8,12 @@ import {
   IconButton,
   Card,
 } from "@mui/material";
-import type { NextPage } from "next";
+import type { GetServerSideProps, NextPage } from "next";
 import NextLink from "next/link";
 import { Link } from "react-scroll";
-import { useEffect, useState } from "react";
 
 import { PromotionCategory } from "../components/products/PromotionCategory";
-import { IPromotion } from "../interfaces";
+import { ICategory, IPromotion } from "../interfaces";
 import { useGetAllPromotionsQuery } from "../store/RTKQuery/promotionApi";
 import { DrawerCustomRoll } from "../components/customRoll/DrawerCustomRoll";
 import { useDispatch, useSelector } from "react-redux";
@@ -24,11 +23,16 @@ import { currency } from "../utils";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { MainShopLayout } from "../components/layouts";
 import { FaCircle } from "react-icons/fa";
+import { useGetCategoriesQuery } from "../store/RTKQuery/categoriesApi";
+import { dbCategories, dbPromotions } from "../database";
+import { useState, useEffect } from "react";
 
-const categoriesBBDD = ["HandRolls", "Promos"];
+interface Props {
+  promotions: IPromotion[];
+  categories: ICategory[];
+}
 
-const HomePage: NextPage = () => {
-  const { data: promotions, isLoading } = useGetAllPromotionsQuery(null);
+const HomePage: NextPage<Props> = ({ promotions, categories }) => {
   const {
     ui: { scrollIsDown },
     cart: { numberOfItems, total },
@@ -68,9 +72,9 @@ const HomePage: NextPage = () => {
   useEffect(() => {
     if (promotions) {
       let promosSeparate: any = {};
-
-      promotions?.forEach((promo: IPromotion) => {
-        const nameCategory = promo?.category?.name.toString();
+      console.log({ promotions });
+      promotions!.forEach((promo: IPromotion) => {
+        const nameCategory = promo?.category?.name;
         promosSeparate = {
           ...promosSeparate,
           [nameCategory]: promosSeparate[nameCategory]
@@ -79,6 +83,7 @@ const HomePage: NextPage = () => {
         };
       });
       setPromosByCategory(promosSeparate);
+      console.log({ promosSeparate });
     }
   }, [promotions]);
 
@@ -105,11 +110,11 @@ const HomePage: NextPage = () => {
         allowScrollButtonsMobile
         aria-label="scrollable force tabs example"
       >
-        {categoriesBBDD.map((category, i) => (
-          <Box key={i}>
+        {(categories ?? []).map((category) => (
+          <Box key={category._id}>
             <Link
               activeClass="active"
-              to={category}
+              to={category.name}
               spy={true}
               smooth={true}
               duration={500}
@@ -124,7 +129,7 @@ const HomePage: NextPage = () => {
               }}
               offset={-120}
             >
-              {category}
+              {category.name}
             </Link>
             <FaCircle
               style={{ width: "10px", position: "relative", top: 18 }}
@@ -209,4 +214,14 @@ const HomePage: NextPage = () => {
     </MainShopLayout>
   );
 };
+
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const promotions = await dbPromotions.getAllPromotions();
+  const categories = await dbCategories.getCategories();
+
+  return {
+    props: { promotions, categories },
+  };
+};
+
 export default HomePage;

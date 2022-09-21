@@ -134,6 +134,7 @@ const ProductsPage = () => {
       </Box>
       <Grid className="fadeIn" container xs={12} height={650} width="100%">
         <DataGrid
+          disableSelectionOnClick={true}
           rows={rows ?? []}
           columns={columns}
           pageSize={10}

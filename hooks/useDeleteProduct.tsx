@@ -27,7 +27,13 @@ export const useDeleteProduct = () => {
   const onDeleteProduct = (row: PropsOnDelete) => {
     toast.custom(
       (t) => (
-        <Box>
+        <Box
+          sx={{
+            boxShadow: "4px 5px 15px -5px rgba(0,0,0,0.53)",
+            p: 1,
+            borderRadius: "10px",
+          }}
+        >
           <Grid container spacing={2}>
             <Grid item>
               <Box>
@@ -35,7 +41,7 @@ export const useDeleteProduct = () => {
                 <Avatar
                   sx={{
                     position: "absolute",
-                    top: 0,
+                    top: 10,
                     zIndex: 99,
                     opacity: 0.3,
                   }}

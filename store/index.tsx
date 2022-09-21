@@ -9,6 +9,7 @@ import { productsApi } from "./RTKQuery/productsApi";
 import { uploadApi } from "./RTKQuery/uploadApi";
 import { promotionApi } from "./RTKQuery/promotionApi";
 import { couponApi } from "./RTKQuery/couponApi";
+import { categoriesApi } from "./RTKQuery/categoriesApi";
 
 const apisMiddlewares = [
   authApi.middleware,
@@ -18,6 +19,7 @@ const apisMiddlewares = [
   uploadApi.middleware,
   promotionApi.middleware,
   couponApi.middleware,
+  categoriesApi.middleware,
 ];
 
 export const store = configureStore({
@@ -32,6 +34,7 @@ export const store = configureStore({
     [uploadApi.reducerPath]: uploadApi.reducer,
     [promotionApi.reducerPath]: promotionApi.reducer,
     [couponApi.reducerPath]: couponApi.reducer,
+    [categoriesApi.reducerPath]: categoriesApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apisMiddlewares),

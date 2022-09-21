@@ -2,9 +2,6 @@ import {
   Box,
   Divider,
   Drawer,
-  IconButton,
-  Input,
-  InputAdornment,
   List,
   ListItem,
   ListItemIcon,
@@ -12,20 +9,13 @@ import {
   ListSubheader,
 } from "@mui/material";
 import {
-  AccountCircleOutlined,
-  AddShoppingCartOutlined,
   AdminPanelSettings,
   CategoryOutlined,
   ConfirmationNumberOutlined,
   DashboardOutlined,
-  EscalatorWarningOutlined,
-  FemaleOutlined,
   LocalOfferOutlined,
   LocationCityOutlined,
   LoginOutlined,
-  MaleOutlined,
-  PlusOne,
-  SearchOutlined,
   VpnKeyOutlined,
 } from "@mui/icons-material";
 import { useState } from "react";
@@ -124,6 +114,12 @@ export const SideMenu = () => {
           <>
             <Divider />
             <ListSubheader>Admin Panel</ListSubheader>
+            <ListItem button onClick={() => navigateTo(`/admin`)}>
+              <ListItemIcon>
+                <DashboardOutlined />
+              </ListItemIcon>
+              <ListItemText primary={"Dashboard"} />
+            </ListItem>
             <ListItem button onClick={() => navigateTo(`/admin/promotions`)}>
               <ListItemIcon>
                 <LocalOfferOutlined />
@@ -136,12 +132,19 @@ export const SideMenu = () => {
               </ListItemIcon>
               <ListItemText primary={"Productos"} />
             </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin`)}>
+            <ListItem button onClick={() => navigateTo(`/admin/categories`)}>
               <ListItemIcon>
-                <DashboardOutlined />
+                <CategoryOutlined />
               </ListItemIcon>
-              <ListItemText primary={"Dashboard"} />
+              <ListItemText primary={"Categorias"} />
             </ListItem>
+            <ListItem button onClick={() => navigateTo(`/admin/coupons`)}>
+              <ListItemIcon>
+                <CategoryOutlined />
+              </ListItemIcon>
+              <ListItemText primary={"Cupones"} />
+            </ListItem>
+
             <ListItem button onClick={() => navigateTo(`/admin/orders`)}>
               <ListItemIcon>
                 <ConfirmationNumberOutlined />

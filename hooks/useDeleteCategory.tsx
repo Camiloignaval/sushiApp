@@ -1,30 +1,30 @@
-import { InfoRounded } from "@mui/icons-material";
+import { InfoRounded, QuestionMarkOutlined } from "@mui/icons-material";
 import { Box, Grid, Avatar, Typography, Button } from "@mui/material";
 import { useRouter } from "next/router";
 import toast from "react-hot-toast";
-import { useDeletePromotionMutation } from "../store/RTKQuery/promotionApi";
+import { useDeleteCategoryMutation } from "../store/RTKQuery/categoriesApi";
 
 interface PropsOnDelete {
-  img: string;
   name: string;
   id: string;
 }
 
-export const useDeletePromotion = () => {
-  const [deletePromotionQuery, deletePromotionStatus] =
-    useDeletePromotionMutation();
+export const useDeleteCategory = () => {
+  const [deleteCategoryQuery, deleteCategoryStatus] =
+    useDeleteCategoryMutation();
   const router = useRouter();
-  const onConfirmDelete = async (idToast: string, idPromotion: string) => {
+
+  const onConfirmDelete = async (idToast: string, idProducto: string) => {
     toast.dismiss(idToast);
     try {
-      await deletePromotionQuery(idPromotion);
-      router.push("/admin/promotions");
+      await deleteCategoryQuery(idProducto);
+      router.push("/admin/categories");
     } catch (error) {
       console.log({ error });
     }
   };
 
-  const onDeletePromotion = (row: PropsOnDelete) => {
+  const onDeleteCategory = (row: PropsOnDelete) => {
     toast.custom(
       (t) => (
         <Box
@@ -36,19 +36,9 @@ export const useDeletePromotion = () => {
         >
           <Grid container spacing={2}>
             <Grid item>
-              <Box>
-                <Avatar alt="imgPromotion" src={row.img} />
-                <Avatar
-                  sx={{
-                    position: "absolute",
-                    top: 10,
-                    zIndex: 99,
-                    opacity: 0.3,
-                  }}
-                  alt="Prohibido"
-                  src="/images/prohibido.png"
-                />
-              </Box>
+              <Avatar sx={{ bgcolor: "rgb(204, 242, 255)" }}>
+                <QuestionMarkOutlined />
+              </Avatar>
             </Grid>
             <Grid item>
               <Typography>¿Seguro que desea eliminar {row.name}?</Typography>
@@ -89,5 +79,5 @@ export const useDeletePromotion = () => {
     );
   };
 
-  return { onDeletePromotion, deletePromotionStatus };
+  return { onDeleteCategory, deleteCategoryStatus };
 };

@@ -28,11 +28,6 @@ const getPromotions = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
-  // const { gender } = req.query;}
-  // let condition = {};
-  // if (gender !== "all" && SHOP_CONSTANT.validGenders.includes(`${gender}`)) {
-  //   condition = { gender };
-  // }
   await db.connect();
   const promotions = await Promotion.find(/* condition */)
     .select("-createdAt -updatedAt")

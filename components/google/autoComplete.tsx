@@ -188,7 +188,6 @@ export const AutoCompletePlace: React.FC<Props> = ({
             data: { rows },
           } = respMatrix;
           const { distance, duration } = rows[0].elements[0];
-          console.log({ distance, duration });
           if (distance.value > 2000) {
             deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;
           }
@@ -274,11 +273,9 @@ export const AutoCompletePlace: React.FC<Props> = ({
           if (selectedDirection) {
             newOptions = [selectedDirection];
           }
-          console.log({ results });
           if (results) {
             newOptions = [/* ...newOptions,  */ ...results];
           }
-          console.log({ options: JSON.stringify(newOptions[0]) });
           setOptions(newOptions);
         }
       }
@@ -296,25 +293,19 @@ export const AutoCompletePlace: React.FC<Props> = ({
     if (addressFound) {
       return true;
     }
-    console.log("entre aqui0");
     if (selectedDirection) {
-      console.log("entre aqui1");
       if (inputValue !== selectedDirection?.description) {
-        console.log("entre aqui2");
         return false;
       }
       return true;
     } else if (!selectedDirection) {
-      console.log("entre aqui3");
       if (!shippingAddress) {
-        console.log("entre aqui4");
         return false;
       }
       if (shippingAddress && inputValue !== shippingAddress.address) {
         return false;
       }
     }
-    console.log("entre aqui5");
     return true;
   };
   shippingAddress && inputValue !== shippingAddress.address;

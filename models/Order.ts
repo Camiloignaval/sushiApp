@@ -13,6 +13,12 @@ const orderSchema = new Schema(
         quantity: { type: Number, required: true },
         image: { type: String, required: true },
         price: { type: Number, required: true },
+        note: { type: String },
+        proteins: { type: Array },
+        vegetables: { type: Array },
+        sauces: { type: Array },
+        extraProduct: { type: Array },
+        envelopes: { type: Array },
       },
     ],
     orderExtraItems: [
@@ -22,6 +28,7 @@ const orderSchema = new Schema(
         quantity: { type: Number, required: true },
         image: { type: String, required: true },
         price: { type: Number, required: true },
+        note: { type: String },
       },
     ],
     shippingAddress: {

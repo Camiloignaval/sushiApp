@@ -122,8 +122,7 @@ const OrderInfoPage: FC<Props> = ({ order }) => {
           </Typography>{" "}
           <Typography variant="subtitle1">
             <HomeOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {order.shippingAddress.address}, {order.shippingAddress.commune},{" "}
-            {order.shippingAddress.city}
+            {order.shippingAddress.address}
           </Typography>
         </Grid>
       </Grid>

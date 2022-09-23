@@ -32,11 +32,6 @@ const emptyAddress: IShippingAdress = {
 };
 
 const getAdressFromCookies = (): IShippingAdress => {
-  console.log({
-    cookiesadress: Cookies.get("address")
-      ? JSON.parse(Cookies.get("address")!)
-      : emptyAddress,
-  });
   return Cookies.get("address")
     ? JSON.parse(Cookies.get("address")!)
     : emptyAddress;
@@ -90,7 +85,6 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
       return;
     }
     data.placeId = placeIdState!;
-    console.log({ data });
     Cookies.set("address", JSON.stringify(data));
     setIsModificable(false);
 
@@ -106,7 +100,6 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
       setValue("phone", data.phone);
       setValue("address", data.address);
       setPlaceIdState(data.placeId);
-      console.log({ placeIdEnFind: data.placeId });
       searchPriceDeliverIfWasSaved(data.placeId, data.address);
     } catch (error) {
       console.log({ error });
@@ -117,7 +110,6 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
     placeId: string,
     addressDir: string
   ) => {
-    console.log("entre al calculo");
     const respMatrix = await axios(
       `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${placeId}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
     );
@@ -128,7 +120,6 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
       data: { rows },
     } = respMatrix;
     const { distance, duration } = rows[0].elements[0];
-    console.log({ distance, duration });
     if (distance.value > 2000) {
       deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;
     }
@@ -140,6 +131,7 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
       })
     );
   };
+
   return (
     <Box marginBottom={5}>
       <Typography variant="h2" component="h2">

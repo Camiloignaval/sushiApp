@@ -33,7 +33,6 @@ const createNewOrder = async (
   res: NextApiResponse<Data>
 ) => {
   const body = req.body as IOrder;
-
   try {
     db.connect();
     // calcular precio de customs roll
@@ -45,6 +44,7 @@ const createNewOrder = async (
     if (customRolls.length > 0) {
       await Promise.all(
         customRolls.map(async (p) => {
+          console.log({ p: p.extraProduct });
           const idsToSearch = [
             ...(p.envelopes ?? []),
             ...(p?.extraProduct ?? []),

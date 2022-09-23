@@ -64,7 +64,46 @@ const SummaryPage = () => {
       subTotal,
       total,
       isPaid: false,
-      orderItems: cart,
+      orderItems: cart.map((item) => {
+        if (item.name !== "Roll personalizado") return item;
+        const itemClone = { ...item };
+        itemClone.proteins = itemClone?.proteins
+          ? (itemClone.proteins?.map((p) => ({
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+            })) as any)
+          : undefined;
+        itemClone.vegetables = itemClone?.vegetables
+          ? (itemClone.vegetables?.map((p) => ({
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+            })) as any)
+          : undefined;
+        itemClone.sauces = itemClone?.sauces
+          ? (itemClone.sauces?.map((p) => ({
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+            })) as any)
+          : undefined;
+        itemClone.extraProduct = itemClone?.sauces
+          ? (itemClone.extraProduct?.map((p) => ({
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+            })) as any)
+          : undefined;
+        itemClone.envelopes = itemClone?.envelopes
+          ? (itemClone.envelopes?.map((p) => ({
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+            })) as any)
+          : undefined;
+        return itemClone;
+      }),
       orderExtraItems:
         extraProduct.length > 0
           ? extraProduct.filter((e) => e.quantity !== 0)
@@ -76,7 +115,6 @@ const SummaryPage = () => {
     };
 
     try {
-      console.log({ orderToSend });
       await createNewOrder(orderToSend).unwrap();
       dispatch(cleanCart());
       Cookies.remove("address");

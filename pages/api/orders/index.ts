@@ -96,6 +96,7 @@ const createNewOrder = async (
 
     // TODO falta sumar despacho
     if (subTotal !== body.subTotal) {
+      console.log({ subTotal, subbody: body.subTotal });
       throw new Error("Ha ocurrido un error, valores han sido alterados");
     }
 
@@ -158,13 +159,15 @@ const createNewOrder = async (
 
     const { shippingAddress } = body;
     const { username, address, phone, placeId } = shippingAddress;
-    console.log({ placeId });
-    await User.findOneAndUpdate(
+
+    const userUpdated = await User.findOneAndUpdate(
       { phone },
-      { name: username, address, placeId },
-      { upsert: true }
+      { $set: { name: username, address, placeId, email: "hola" } },
+      { upsert: true, new: true }
     );
 
+    console.log({ userUpdated });
+    orderToCreate.user = userUpdated._id;
     const newOrder = new Order(orderToCreate);
     await newOrder.save();
 

@@ -5,8 +5,8 @@ import mongoose_delete from "mongoose-delete";
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
-    address: { type: String, required: true, unique: true },
-    phone: { type: String },
+    address: { type: String, required: true },
+    phone: { type: String, required: true, unique: true },
     placeId: { type: String },
     role: {
       type: String,
@@ -14,12 +14,10 @@ const userSchema = new Schema(
         values: ["admin", "client", "delivery"],
         message: "${VALUE} no es un rol valido",
         default: "client",
-        required: true,
+        // required: true,
       },
-      default: "client",
     },
     password: { type: String },
-    username: { type: String },
   },
   {
     timestamps: true,

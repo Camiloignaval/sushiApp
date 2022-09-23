@@ -10,8 +10,10 @@ interface SeedProduct {
 }
 interface SeedUser {
   name: string;
-  email: string;
+  phone: string;
   password: string;
+  address: string;
+  placeId: string;
   role: "admin" | "client" | "delivery";
 }
 
@@ -32,6 +34,7 @@ interface SeedPromotion {
   promotionItems?: Array<String>;
   price: number;
   inOffer: boolean;
+  offerPrice?: number;
   inStock: boolean;
   description: string;
   images: Array<String>;
@@ -231,15 +234,11 @@ export const initialData: SeedData = {
   users: [
     {
       name: "Camilo Valenzuela",
-      email: "camiloignaval@gmail.com",
+      phone: "+56954275898",
       password: bcrypt.hashSync("123456"),
       role: "admin",
-    },
-    {
-      name: "Jael Burgos",
-      email: "jburgos@gmail.com",
-      password: bcrypt.hashSync("123456"),
-      role: "client",
+      address: "Alonso de Ercilla 960, Maipú, Chile",
+      placeId: "ChIJ8Vm8XDfDYpYRR9toKYfO1NY",
     },
   ],
   promotions: [
@@ -293,6 +292,7 @@ export const initialData: SeedData = {
       description: "La segunda mejor promocion de todas",
       inOffer: true,
       inStock: true,
+      offerPrice: 15990,
       name: "Promo el mar",
       price: 18000,
       lastPrice: 20000,

@@ -19,7 +19,7 @@ export interface IOrder {
   deliverPrice: number;
   transactionId?: string;
   createdAt?: string;
-  coupon?: ICoupon;
+  coupon?: ICoupon | string;
 }
 
 export type IOrderStatus =

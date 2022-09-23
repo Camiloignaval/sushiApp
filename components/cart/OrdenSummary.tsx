@@ -187,7 +187,21 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
       <Grid item xs={6} display="flex" justifyContent="end">
         <Typography>{currency.format(cart.discount)}</Typography>
       </Grid>
-      <Divider />
+      <Divider sx={{ my: 2 }} />
+      {/* despacho */}
+      <Grid item xs={6} sx={{ marginTop: 5 }}>
+        <Typography>Despacho</Typography>
+      </Grid>
+      <Grid
+        sx={{ marginTop: 5 }}
+        item
+        xs={6}
+        display="flex"
+        justifyContent="end"
+      >
+        <Typography>{currency.format(cart.deliverPrice)}</Typography>
+      </Grid>
+
       {/* total */}
       <Grid item xs={6} sx={{ marginTop: 5 }}>
         <Typography variant="subtitle1">Total</Typography>

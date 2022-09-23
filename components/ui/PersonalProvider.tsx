@@ -9,6 +9,7 @@ import { useCheckTokenQuery } from "../../store/RTKQuery/authApi";
 import { LogIn } from "../../store/Slices/AuthSlice";
 import {
   addCoupon,
+  addDeliveryPrice,
   addOrUpdateCart,
   addOrUpdateExtraProducts,
   removeCoupon,
@@ -26,9 +27,15 @@ interface Props {
 export const PersonalProvider: FC<Props> = ({ children }) => {
   const [firstRender, setFirstRender] = useState(true);
   const dispatch = useDispatch();
-  const { cart, extraProduct, coupon, subTotal } = useSelector(
-    (state: RootState) => state.cart
-  );
+  const {
+    cart,
+    extraProduct,
+    coupon,
+    subTotal,
+    deliverPrice,
+    valuedAddress,
+    valuedPlaceId,
+  } = useSelector((state: RootState) => state.cart);
   const { data, status } = useSession();
 
   // atento al carrito
@@ -62,8 +69,26 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       setFirstRender(false);
       const couponSaved = localStorage.getItem("coupon")
         ? JSON.parse(localStorage.getItem("coupon")!)
+        : undefined;
+      couponSaved && addCoupon(couponSaved);
+      // dispatch(addCoupon(couponSaved));
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch]);
+  useEffect(() => {
+    try {
+      setFirstRender(false);
+      const deliverPriceSaved = localStorage.getItem("deliverPrice")
+        ? JSON.parse(localStorage.getItem("deliverPrice")!)
         : [];
-      dispatch(addCoupon(couponSaved));
+      dispatch(
+        addDeliveryPrice({
+          deliveryPrice: +deliverPriceSaved.deliverPrice,
+          valuedAddress: deliverPriceSaved.valuedAddress,
+          valuedPlaceId: deliverPriceSaved.valuedPlaceId,
+        })
+      );
     } catch (error) {
       console.log(error);
     }
@@ -82,6 +107,19 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     if (firstRender) return;
     localStorage.setItem("extracart", JSON.stringify(extraProduct));
   }, [extraProduct, firstRender]);
+  useEffect(() => {
+    if (firstRender) return;
+    localStorage.setItem(
+      "deliverPrice",
+      JSON.stringify({ deliverPrice, valuedAddress, valuedPlaceId })
+    );
+  }, [deliverPrice, firstRender]);
+
+  // useEffect(() => {
+  //   if (coupon && coupon.) {
+  //     console.log({ coupon });
+  //   }
+  // }, [coupon]);
 
   // atento si baja el precio del cupon con compra minima
   useEffect(() => {
@@ -124,9 +162,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       }
     }
 
-    // const tax =
-    //   (subTotal * Number(process.env.NEXT_PUBLIC_TAX_RATE || 0)) / 100;
-    const total = subTotal - discount;
+    const total = subTotal - discount + deliverPrice;
     const ordenSummary = {
       numberOfItems,
       subTotal,
@@ -134,7 +170,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       discount,
     };
     dispatch(updateSummary(ordenSummary));
-  }, [cart, extraProduct, dispatch, coupon]);
+  }, [cart, extraProduct, deliverPrice, dispatch, coupon]);
 
   // -----------------
 

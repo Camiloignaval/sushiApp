@@ -15,6 +15,9 @@ export interface CartState {
   tax: number;
   total: number;
   shippingAddress?: IShippingAdress;
+  deliverPrice: number;
+  valuedAddress: string;
+  valuedPlaceId: string;
 }
 
 const initialState: CartState = {
@@ -29,6 +32,9 @@ const initialState: CartState = {
   tax: 0,
   total: 0,
   shippingAddress: undefined,
+  deliverPrice: 0,
+  valuedAddress: "",
+  valuedPlaceId: "",
 };
 
 export const CartSlice = createSlice({
@@ -45,13 +51,7 @@ export const CartSlice = createSlice({
     ) => {
       state.extraProduct = action.payload;
     },
-    // udpateCartQuantity: (state, action: PayloadAction<ICartProduct>) => {
-    //   state.cart = state.cart.map((p) => {
-    //     if (p._id !== action.payload._id) return p;
-    //     if (p.size !== action.payload.size) return p;
-    //     return action.payload;
-    //   });
-    // },
+
     removeFromCart: (state, action: PayloadAction<String>) => {
       state.cart = state.cart.filter((p) => !(p._id === action.payload));
     },
@@ -90,6 +90,12 @@ export const CartSlice = createSlice({
       state.tax = 0;
       state.total = 0;
       state.shippingAddress = undefined;
+      state.deliverPrice = 0;
+    },
+    addDeliveryPrice: (state, action: PayloadAction<any>) => {
+      state.deliverPrice = Number(action.payload.deliveryPrice);
+      state.valuedAddress = action.payload.valuedAddress;
+      state.valuedPlaceId = action.payload.valuedPlaceId;
     },
   },
 });
@@ -105,6 +111,7 @@ export const {
   cleanCart,
   addCoupon,
   removeCoupon,
+  addDeliveryPrice,
 } = CartSlice.actions;
 
 export default CartSlice.reducer;

@@ -5,8 +5,9 @@ import mongoose_delete from "mongoose-delete";
 const userSchema = new Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
-    password: { type: String },
+    address: { type: String, required: true, unique: true },
+    phone: { type: String },
+    placeId: { type: String },
     role: {
       type: String,
       enum: {
@@ -15,7 +16,10 @@ const userSchema = new Schema(
         default: "client",
         required: true,
       },
+      default: "client",
     },
+    password: { type: String },
+    username: { type: String },
   },
   {
     timestamps: true,

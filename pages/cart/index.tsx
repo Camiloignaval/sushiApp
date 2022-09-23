@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useRouter } from "next/router";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { CardList, OrdenSummary } from "../../components/cart";
 import { AddressForm } from "../../components/cart/AddressForm";
@@ -24,6 +24,7 @@ const CartPage = () => {
   const { data: productData, isLoading } = useGetProductsQuery(null);
   const { cart } = useSelector((state: RootState) => state);
   const { replace, push } = useRouter();
+  const [isModificable, setIsModificable] = useState(true);
 
   useEffect(() => {
     if (cart.isLoaded && cart.cart.length === 0) {
@@ -58,7 +59,10 @@ const CartPage = () => {
           {/* cart */}
           <Card className="summary-cart">
             <CardContent>
-              <AddressForm />
+              <AddressForm
+                isModificable={isModificable}
+                setIsModificable={setIsModificable}
+              />
 
               <Typography variant="h2" sx={{ marginBottom: 1 }}>
                 Resumen del carrito
@@ -71,7 +75,9 @@ const CartPage = () => {
                   color="secondary"
                   className="circular-btn"
                   fullWidth
-                  disabled={cart.shippingAddress ? false : true}
+                  disabled={
+                    cart.shippingAddress && !isModificable ? false : true
+                  }
                   onClick={onSubmitOrder}
                 >
                   Confirmar datos

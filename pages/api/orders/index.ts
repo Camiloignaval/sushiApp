@@ -5,7 +5,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 import { db } from "../../../database";
 import { ICoupon, IOrder, IProduct } from "../../../interfaces";
-import { Order, Product, Promotion } from "../../../models";
+import { Order, Product, Promotion, User } from "../../../models";
 import Coupon from "../../../models/Coupon";
 import { sendMessage } from "../../../utils/whatsapp";
 type Data =
@@ -130,33 +130,43 @@ const createNewOrder = async (
         total -= discount;
       }
     }
-    if (total !== body.total) {
+
+    if (total + body.deliverPrice !== body.total) {
       throw new Error("Ha ocurrido un error, valores han sido alterados");
     }
 
     // si todo ha salido bien
 
-    // if (body.coupon) {
-    //   await Coupon.findByIdAndUpdate(body.coupon!._id, {
-    //     $inc: { qtyUsed: 1 },
-    //   });
-    // }
-    // const orderToCreate: IOrder = { ...body };
-    // if (body?.coupon) {
-    //   orderToCreate.coupon = body.coupon!._id.toString();
-    // }
+    if (body.coupon) {
+      await Coupon.findByIdAndUpdate(body.coupon!._id, {
+        $inc: { qtyUsed: 1 },
+      });
+    }
+    const orderToCreate: IOrder = { ...body };
+    if (body?.coupon) {
+      orderToCreate.coupon = body.coupon!._id.toString();
+    }
 
     // prueba whatsap
     // TODO ENVIAR WHATSAPP CON DETALLE ORDEN Y LINK DE SEGUIMIENTO
-    sendMessage(body.shippingAddress.phone, "Su orden xxxxxxx");
+    // sendMessage(body.shippingAddress.phone, "Su orden xxxxxxx");
     // client.on("message", (message) => {
     //   message.reply("hola probando");
     // });
 
     // wspMessage();
 
-    // const newOrder = new Order(orderToCreate);
-    // await newOrder.save();
+    const { shippingAddress } = body;
+    const { username, address, phone, placeId } = shippingAddress;
+    console.log({ placeId });
+    await User.findOneAndUpdate(
+      { phone },
+      { name: username, address, placeId },
+      { upsert: true }
+    );
+
+    const newOrder = new Order(orderToCreate);
+    await newOrder.save();
 
     return res.status(201).json({ message: "creada" });
   } catch (error) {

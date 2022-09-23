@@ -15,52 +15,71 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { ShopLayout } from "../layouts";
 import { IShippingAdress } from "../../interfaces";
-import { updateAdress } from "../../store/Slices/CartSlice";
+import { addDeliveryPrice, updateAdress } from "../../store/Slices/CartSlice";
 import HomeIconOutlined from "@mui/icons-material/HomeOutlined";
 import { countries } from "../../utils";
-import {
-  AccountCircle,
-  LocationCityOutlined,
-  PersonAddAlt1Outlined,
-  PersonOutline,
-  PhoneAndroidOutlined,
-} from "@mui/icons-material";
-import {
-  isPossiblePhoneNumber,
-  isValidPhoneNumber,
-  validatePhoneNumberLength,
-} from "libphonenumber-js";
+import { PersonOutline, PhoneAndroidOutlined } from "@mui/icons-material";
+import { isValidPhoneNumber } from "libphonenumber-js";
 import { RootState } from "../../store";
+import { AutoCompletePlace } from "../google/autoComplete";
+import { dbUsers } from "../../database";
+import axios from "axios";
 
 const emptyAddress: IShippingAdress = {
   username: "",
   address: "",
-  city: "",
-  commune: "",
   phone: "",
 };
 
 const getAdressFromCookies = (): IShippingAdress => {
+  console.log({
+    cookiesadress: Cookies.get("address")
+      ? JSON.parse(Cookies.get("address")!)
+      : emptyAddress,
+  });
   return Cookies.get("address")
     ? JSON.parse(Cookies.get("address")!)
     : emptyAddress;
 };
+const placeIdDesire =
+  "EhpEZXNpcmUgMjkwMCwgTWFpcMO6LCBDaGlsZSIxEi8KFAoSCbFHAS_OwmKWEYjH62N6qeJCENQWKhQKEgnrvQ3hz8JilhHPZ_2m_Zd-IQ";
 
-export const AddressForm = () => {
-  const { shippingAddress } = useSelector((state: RootState) => state.cart);
-  const [isModificable, setIsModificable] = useState(true);
+interface Props {
+  isModificable: boolean;
+  setIsModificable: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
+  const [addressFound, setAddressFound] = useState(null);
+  const { cart, shippingAddress, deliverPrice, valuedAddress, valuedPlaceId } =
+    useSelector((state: RootState) => state.cart);
+  const [placeIdState, setPlaceIdState] = useState<null | string>(null);
   const dispatch = useDispatch();
   const router = useRouter();
   const {
     register,
     handleSubmit,
+    setValue,
+    getValues,
     formState: { errors },
   } = useForm<IShippingAdress>({
     defaultValues: getAdressFromCookies(),
   });
 
-  // ver si hay direccion en carrito al cargar pagina
+  // verificar que valor cotizado corresponda que la direccion guardada
+  useEffect(() => {
+    if (shippingAddress) {
+      if (shippingAddress.address !== valuedAddress) {
+        // realizar calculo denuevo
+        searchPriceDeliverIfWasSaved(
+          shippingAddress.placeId!,
+          shippingAddress.address
+        );
+      }
+    }
+  }, []);
 
+  // ver si hay direccion en carrito al cargar pagina
   useEffect(() => {
     setIsModificable(!shippingAddress);
   }, [shippingAddress]);
@@ -70,11 +89,56 @@ export const AddressForm = () => {
       setIsModificable(true);
       return;
     }
-    data.city = "Santiago";
-    data.commune = "Maipú";
+    data.placeId = placeIdState!;
+    console.log({ data });
     Cookies.set("address", JSON.stringify(data));
     setIsModificable(false);
+
     dispatch(updateAdress(data));
+  };
+
+  const findClient = async () => {
+    const phone = getValues("phone").trim();
+    try {
+      const { data } = await axios.post(`/api/user/findUser`, { phone });
+      setAddressFound(data.address);
+      setValue("username", data.name);
+      setValue("phone", data.phone);
+      setValue("address", data.address);
+      setPlaceIdState(data.placeId);
+      console.log({ placeIdEnFind: data.placeId });
+      searchPriceDeliverIfWasSaved(data.placeId, data.address);
+    } catch (error) {
+      console.log({ error });
+    }
+  };
+
+  const searchPriceDeliverIfWasSaved = async (
+    placeId: string,
+    addressDir: string
+  ) => {
+    console.log("entre al calculo");
+    const respMatrix = await axios(
+      `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${placeId}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
+    );
+
+    // calcular tarifa de delivery
+    let deliveryPrice = 1000;
+    const {
+      data: { rows },
+    } = respMatrix;
+    const { distance, duration } = rows[0].elements[0];
+    console.log({ distance, duration });
+    if (distance.value > 2000) {
+      deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;
+    }
+    dispatch(
+      addDeliveryPrice({
+        deliveryPrice: +deliveryPrice,
+        valuedAddress: addressDir,
+        selectedDirection: placeId,
+      })
+    );
   };
   return (
     <Box marginBottom={5}>
@@ -92,11 +156,13 @@ export const AddressForm = () => {
                   </InputAdornment>
                 ),
               }}
+              autoComplete="off"
               disabled={!isModificable}
               label="Telefono"
               variant="standard"
               fullWidth
               {...register("phone", {
+                onBlur: findClient,
                 required: "Este campo es requerido",
                 // pattern: {
                 //   value: /\A(\+?56)?(\s?)(0?9)(\s?)[9876543]\d{7}\z/,
@@ -125,6 +191,7 @@ export const AddressForm = () => {
               }}
               disabled={!isModificable}
               label="Nombre"
+              autoComplete="off"
               variant="standard"
               fullWidth
               {...register("username", {
@@ -138,46 +205,16 @@ export const AddressForm = () => {
               helperText={errors?.username?.message}
             />
           </Grid>
-          <Grid item xs={12} lg={6}>
-            <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <HomeIconOutlined />
-                  </InputAdornment>
-                ),
-              }}
-              disabled={!isModificable}
-              label="Direccion"
-              variant="standard"
-              fullWidth
-              {...register("address", {
-                required: "Este campo es requerido",
-              })}
-              error={!!errors.address}
-              helperText={errors?.address?.message}
-            />
-          </Grid>
-          <Grid item xs={12} lg={6}>
-            <TextField
-              InputProps={{
-                startAdornment: (
-                  <InputAdornment position="start">
-                    <LocationCityOutlined />
-                  </InputAdornment>
-                ),
-              }}
-              disabled
-              defaultValue="Maipú"
-              value="Maipú"
-              label="Comuna"
-              variant="standard"
-              fullWidth
-              {...register("commune", {
-                // required: "Este campo es requerido",
-              })}
-              error={!!errors.commune}
-              helperText={errors?.commune?.message}
+          <Grid item xs={12} lg={12}>
+            <AutoCompletePlace
+              addressFound={addressFound}
+              register={register}
+              errors={errors}
+              setValue={setValue}
+              getValues={getValues}
+              disableInput={!isModificable}
+              placeIdState={placeIdState}
+              setPlaceIdState={setPlaceIdState}
             />
           </Grid>
         </Grid>
@@ -190,7 +227,7 @@ export const AddressForm = () => {
               className="circular-btn"
               size="small"
             >
-              Agregar dirección
+              Guardar dirección
             </Button>
           ) : (
             <Button
@@ -208,31 +245,3 @@ export const AddressForm = () => {
     </Box>
   );
 };
-
-// You should use getServerSideProps when:
-// - Only if you need to pre-render a page whose data must be fetched at request time
-
-// export const getServerSideProps: GetServerSideProps = async ({ req }) => {
-//   const { token = "" } = req.cookies as { token: string };
-//   let isValidToken = false;
-
-//   try {
-//     await jwt.isValidToken(token);
-//     isValidToken = true;
-//   } catch (error) {
-//     isValidToken = false;
-//   }
-
-//   if (!isValidToken) {
-//     return {
-//       redirect: {
-//         destination: "/auth/login?p=/checkout/adress",
-//         permanent: false,
-//       },
-//     };
-//   }
-
-//   return {
-//     props: {},
-//   };
-// };

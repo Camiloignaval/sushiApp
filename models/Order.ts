@@ -27,9 +27,8 @@ const orderSchema = new Schema(
     shippingAddress: {
       username: { type: String, required: true },
       address: { type: String, required: true },
-      commune: { type: String, required: true },
-      city: { type: String, required: true, default: "Santiago" },
       phone: { type: String, required: true },
+      placeId: { type: String, required: true },
     },
     coupon: { type: Schema.Types.ObjectId, ref: "Coupon" },
     numberOfItems: { type: Number, required: true },

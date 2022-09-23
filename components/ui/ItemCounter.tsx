@@ -20,7 +20,7 @@ export const ItemCounter: FC<Props> = ({
 
   useEffect(() => {
     updatedQuantity(quantity);
-  }, [quantity, updatedQuantity]);
+  }, [quantity]);
 
   return (
     <Box display="flex" alignItems="center">

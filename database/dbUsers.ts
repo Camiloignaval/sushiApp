@@ -52,3 +52,15 @@ export const oAuthToDbUser = async (oAuthEmail: string, oAuthName: string) => {
   const { _id, name, email, role } = newUser;
   return { _id, name, email, role };
 };
+
+export const findUserByPhone = async (phone: string) => {
+  console.log("entre a finduser");
+  await db.connect();
+  const user = await User.findOne({ phone });
+  console.log({ user });
+  await db.disconnect();
+  if (!user) {
+    return null;
+  }
+  return user;
+};

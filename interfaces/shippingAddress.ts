@@ -1,7 +1,7 @@
+// import { IPlaceResponse } from "./placeResponse";
 export interface IShippingAdress {
+  phone: string;
   username: string;
   address: string;
-  city: string;
-  commune: string;
-  phone: string;
+  placeId?: string;
 }

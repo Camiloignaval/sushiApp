@@ -10,7 +10,7 @@ import {
   Typography,
 } from "@mui/material";
 import NextLink from "next/link";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CardList, OrdenSummary } from "../../components/cart";
 import { ShopLayout } from "../../components/layouts";
@@ -37,9 +37,11 @@ const SummaryPage = () => {
     extraProduct,
     note,
     coupon,
+    deliverPrice,
   } = useSelector((state: RootState) => state.cart);
   const [createNewOrder, createNewOrderState] = useCreateOrderMutation();
   const { data: productData, isLoading } = useGetProductsQuery(null);
+  const [disabledSubmit, setDisabledSubmit] = useState(false);
 
   useEffect(() => {
     if (!Cookies.get("address")) {
@@ -69,15 +71,18 @@ const SummaryPage = () => {
           : undefined,
       status: "ingested",
       note: !["", undefined].includes(note) ? note : undefined,
-      deliverPrice: 0,
+      deliverPrice,
       coupon: coupon,
     };
 
     try {
+      console.log({ orderToSend });
       await createNewOrder(orderToSend).unwrap();
-      // dispatch(cleanCart());
+      dispatch(cleanCart());
+      Cookies.remove("address");
       // // TODO hacer lo que se necesite como enviar whatsap o en backend
-      // router.replace("/");
+      router.replace("/");
+      setDisabledSubmit(true);
     } catch (error) {
       console.log({ error });
     }
@@ -119,7 +124,6 @@ const SummaryPage = () => {
               </Box>
               <Typography>{shippingAddress?.username}</Typography>
               <Typography>{shippingAddress?.address}</Typography>
-              <Typography>{shippingAddress?.city}</Typography>
               <Typography>{shippingAddress?.phone}</Typography>
               <Divider sx={{ my: 1 }} />
               <Box display="flex" justifyContent={"end"}>
@@ -130,7 +134,7 @@ const SummaryPage = () => {
               <OrdenSummary />
               <Box sx={{ mt: 3 }}>
                 <Button
-                  disabled={createNewOrderState.isLoading}
+                  disabled={createNewOrderState.isLoading || disabledSubmit}
                   onClick={createOrder}
                   color="secondary"
                   className="circular-btn"

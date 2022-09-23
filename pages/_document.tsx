@@ -23,6 +23,10 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
+          <script
+            type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw&language=es&libraries=places"
+          ></script>
           <Main />
           <NextScript />
         </body>

@@ -20,6 +20,7 @@ import { toggleMenu } from "../../store/Slices/UISlice";
 import { IoMdClose } from "react-icons/io";
 import { RootState } from "../../store";
 import { currency } from "../../utils";
+import { MapOutlined } from "@mui/icons-material";
 
 interface Props {
   showPrice?: boolean;
@@ -122,6 +123,13 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
                 </Link>
               </NextLink>
             </Box>
+            <NextLink href="/map" passHref>
+              <Link>
+                <IconButton>
+                  <MapOutlined />
+                </IconButton>
+              </Link>
+            </NextLink>
           </>
         )}
         <Button

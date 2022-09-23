@@ -2,7 +2,7 @@ import { GoogleMap, LoadScript, Marker, Polygon } from "@react-google-maps/api";
 // const ScriptLoaded = require("../../docs/ScriptLoaded").default;
 
 import React, { useCallback, useRef, useState } from "react";
-import { Navbar } from "../../components/ui";
+import { Navbar } from "../components/ui";
 
 const map = () => {
   const mapContainerStyle = {

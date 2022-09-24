@@ -20,10 +20,10 @@ import { printOrder } from "../../utils/printOrder";
 
 const OrdersPage = () => {
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(20);
   const { data: dataOrders, isLoading } = useGetAllOrdersQuery(
-    `page=${page}&limit=${pageSize}`
+    `page=${page + 1}&limit=${pageSize}`
   );
 
   const columns: GridColDef[] = [
@@ -158,7 +158,7 @@ const OrdersPage = () => {
     status: order?.status,
     phone: order.shippingAddress.phone,
     noProducts: order?.numberOfItems,
-    createdAt: format(new Date(order?.createdAt!), "dd-mm-yyyy hh:mm:ss"),
+    createdAt: format(new Date(order?.createdAt!), "dd-MM-yyyy hh:mm:ss"),
     extras: order?.orderExtraItems?.length,
   }));
 

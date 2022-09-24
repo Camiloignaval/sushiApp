@@ -5,7 +5,7 @@ import Document, {
   Main,
   NextScript,
 } from "next/document";
-import { ScriptGoogle } from "../components/google/ScriptGoogle";
+import Script from "next/script";
 
 class MyDocument extends Document {
   static async getInitialProps(ctx: DocumentContext) {
@@ -24,7 +24,11 @@ class MyDocument extends Document {
           />
         </Head>
         <body>
-          <ScriptGoogle />
+          <Script
+            strategy="lazyOnload"
+            type="text/javascript"
+            src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw&language=es&libraries=places"
+          ></Script>
           {/* conector plugin */}
           {/* <script src="../utils/conectorPlugin.js"></script> */}
           <Main />

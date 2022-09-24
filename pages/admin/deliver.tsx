@@ -53,7 +53,7 @@ const DeliverPage = () => {
 
   if (!dataOrders) return <FullScreenLoading />;
 
-  const rows = dataOrders!.map((order: IOrder) => ({
+  const rows = dataOrders!.docs.map((order: IOrder) => ({
     id: order?._id,
     address: `${order.shippingAddress.address.split(",", 1)}`,
   }));

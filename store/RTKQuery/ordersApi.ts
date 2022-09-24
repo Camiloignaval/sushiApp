@@ -1,3 +1,4 @@
+import { IOrderWithPaginate } from "./../../interfaces/order";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import toast from "react-hot-toast";
 import { IOrder } from "../../interfaces";
@@ -17,7 +18,7 @@ export const ordersApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   tagTypes: ["Orders", "Order"],
   endpoints: (builder) => ({
-    getAllOrders: builder.query<IOrder[], null | string>({
+    getAllOrders: builder.query<IOrderWithPaginate, null | string>({
       query: (query) => ({
         url: `/admin/orders?${query}`,
         method: "get",

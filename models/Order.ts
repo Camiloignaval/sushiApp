@@ -1,7 +1,40 @@
 import { IProduct } from "./../interfaces/products";
-import mongoose, { Schema, Model, model } from "mongoose";
-import { IOrder } from "../interfaces";
+import mongoose, {
+  Schema,
+  Model,
+  model,
+  PaginateModel,
+  Document,
+} from "mongoose";
+// import { IOrder } from "../interfaces";
 import mongoose_delete from "mongoose-delete";
+import paginate from "mongoose-paginate-v2";
+import {
+  IUser,
+  ICartProduct,
+  IShippingAdress,
+  IOrderStatus,
+  ICoupon,
+} from "../interfaces";
+
+interface IOrder extends Document {
+  _id?: string;
+  user?: IUser | string;
+  orderItems: ICartProduct[];
+  orderExtraItems?: ICartProduct[];
+  shippingAddress: IShippingAdress;
+  numberOfItems: number;
+  status: IOrderStatus;
+  subTotal: number;
+  total: number;
+  note?: string;
+  isPaid: boolean;
+  paidAt?: string;
+  deliverPrice: number;
+  transactionId?: string;
+  createdAt?: string;
+  coupon?: ICoupon | string;
+}
 
 const orderSchema = new Schema(
   {
@@ -58,8 +91,13 @@ const orderSchema = new Schema(
 );
 
 orderSchema.plugin(mongoose_delete, { overrideMethods: "all" });
+orderSchema.plugin(paginate);
 
-const Order: Model<IOrder> =
-  mongoose.models.Order || model("Order", orderSchema);
-
+// todo corregir el any
+const Order =
+  (mongoose.models.Order as any) ||
+  model<IOrder, PaginateModel<IOrder>>("Order", orderSchema);
 export default Order;
+
+// mongoose.models.Order
+// export const ArtistModel: ArtistModel<IArtist> = model<IArtist>('Artist', ArtistSchema) as ArtistModel<IArtist>

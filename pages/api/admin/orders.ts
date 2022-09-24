@@ -27,13 +27,18 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const queryParams = req.query;
+  const { page = 1, limit = 20 } = queryParams;
+  console.log({ page, limit });
   await db.connect();
-  const orders = await Order.find(queryParams)
-    .sort({ createdAt: "desc" })
-    .lean();
+  //TODO agregar filtros
+  const orders = await Order.paginate({}, { page, limit });
+  // .sort({ createdAt: "desc" })
+  // .lean();
+  // console.log({ orders });
   await db.disconnect();
-  return res.status(200).json(orders);
+  return res.status(200).json(orders as any);
 };
+
 const changeStatus = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>

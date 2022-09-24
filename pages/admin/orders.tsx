@@ -6,22 +6,25 @@ import {
   GridRowId,
   GridValueGetterParams,
   esES,
+  GridToolbar,
 } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { AdminLayout } from "../../components/layouts";
 import { OrdersActions } from "../../components/orders";
 import { FullScreenLoading } from "../../components/ui";
-import { IOrder, IUser } from "../../interfaces";
+import { IOrder } from "../../interfaces";
 import { useGetAllOrdersQuery } from "../../store/RTKQuery/ordersApi";
 import { currency } from "../../utils";
 import { printOrder } from "../../utils/printOrder";
 
-// ?.slice(-10)
-
 const OrdersPage = () => {
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
-  const { data: dataOrders } = useGetAllOrdersQuery(null);
+  const [page, setPage] = React.useState(1);
+  const [pageSize, setPageSize] = React.useState(20);
+  const { data: dataOrders, isLoading } = useGetAllOrdersQuery(
+    `page=${page}&limit=${pageSize}`
+  );
 
   const columns: GridColDef[] = [
     {
@@ -122,7 +125,9 @@ const OrdersPage = () => {
         return (
           <IconButton
             onClick={() =>
-              printOrder(dataOrders?.find((d) => d._id === row.id) as IOrder)
+              printOrder(
+                dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
+              )
             }
           >
             <ConfirmationNumberOutlined />
@@ -132,9 +137,20 @@ const OrdersPage = () => {
     },
   ];
 
+  const [rowCountState, setRowCountState] = React.useState(
+    dataOrders?.totalDocs || 0
+  );
+  React.useEffect(() => {
+    setRowCountState((prevRowCountState) =>
+      dataOrders?.totalDocs !== undefined
+        ? dataOrders?.totalDocs
+        : prevRowCountState
+    );
+  }, [dataOrders?.totalDocs, setRowCountState]);
+
   if (!dataOrders) return <FullScreenLoading />;
 
-  const rows = dataOrders!.map((order: IOrder) => ({
+  const rows = dataOrders?.docs!.map((order: IOrder) => ({
     id: order?._id,
     name: order.shippingAddress.username!,
     total: order?.total,
@@ -155,19 +171,39 @@ const OrdersPage = () => {
       <Box display={"flex"} justifyContent="end">
         <OrdersActions
           rowsId={selectedRows}
-          data={dataOrders?.filter((d) => selectedRows.includes(d?._id!))}
+          data={dataOrders.docs?.filter((d) => selectedRows.includes(d?._id!))}
         />
       </Box>
-      <Grid className="fadeIn" container xs={12} height={650} width="100%">
+      <Grid
+        className="fadeIn"
+        container
+        xs={12}
+        height={"calc(100vh - 250px)"}
+        width="100%"
+      >
         <DataGrid
+          rowCount={rowCountState}
+          loading={isLoading}
+          rowsPerPageOptions={[10, 20, 30, 50, 70, 100]}
+          pagination
+          page={page}
+          pageSize={pageSize}
+          paginationMode="server"
+          onPageChange={(newPage) => setPage(newPage)}
+          onPageSizeChange={(newPageSize) => setPageSize(newPageSize)}
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
           checkboxSelection
+          disableSelectionOnClick
           onSelectionModelChange={(e) => setSelectedRows(e)}
           rows={rows ?? []}
           columns={columns}
-          pageSize={10}
-          rowsPerPageOptions={[10, 20, 30]}
-        ></DataGrid>
+          components={{
+            Toolbar: GridToolbar,
+          }}
+          componentsProps={{
+            pagination: { classes: null },
+          }}
+        />
       </Grid>
     </AdminLayout>
   );

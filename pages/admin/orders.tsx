@@ -1,6 +1,5 @@
-import { ConfirmationNumberOutlined, PeopleOutline } from "@mui/icons-material";
-import { Chip, Grid, MenuItem, Select } from "@mui/material";
-import IconButton from "@mui/material/IconButton/IconButton";
+import { ConfirmationNumberOutlined } from "@mui/icons-material";
+import { Box, Chip, Grid, IconButton } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -9,8 +8,9 @@ import {
   esES,
 } from "@mui/x-data-grid";
 import { format } from "date-fns";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { AdminLayout } from "../../components/layouts";
+import { OrdersActions } from "../../components/orders";
 import { FullScreenLoading } from "../../components/ui";
 import { IOrder, IUser } from "../../interfaces";
 import { useGetAllOrdersQuery } from "../../store/RTKQuery/ordersApi";
@@ -152,15 +152,15 @@ const OrdersPage = () => {
       title={"Ordenes"}
       subTitle={"Mantenimiento de ordenes"}
     >
+      <Box display={"flex"} justifyContent="end">
+        <OrdersActions
+          rowsId={selectedRows}
+          data={dataOrders?.filter((d) => selectedRows.includes(d?._id!))}
+        />
+      </Box>
       <Grid className="fadeIn" container xs={12} height={650} width="100%">
         <DataGrid
           localeText={esES.components.MuiDataGrid.defaultProps.localeText}
-          // componentsProps={{
-          //   toolbar: {
-          //     showQuickFilter: true,
-          //     quickFilterProps: { debounceMs: 500 },
-          //   },
-          // }}
           checkboxSelection
           onSelectionModelChange={(e) => setSelectedRows(e)}
           rows={rows ?? []}

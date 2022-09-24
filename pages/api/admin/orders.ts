@@ -15,8 +15,8 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
     case "GET":
       return getOrders(req, res);
 
-    // case "PUT":
-    //   return updateUser(req, res);
+    case "PUT":
+      return changeStatus(req, res);
 
     default:
       return res.status(405).json({
@@ -26,33 +26,36 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const queryParams = req.query;
   await db.connect();
-  const orders = await Order.find().sort({ createdAt: "desc" }).lean();
+  const orders = await Order.find(queryParams)
+    .sort({ createdAt: "desc" })
+    .lean();
   await db.disconnect();
   return res.status(200).json(orders);
 };
+const changeStatus = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const { ids = [], newStatus = "" } = req.body;
+  try {
+    if (!ids.every((id: string) => isValidObjectId(id)))
+      return res
+        .status(400)
+        .json({ message: "Uno o mas de los ids enviados no son válidos" });
+    const ordenes = await Order.find({ _id: { $in: ids } });
+    if (ordenes.length !== ids.length)
+      return res
+        .status(400)
+        .json({ message: "Uno o mas de los ids no existen" });
 
-// const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-//   const { userId = "", role = "" } = req.body;
-
-//   if (!isValidObjectId(userId)) {
-//     return res.status(400).json({ message: "Id de usuario no es valido" });
-//   }
-
-//   const validRoles = ["admin", "client", "SEO", "super-user"];
-
-//   if (!validRoles.includes(role)) {
-//     return res.status(400).json({ message: "Rol no permitido" });
-//   }
-
-//   await db.connect();
-//   const user = await User.findById(userId);
-
-//   if (!user) {
-//     return res.status(400).json({ message: "Usuario no existe en registros" });
-//   }
-
-//   await User.findOneAndUpdate({ _id: userId }, { role });
-//   await db.disconnect();
-//   res.status(200).json({ message: "Usuario actualizado" });
-// };
+    await db.connect();
+    await Order.updateMany({ _id: { $in: ids } }, { status: newStatus });
+    await db.disconnect();
+    return res.status(200).json({ message: "Ordenes actualizadas" });
+  } catch (error) {
+    console.log({ error });
+    return res.status(400).json({ message: "Ha ocurrido un error..." });
+  }
+};

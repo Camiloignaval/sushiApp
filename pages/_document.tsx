@@ -28,7 +28,7 @@ class MyDocument extends Document {
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw&language=es&libraries=places"
           ></script>
           {/* conector plugin */}
-          <script src="../utils/conectorPlugin.js"></script>
+          {/* <script src="../utils/conectorPlugin.js"></script> */}
           <Main />
           <NextScript />
         </body>

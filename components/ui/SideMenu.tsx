@@ -13,6 +13,9 @@ import {
   CategoryOutlined,
   ConfirmationNumberOutlined,
   DashboardOutlined,
+  DeliveryDiningOutlined,
+  FilterFramesOutlined,
+  Inventory2Outlined,
   LocalOfferOutlined,
   LocationCityOutlined,
   LoginOutlined,
@@ -128,7 +131,7 @@ export const SideMenu = () => {
             </ListItem>
             <ListItem button onClick={() => navigateTo(`/admin/products`)}>
               <ListItemIcon>
-                <CategoryOutlined />
+                <Inventory2Outlined />
               </ListItemIcon>
               <ListItemText primary={"Productos"} />
             </ListItem>
@@ -140,16 +143,22 @@ export const SideMenu = () => {
             </ListItem>
             <ListItem button onClick={() => navigateTo(`/admin/coupons`)}>
               <ListItemIcon>
-                <CategoryOutlined />
+                <ConfirmationNumberOutlined />
               </ListItemIcon>
               <ListItemText primary={"Cupones"} />
             </ListItem>
 
             <ListItem button onClick={() => navigateTo(`/admin/orders`)}>
               <ListItemIcon>
-                <ConfirmationNumberOutlined />
+                <FilterFramesOutlined />
               </ListItemIcon>
               <ListItemText primary={"Ordenes"} />
+            </ListItem>
+            <ListItem button onClick={() => navigateTo(`/admin/deliver`)}>
+              <ListItemIcon>
+                <DeliveryDiningOutlined />
+              </ListItemIcon>
+              <ListItemText primary={"En ruta"} />
             </ListItem>
             <ListItem button onClick={() => navigateTo(`/admin/users`)}>
               <ListItemIcon>

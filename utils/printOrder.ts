@@ -1,6 +1,7 @@
 import { IProduct } from "./../interfaces/products";
 import { IOrder } from "./../interfaces/order";
 import { ConectorPlugin } from "./conectorPlugin";
+import { currency } from ".";
 
 interface IProductCustomRoll {
   name?: string;
@@ -98,20 +99,24 @@ export const printOrder = (order: IOrder) => {
   conector
     .establecerJustificacion(ConectorPlugin.Constantes.AlineacionDerecha)
     .establecerEnfatizado(1)
-    .textoConAcentos("------------------------\n")
-    .textoConAcentos(`Total:${order.total}`);
-  conector.feed(3);
-  conector
+    .textoConAcentos("----------------------------\n")
+    .textoConAcentos(`Total:${currency.format(Math.round(order.total))}`)
+    .feed(3)
     .establecerJustificacion(ConectorPlugin.Constantes.AlineacionCentro)
-    .textoConAcentos("***Gracias por su compra***");
-  conector.feed(1);
-  conector.cortar();
-  conector.cortarParcialmente();
-  conector.imprimirEn("ImpresoraTermica").then((respuestaAlImprimir) => {
-    if (respuestaAlImprimir === true) {
-      console.log("Impreso correctamente");
-    } else {
-      console.log("Error. La respuesta es: " + respuestaAlImprimir);
-    }
-  });
+    .textoConAcentos("***Gracias por su compra***\n")
+    .feed(1)
+    .establecerEnfatizado(0)
+    .establecerJustificacion(ConectorPlugin.Constantes.AlineacionDerecha)
+    .texto(`N° ${order._id!.slice(-10)}`)
+    .feed(1)
+    .cortar()
+    .cortarParcialmente()
+    .imprimirEn("ImpresoraTermica")
+    .then((respuestaAlImprimir) => {
+      if (respuestaAlImprimir === true) {
+        console.log("Impreso correctamente");
+      } else {
+        console.log("Error. La respuesta es: " + respuestaAlImprimir);
+      }
+    });
 };

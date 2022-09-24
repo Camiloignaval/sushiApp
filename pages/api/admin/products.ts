@@ -38,7 +38,7 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     // TODO  must update images
     return res.status(200).json(products);
   } catch (error) {
-    db.disconnect();
+    await db.disconnect();
     console.log({ error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

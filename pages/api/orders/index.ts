@@ -34,7 +34,7 @@ const createNewOrder = async (
 ) => {
   const body = req.body as IOrder;
   try {
-    db.connect();
+    await db.connect();
     // calcular precio de customs roll
     let priceFinalOfRollsPersonalized = 0;
 
@@ -166,14 +166,15 @@ const createNewOrder = async (
       { upsert: true, new: true }
     );
 
-    console.log({ userUpdated });
     orderToCreate.user = userUpdated._id;
     const newOrder = new Order(orderToCreate);
     await newOrder.save();
-
+    await db.disconnect();
     return res.status(201).json({ message: "creada" });
   } catch (error) {
     console.log(error);
+    await db.disconnect();
+
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

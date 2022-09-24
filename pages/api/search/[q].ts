@@ -28,17 +28,28 @@ const searchProducts = async (
   res: NextApiResponse<Data>
 ) => {
   let { q = "" } = req.query;
-  if (q.toString().trim().length === 0) {
-    return res.status(400).json({
-      message: "Must provide a search term",
-    });
-  }
-  q = q.toString().toLowerCase();
+  try {
+    if (q.toString().trim().length === 0) {
+      return res.status(400).json({
+        message: "Must provide a search term",
+      });
+    }
+    q = q.toString().toLowerCase();
 
-  db.connect();
-  const products = await Product.find({ $text: { $search: q } })
-    .select("title slug price inStock images -_id")
-    .lean();
-  db.disconnect();
-  return res.status(200).json(products);
+    await db.connect();
+    const products = await Product.find({ $text: { $search: q } })
+      .select("title slug price inStock images -_id")
+      .lean();
+    await db.disconnect();
+    return res.status(200).json(products);
+  } catch (error) {
+    console.log(error);
+    await db.disconnect();
+
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
 };

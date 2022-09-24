@@ -25,10 +25,21 @@ export default function handler(
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  await db.connect();
-  const products = await Product.find().lean();
-  await db.disconnect();
+  try {
+    await db.connect();
+    const products = await Product.find().lean();
+    await db.disconnect();
 
-  // TODO  must update images
-  return res.status(200).json(products);
+    // TODO  must update images
+    return res.status(200).json(products);
+  } catch (error) {
+    console.log(error);
+    await db.disconnect();
+
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
 };

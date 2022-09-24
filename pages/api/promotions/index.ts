@@ -28,12 +28,23 @@ const getPromotions = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
-  await db.connect();
-  const promotions = await Promotion.find(/* condition */)
-    .select("-createdAt -updatedAt")
-    .populate("category")
-    .lean();
-  await db.disconnect();
+  try {
+    await db.connect();
+    const promotions = await Promotion.find(/* condition */)
+      .select("-createdAt -updatedAt")
+      .populate("category")
+      .lean();
+    await db.disconnect();
 
-  res.status(200).json(promotions);
+    res.status(200).json(promotions);
+  } catch (error) {
+    console.log(error);
+    await db.disconnect();
+
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
 };

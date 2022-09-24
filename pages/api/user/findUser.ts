@@ -24,19 +24,29 @@ export default function handler(
 }
 
 const findUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { phone = "" } = req.body;
-  await db.connect();
-  const user = await User.findOne({ phone: phone }).select(
-    " phone address name placeId -_id"
-  );
-  console.log({ user });
-  await db.disconnect();
+  try {
+    const { phone = "" } = req.body;
+    await db.connect();
+    const user = await User.findOne({ phone: phone }).select(
+      " phone address name placeId -_id"
+    );
+    await db.disconnect();
 
-  if (!user) {
-    return res.status(400).json({
-      message: "No existe usuario con el id dado",
-    });
+    if (!user) {
+      return res.status(400).json({
+        message: "No existe usuario con el id dado",
+      });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.log(error);
+    await db.disconnect();
+
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
   }
-
-  res.status(200).json(user);
 };

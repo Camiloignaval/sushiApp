@@ -56,13 +56,13 @@ const changeStatus = async (
       return res
         .status(400)
         .json({ message: "Uno o mas de los ids enviados no son válidos" });
+    await db.connect();
     const ordenes = await Order.find({ _id: { $in: ids } });
     if (ordenes.length !== ids.length)
       return res
         .status(400)
         .json({ message: "Uno o mas de los ids no existen" });
 
-    await db.connect();
     await Order.updateMany({ _id: { $in: ids } }, { status: newStatus });
     await db.disconnect();
     return res.status(200).json({ message: "Ordenes actualizadas" });

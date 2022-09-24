@@ -24,11 +24,11 @@ interface ProductSlugs {
 // };
 
 export const getAllProducts = async (): Promise<IProduct[]> => {
-  db.connect();
+  await db.connect();
   const products = await Product.find({})
     .select("title slug price inStock images -_id")
     .lean();
-  db.disconnect();
+  await db.disconnect();
 
   return JSON.parse(JSON.stringify(products));
 };

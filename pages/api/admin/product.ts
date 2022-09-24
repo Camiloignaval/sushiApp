@@ -30,12 +30,13 @@ const updateProductStatus = async (
   const body = req.body;
   try {
     await db.connect();
-
     await Product.findByIdAndUpdate(body.id, { [body.category]: body.value });
     await db.disconnect();
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
+    await db.disconnect();
+
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

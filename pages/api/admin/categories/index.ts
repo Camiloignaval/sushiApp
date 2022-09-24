@@ -61,8 +61,10 @@ const newCategory = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const { body } = req;
     await db.connect();
     const categoryInBdd = await Category.find({ name: body.trim() });
-    if (categoryInBdd.length > 0)
+    if (categoryInBdd.length > 0) {
+      await db.disconnect();
       throw new Error("Nombre ya existe en base de datos");
+    }
     const newCategory = new Category({ name: body.trim() });
     await newCategory.save();
 
@@ -70,6 +72,8 @@ const newCategory = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
+    await db.disconnect();
+
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -83,20 +87,21 @@ const deleteCategory = async (
 ) => {
   const { body = "" } = req;
   try {
-    console.log({ body });
-    db.connect();
+    await db.connect();
     const promosWithThisCategory = await Promotion.find({ category: body });
     if (promosWithThisCategory.length > 0)
       throw new Error(
         "Primero debe eliminar artículos relacionados a esta categoría"
       );
     const category = await Category.findByIdAndDelete(body);
+    await db.disconnect();
+
     if (!category) throw new Error("Id solicitado no existe");
-    console.log({ promosWithThisCategory });
-    db.disconnect();
     res.status(200).json({ message: "Eliminada con éxito" });
   } catch (error) {
     if (error instanceof Error) {
+      await db.disconnect();
+
       return res.status(400).json({ message: error.message });
     } else {
       return res.status(400).json({ message: "Error desconocido" });

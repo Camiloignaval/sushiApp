@@ -26,10 +26,15 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const getUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  await db.connect();
-  const users = await User.find().select("-password").lean();
-  await db.disconnect();
-  return res.status(200).json(users);
+  try {
+    await db.connect();
+    const users = await User.find().select("-password").lean();
+    await db.disconnect();
+    return res.status(200).json(users);
+  } catch (error) {
+    await db.disconnect();
+    res.status(500).json({ message: "Algo ha salido mal..." });
+  }
 };
 
 const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {

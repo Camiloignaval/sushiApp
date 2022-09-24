@@ -27,20 +27,23 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const queryParams = req.query;
-  let { page = 1, limit = 20, status } = queryParams;
-  console.log({ status });
+  try {
+    let { page = 1, limit = 20, status } = queryParams;
+    const statusQuery = status ? { status } : {};
+    await db.connect();
+    //TODO agregar filtros
+    const orders = await Order.paginate(
+      { ...statusQuery },
+      { page, limit, sort: { createdAt: "desc" } }
+    );
 
-  const statusQuery = status ? { status } : {};
-  console.log({ page, limit, ...statusQuery });
-  await db.connect();
-  //TODO agregar filtros
-  const orders = await Order.paginate(
-    { ...statusQuery },
-    { page, limit, sort: { createdAt: "desc" } }
-  );
+    await db.disconnect();
+    return res.status(200).json(orders as any);
+  } catch (error) {
+    await db.disconnect();
 
-  await db.disconnect();
-  return res.status(200).json(orders as any);
+    return res.status(400).json({ message: "Ha ocurrido un error..." });
+  }
 };
 
 const changeStatus = async (
@@ -64,6 +67,7 @@ const changeStatus = async (
     await db.disconnect();
     return res.status(200).json({ message: "Ordenes actualizadas" });
   } catch (error) {
+    await db.disconnect();
     console.log({ error });
     return res.status(400).json({ message: "Ha ocurrido un error..." });
   }

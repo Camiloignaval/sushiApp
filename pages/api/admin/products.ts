@@ -30,12 +30,22 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  await db.connect();
-  const products = await Product.find().lean();
-  await db.disconnect();
+  try {
+    await db.connect();
+    const products = await Product.find().lean();
+    await db.disconnect();
 
-  // TODO  must update images
-  return res.status(200).json(products);
+    // TODO  must update images
+    return res.status(200).json(products);
+  } catch (error) {
+    db.disconnect();
+    console.log({ error });
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
 };
 
 const updateProduct = async (
@@ -57,10 +67,11 @@ const updateProduct = async (
       cloudinary.api.delete_resources_by_prefix(`SushiApp/${fileId}`);
     }
     await Product.findByIdAndUpdate(body._id, body);
-    // await db.disconnect();
+    await db.disconnect();
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
+    await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -79,12 +90,14 @@ const createProduct = async (
     const findBySameTypeAndName = await Product.findOne({ name, type });
     if (findBySameTypeAndName) {
       await db.disconnect();
+
       return res.status(400).json({
         message: "Ya existe un producto de este tipo con el mismo nombre",
       });
     }
     const product = new Product(req.body);
     await product.save();
+    await db.disconnect();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
     await db.disconnect();
@@ -105,8 +118,8 @@ const deleteProduct = async (
         message: "No existe producto con id indicado",
       });
     }
+    await db.disconnect();
     res.status(200).json({ message: "Producto eliminado con éxito" });
-    console.log({ deletedProduct });
   } catch (error) {
     console.log({ error });
     await db.disconnect();

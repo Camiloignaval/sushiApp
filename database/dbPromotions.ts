@@ -19,9 +19,9 @@ interface ProductSlugs {
 }
 
 export const getAllPromotions = async (): Promise<IProduct[]> => {
-  db.connect();
+  await db.connect();
   const products = await Promotion.find({}).populate("category").lean();
-  db.disconnect();
+  await db.disconnect();
 
   return JSON.parse(JSON.stringify(products));
 };

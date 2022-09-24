@@ -95,12 +95,17 @@ const createPromotion = async (
       });
     }
     if (req.body.images.length === 0) {
+      await db.disconnect();
+
       return res.status(400).json({
         message: "Debe seleccionar a lo menos 1 imágen",
       });
     }
+
     const product = new Promotion(req.body);
     await product.save();
+    await db.disconnect();
+
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
     await db.disconnect();
@@ -118,10 +123,13 @@ const deletePromotion = async (
     await db.connect();
     const deletedPromotion = await Promotion.findByIdAndDelete(id);
     if (!deletedPromotion) {
+      await db.disconnect();
       return res.status(400).json({
         message: "No existe promoción con id indicado",
       });
     }
+    await db.disconnect();
+
     res.status(200).json({ message: "Promoción eliminada con éxito" });
   } catch (error) {
     console.log({ error });

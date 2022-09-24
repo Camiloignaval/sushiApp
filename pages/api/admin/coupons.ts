@@ -31,15 +31,6 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   }
 }
 
-// const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-//   await db.connect();
-//   const products = await Product.find().lean();
-//   await db.disconnect();
-
-//   // TODO  must update images
-//   return res.status(200).json(products);
-// };
-
 const updateCoupon = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
@@ -53,6 +44,8 @@ const updateCoupon = async (
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
+    await db.disconnect();
+
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -69,7 +62,6 @@ const createCoupon = async (
     const { name = "", code = "" } = req.body;
     await db.connect();
     const findSameCoupon = await Coupon.find({ $or: [{ name }, { code }] });
-    console.log({ findSameCoupon });
     if (findSameCoupon.length > 0) {
       await db.disconnect();
       return res.status(400).json({
@@ -78,6 +70,7 @@ const createCoupon = async (
     }
     const cupon = new Coupon(req.body);
     await cupon.save();
+    await db.disconnect();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
     console.log({ error });

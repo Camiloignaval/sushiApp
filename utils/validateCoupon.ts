@@ -11,7 +11,7 @@ export const validateCoupon = (cupon: ICoupon, subTotal: number) => {
     }
   }
   //   validar que no se haya alcanzado el limite de cupones usados
-  if (cupon.qtyUsed >= cupon.qtyAvailable) {
+  if (cupon.qtyUsed! >= cupon.qtyAvailable) {
     throw new Error("Cupón ha superado el limite");
   }
 

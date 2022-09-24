@@ -13,16 +13,12 @@ import { useRouter } from "next/router";
 import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { ShopLayout } from "../layouts";
 import { IShippingAdress } from "../../interfaces";
 import { addDeliveryPrice, updateAdress } from "../../store/Slices/CartSlice";
-import HomeIconOutlined from "@mui/icons-material/HomeOutlined";
-import { countries } from "../../utils";
 import { PersonOutline, PhoneAndroidOutlined } from "@mui/icons-material";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { RootState } from "../../store";
-import { AutoCompletePlace } from "../google/autoComplete";
-import { dbUsers } from "../../database";
+import { AutoCompletePlace } from "../google/AutoCompletePlace";
 import axios from "axios";
 
 const emptyAddress: IShippingAdress = {

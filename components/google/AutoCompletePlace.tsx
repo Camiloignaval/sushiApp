@@ -23,21 +23,7 @@ import { IPlaceResponse } from "../../interfaces/placeResponse";
 import { RootState } from "../../store";
 import { errors } from "jose";
 
-// This key was created specifically for the demo in mui.com.
-// You need to create a new one for your application.
 const GOOGLE_MAPS_API_KEY = process.env.API_KEY_GOOGLE;
-
-// function loadScript(src: string, position: HTMLElement | null, id: string) {
-//   if (!position) {
-//     return;
-//   }
-
-//   const script = document.createElement("script");
-//   script.setAttribute("async", "");
-//   script.setAttribute("id", id);
-//   script.src = src;
-//   position.appendChild(script);
-// }
 
 const autocompleteService = { current: null };
 

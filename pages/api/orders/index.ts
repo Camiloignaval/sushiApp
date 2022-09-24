@@ -105,7 +105,7 @@ const createNewOrder = async (
     let cuponType = "";
     let maxDiscount = undefined;
     if (body?.coupon as ICoupon) {
-      const cupon = await Coupon.findById(body?.coupon!._id ?? "")
+      const cupon = await Coupon.findById((body?.coupon! as ICoupon)._id! ?? "")
         .select("-__v -createdAt -updatedAt")
         .lean();
       if (!cupon) {
@@ -139,13 +139,13 @@ const createNewOrder = async (
     // si todo ha salido bien
 
     if (body.coupon) {
-      await Coupon.findByIdAndUpdate(body.coupon!._id, {
+      await Coupon.findByIdAndUpdate((body?.coupon! as ICoupon)._id, {
         $inc: { qtyUsed: 1 },
       });
     }
     const orderToCreate: IOrder = { ...body };
     if (body?.coupon) {
-      orderToCreate.coupon = body.coupon!._id.toString();
+      orderToCreate.coupon = (body?.coupon! as ICoupon)._id!.toString();
     }
 
     // prueba whatsap

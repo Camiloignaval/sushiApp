@@ -1,3 +1,4 @@
+import { IUser } from "./../../../interfaces/user";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { User } from "../../../models";
@@ -10,11 +11,7 @@ type Data =
     }
   | {
       token: string;
-      user: {
-        email: string;
-        name: string;
-        role: string;
-      };
+      user: IUser;
     };
 
 export default function handler(
@@ -54,9 +51,9 @@ const checkJWT = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     });
   }
 
-  const { _id, email, name, role } = user;
+  const { _id, name, role, phone } = user as IUser;
 
   res
     .status(200)
-    .json({ token: jwt.signToken(_id, email), user: { role, name, email } });
+    .json({ token: jwt.signToken(_id!, phone), user: { role, name, phone } });
 };

@@ -43,7 +43,7 @@ interface FormData {
   qtyUsed?: number;
 }
 
-const newCuponPage = () => {
+const NewCuponPage = () => {
   const router = useRouter();
 
   const [activeMaxDiscount, setActiveMaxDiscount] = useState(false);
@@ -375,4 +375,4 @@ const newCuponPage = () => {
   );
 };
 
-export default newCuponPage;
+export default NewCuponPage;

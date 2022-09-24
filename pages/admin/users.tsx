@@ -47,7 +47,6 @@ const UsersPage = () => {
 
   const rows = dataUsers!.map((user: IUser) => ({
     id: user?._id,
-    email: user?.email,
     name: user?.name,
     role: user?.role,
   }));

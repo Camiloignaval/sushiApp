@@ -4,7 +4,7 @@ import { GoogleMap, LoadScript, Marker, Polygon } from "@react-google-maps/api";
 import React, { useCallback, useRef, useState } from "react";
 import { Navbar } from "../components/ui";
 
-const map = () => {
+const MapPage = () => {
   const mapContainerStyle = {
     height: "calc(100vh)",
     width: "calc(100vw)",
@@ -62,4 +62,4 @@ const map = () => {
   );
 };
 
-export default map;
+export default MapPage;

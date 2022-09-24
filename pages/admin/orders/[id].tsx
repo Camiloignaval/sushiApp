@@ -76,7 +76,6 @@ const OrderPage: FC<Props> = ({ order }) => {
               <Typography>{sa.lastName}</Typography>
               <Typography>{sa.adress}</Typography>
               {sa.adress2 && <Typography>{sa.adress2}</Typography>} */}
-              <Typography>{sa.city}</Typography>
               <Typography>{sa.phone}</Typography>
               <Divider sx={{ my: 1 }} />
 

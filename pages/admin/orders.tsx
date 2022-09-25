@@ -1,4 +1,8 @@
-import { ConfirmationNumberOutlined } from "@mui/icons-material";
+import {
+  ConfirmationNumberOutlined,
+  DoneAllOutlined,
+  ReplayOutlined,
+} from "@mui/icons-material";
 import { Box, Chip, Grid, IconButton } from "@mui/material";
 import {
   DataGrid,
@@ -14,34 +18,63 @@ import { AdminLayout } from "../../components/layouts";
 import { OrdersActions } from "../../components/orders";
 import { FullScreenLoading } from "../../components/ui";
 import { IOrder } from "../../interfaces";
-import { useGetAllOrdersQuery } from "../../store/RTKQuery/ordersApi";
+import {
+  useGetAllOrdersQuery,
+  useRetryConfirmOrderMutation,
+} from "../../store/RTKQuery/ordersApi";
 import { currency } from "../../utils";
 import { printOrder } from "../../utils/printOrder";
 
 const OrdersPage = () => {
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
+  const [retryConfirmQuery, retryConfirmStatus] =
+    useRetryConfirmOrderMutation();
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(20);
   const { data: dataOrders, isLoading } = useGetAllOrdersQuery(
     `page=${page + 1}&limit=${pageSize}`
   );
 
+  const retryConfirmOrder = (id: string, phone: string) => {
+    retryConfirmQuery({ orderId: id, phone });
+  };
+
   const columns: GridColDef[] = [
     {
       field: "id",
       headerName: "Orden ID",
-      width: 150,
+      width: 110,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row.id.slice(-10);
       },
     },
     { field: "name", headerName: "Nombre", width: 150 },
-    { field: "phone", headerName: "Teléfono", width: 150 },
+    { field: "phone", headerName: "Teléfono", width: 120 },
+    {
+      field: "wspReceived",
+      headerName: "Wsp",
+      width: 20,
+      renderCell: ({ row }: GridValueGetterParams) => {
+        if (row?.wspReceived === true) {
+          return <DoneAllOutlined color="success" sx={{ ml: 1 }} />;
+        } else {
+          return (
+            <IconButton
+              disabled={retryConfirmStatus.isLoading}
+              onClick={() => retryConfirmOrder(row.id, row.phone)}
+              color="error"
+            >
+              <ReplayOutlined />
+            </IconButton>
+          );
+        }
+      },
+    },
     { field: "address", headerName: "Dirección", width: 250 },
     {
       field: "total",
-      headerName: "Monto total",
-      width: 100,
+      headerName: "Monto ",
+      width: 80,
       renderCell: ({ row }: GridValueGetterParams) => {
         return currency.format(row.total);
       },
@@ -95,9 +128,9 @@ const OrdersPage = () => {
     },
     {
       field: "noProducts",
-      headerName: "No.Productos",
+      headerName: "No.Prod.",
       align: "center",
-      width: 100,
+      width: 80,
     },
     {
       field: "extras",
@@ -116,7 +149,7 @@ const OrdersPage = () => {
         );
       },
     },
-    { field: "createdAt", headerName: "Ingresada en", width: 180 },
+    { field: "createdAt", headerName: "Ingresada en", width: 160 },
     {
       field: "ticket",
       headerName: "Ticket",
@@ -152,6 +185,7 @@ const OrdersPage = () => {
 
   const rows = dataOrders?.docs!.map((order: IOrder) => ({
     id: order?._id,
+    wspReceived: order?.wspReceived,
     name: order.shippingAddress.username!,
     total: order?.total,
     address: `${order.shippingAddress.address}`,

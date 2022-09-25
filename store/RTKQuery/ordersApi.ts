@@ -81,6 +81,24 @@ export const ordersApi = createApi({
         });
       },
     }),
+    retryConfirmOrder: builder.mutation<
+      IResponse,
+      { phone: string; orderId: string }
+    >({
+      query: (body) => ({
+        url: `/admin/order`,
+        method: "post",
+        body,
+      }),
+      invalidatesTags: ["Orders"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Confirmando orden...",
+          success: "Orden confirmada con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
 
     // payOrder: builder.mutation<
     //   IResponse,
@@ -104,8 +122,7 @@ export const ordersApi = createApi({
 
 export const {
   useCreateOrderMutation,
-  // useGetOrderQuery,
-  // usePayOrderMutation,
   useGetAllOrdersQuery,
   useChangeOrderStatusMutation,
+  useRetryConfirmOrderMutation,
 } = ordersApi;

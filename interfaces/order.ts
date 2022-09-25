@@ -20,6 +20,7 @@ export interface IOrder {
   transactionId?: string;
   createdAt?: string;
   coupon?: ICoupon | string;
+  wspReceived?: boolean;
 }
 
 export interface IOrderWithPaginate {

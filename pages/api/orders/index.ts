@@ -8,6 +8,8 @@ import { ICoupon, IOrder, IProduct } from "../../../interfaces";
 import { Order, Product, Promotion, User } from "../../../models";
 import Coupon from "../../../models/Coupon";
 import { sendMessage } from "../../../utils/whatsapp";
+import axios from "axios";
+import { orderMessageWsp } from "../../../utils/orderMessageWsp";
 type Data =
   | {
       message: string;
@@ -41,7 +43,7 @@ const createNewOrder = async (
     const customRolls = body.orderItems.filter(
       (item) => item.name === "Roll personalizado"
     );
-    if (customRolls.length > 0) {
+    if (customRolls?.length > 0) {
       await Promise.all(
         customRolls.map(async (p) => {
           console.log({ p: p.extraProduct });
@@ -65,7 +67,7 @@ const createNewOrder = async (
       (item) => item.name !== "Roll personalizado"
     );
 
-    if (promos.length > 0) {
+    if (promos?.length > 0) {
       await Promise.all(
         promos.map(async (promo) => {
           const promoFound = await Promotion.findById(promo._id).select(
@@ -80,7 +82,7 @@ const createNewOrder = async (
     // calculo extras
     let priceExtras = 0;
 
-    if (body?.orderExtraItems && body?.orderExtraItems.length > 0) {
+    if (body?.orderExtraItems && body?.orderExtraItems?.length > 0) {
       await Promise.all(
         body?.orderExtraItems.map(async (prod) => {
           const prodFound = await Product.findById(prod._id).select("price");
@@ -148,15 +150,6 @@ const createNewOrder = async (
       orderToCreate.coupon = (body?.coupon! as ICoupon)._id!.toString();
     }
 
-    // prueba whatsap
-    // TODO ENVIAR WHATSAPP CON DETALLE ORDEN Y LINK DE SEGUIMIENTO
-    // sendMessage(body.shippingAddress.phone, "Su orden xxxxxxx");
-    // client.on("message", (message) => {
-    //   message.reply("hola probando");
-    // });
-
-    // wspMessage();
-
     const { shippingAddress } = body;
     const { username, address, phone, placeId } = shippingAddress;
 
@@ -169,12 +162,29 @@ const createNewOrder = async (
     orderToCreate.user = userUpdated._id;
     const newOrder = new Order(orderToCreate);
     await newOrder.save();
+
+    // ENVIO INFO WHATSAP
+    const linkWsp = process.env.HOST_WSP_API;
+    try {
+      // Armar mensaje a enviar
+      const message = orderMessageWsp({ ...orderToCreate, _id: newOrder._id });
+      await axios.post(`${linkWsp}/send-message`, {
+        number: phone,
+        message,
+        key: process.env.KEY_API_WSP ?? "",
+      });
+    } catch (error) {
+      await Order.findByIdAndUpdate(
+        { _id: newOrder._id },
+        { wspReceived: false }
+      );
+    }
+
     await db.disconnect();
     return res.status(201).json({ message: "creada" });
   } catch (error) {
     console.log(error);
     await db.disconnect();
-
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

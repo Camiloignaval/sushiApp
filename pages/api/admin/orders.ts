@@ -1,8 +1,10 @@
+import { ShippingAddress } from "./../../../interfaces/paypal";
 import { isValidObjectId } from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { IOrder } from "../../../interfaces";
 import { Order, User } from "../../../models";
+import axios from "axios";
 
 type Data =
   | {
@@ -62,13 +64,39 @@ const changeStatus = async (
       return res
         .status(400)
         .json({ message: "Uno o mas de los ids no existen" });
-
+    console.log({ newStatus });
+    if (newStatus === "dispatched") {
+      const numbersPhone = await Order.find({ _id: { $in: ids } }).select(
+        "shippingAddress.phone -_id"
+      );
+      try {
+        const respApi = await Promise.all(
+          numbersPhone.map(
+            async (n: any) =>
+              await axios.post(
+                `${process.env.HOST_WSP_API ?? ""}/send-message`,
+                {
+                  number: n.shippingAddress.phone,
+                  message: "Buenas noticias, su pedido ya va en camino!",
+                  key: process.env.KEY_API_WSP ?? "",
+                }
+              )
+          )
+        );
+      } catch (error) {
+        throw new Error("Favor revise la conección con Whatsapp");
+      }
+    }
     await Order.updateMany({ _id: { $in: ids } }, { status: newStatus });
     await db.disconnect();
     return res.status(200).json({ message: "Ordenes actualizadas" });
   } catch (error) {
     await db.disconnect();
     console.log({ error });
-    return res.status(400).json({ message: "Ha ocurrido un error..." });
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
   }
 };

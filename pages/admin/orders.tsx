@@ -1,6 +1,7 @@
 import {
   ConfirmationNumberOutlined,
   DoneAllOutlined,
+  MessageOutlined,
   ReplayOutlined,
 } from "@mui/icons-material";
 import { Box, Chip, Grid, IconButton } from "@mui/material";
@@ -15,7 +16,7 @@ import {
 import { format } from "date-fns";
 import React, { useState } from "react";
 import { AdminLayout } from "../../components/layouts";
-import { OrdersActions } from "../../components/orders";
+import { MessageModal, OrdersActions } from "../../components/orders";
 import { FullScreenLoading } from "../../components/ui";
 import { IOrder } from "../../interfaces";
 import {
@@ -31,12 +32,23 @@ const OrdersPage = () => {
     useRetryConfirmOrderMutation();
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(20);
+  const [open, setOpen] = useState(false);
+  const [userActiveToWsp, setuserActiveToWsp] = useState({
+    phone: "",
+    name: "",
+  });
+
   const { data: dataOrders, isLoading } = useGetAllOrdersQuery(
     `page=${page + 1}&limit=${pageSize}`
   );
 
   const retryConfirmOrder = (id: string, phone: string) => {
     retryConfirmQuery({ orderId: id, phone });
+  };
+
+  const handleMessageWsp = (phone: string, name: string) => {
+    setOpen(true);
+    setuserActiveToWsp({ phone, name });
   };
 
   const columns: GridColDef[] = [
@@ -168,6 +180,18 @@ const OrdersPage = () => {
         );
       },
     },
+    {
+      field: "wsp",
+      headerName: "Msg",
+      width: 80,
+      renderCell: ({ row }: GridValueGetterParams) => {
+        return (
+          <IconButton onClick={() => handleMessageWsp(row.phone, row.name)}>
+            <MessageOutlined />
+          </IconButton>
+        );
+      },
+    },
   ];
 
   const [rowCountState, setRowCountState] = React.useState(
@@ -202,6 +226,7 @@ const OrdersPage = () => {
       title={"Ordenes"}
       subTitle={"Mantenimiento de ordenes"}
     >
+      <MessageModal user={userActiveToWsp} open={open} setOpen={setOpen} />
       <Box display={"flex"} justifyContent="end">
         <OrdersActions
           rowsId={selectedRows}

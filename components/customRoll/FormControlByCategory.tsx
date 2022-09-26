@@ -42,7 +42,7 @@ export const FormControlByCategory: FC<Props> = ({
   useEffect(() => {
     const isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty;
     setError(isLessThanMax);
-  }, [promoToSendCart[dictCategory[label]]]);
+  }, [promoToSendCart[dictCategory[label]], maxQty, label, promoToSendCart]);
 
   return (
     <FormControl

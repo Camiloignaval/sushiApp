@@ -113,7 +113,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       "deliverPrice",
       JSON.stringify({ deliverPrice, valuedAddress, valuedPlaceId })
     );
-  }, [deliverPrice, firstRender]);
+  }, [deliverPrice, firstRender, valuedAddress, valuedPlaceId]);
 
   // useEffect(() => {
   //   if (coupon && coupon.) {

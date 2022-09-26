@@ -35,6 +35,7 @@ const ProductsPage = () => {
   const columns: GridColDef[] = [
     {
       field: "img",
+      flex: 1,
       headerName: "Foto",
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
@@ -49,6 +50,7 @@ const ProductsPage = () => {
     },
     {
       field: "name",
+      flex: 1,
       headerName: "Nombre",
       width: 250,
       renderCell: ({ row }: GridValueGetterParams) => {
@@ -59,9 +61,10 @@ const ProductsPage = () => {
         );
       },
     },
-    { field: "type", headerName: "Categoría", width: 150 },
+    { field: "type", headerName: "Categoría", flex: 1, width: 150 },
     {
       field: "inStock",
+      flex: 1,
       headerName: "Stock",
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
@@ -80,6 +83,7 @@ const ProductsPage = () => {
     },
     {
       field: "price",
+      flex: 1,
       headerName: "Precio",
       renderCell: ({ row }: GridValueGetterParams) => {
         return currency.format(row.price);
@@ -87,6 +91,7 @@ const ProductsPage = () => {
     },
     {
       field: "delete",
+      flex: 1,
       headerName: "Eliminar",
       width: 70,
       renderCell: ({ row }: GridValueGetterParams) => {

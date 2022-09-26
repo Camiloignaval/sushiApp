@@ -35,6 +35,7 @@ const CategoriesPage = () => {
   const columns: GridColDef[] = [
     {
       field: "id",
+      flex: 1,
       headerName: "Id",
       renderCell: ({ row }: GridValueGetterParams) => {
         return row.id.slice(-10);
@@ -42,6 +43,7 @@ const CategoriesPage = () => {
     },
     {
       field: "name",
+      flex: 1,
       headerName: "Nombre",
       width: 150,
       editable: updateNameStatus.isLoading,
@@ -49,6 +51,7 @@ const CategoriesPage = () => {
 
     {
       field: "delete",
+      flex: 1,
       headerName: "Eliminar",
       width: 70,
       renderCell: ({ row }: GridValueGetterParams) => {

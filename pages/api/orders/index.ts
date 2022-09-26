@@ -7,7 +7,6 @@ import { db } from "../../../database";
 import { ICoupon, IOrder, IProduct } from "../../../interfaces";
 import { Order, Product, Promotion, User } from "../../../models";
 import Coupon from "../../../models/Coupon";
-import { sendMessage } from "../../../utils/whatsapp";
 import axios from "axios";
 import { orderMessageWsp } from "../../../utils/orderMessageWsp";
 import { Boy } from "@mui/icons-material";

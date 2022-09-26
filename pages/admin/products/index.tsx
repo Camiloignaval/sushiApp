@@ -38,6 +38,7 @@ const ProductsPage = () => {
     {
       field: "img",
       headerName: "Foto",
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <CardMedia
@@ -53,6 +54,7 @@ const ProductsPage = () => {
       field: "name",
       headerName: "Nombre",
       width: 150,
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <NextLink href={`/admin/products/${row.id}`} passHref>
@@ -61,10 +63,11 @@ const ProductsPage = () => {
         );
       },
     },
-    { field: "type", headerName: "Tipo" },
+    { field: "type", headerName: "Tipo", flex: 1 },
     {
       field: "inStock",
       headerName: "Stock",
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <Switch
@@ -83,6 +86,7 @@ const ProductsPage = () => {
     {
       field: "price",
       headerName: "Precio",
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return currency.format(row.price);
       },
@@ -91,6 +95,7 @@ const ProductsPage = () => {
       field: "delete",
       headerName: "Eliminar",
       width: 70,
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <IconButton

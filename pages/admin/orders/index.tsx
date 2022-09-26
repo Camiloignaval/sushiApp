@@ -15,16 +15,16 @@ import {
 } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import React, { useState } from "react";
-import { AdminLayout } from "../../components/layouts";
-import { MessageModal, OrdersActions } from "../../components/orders";
-import { FullScreenLoading } from "../../components/ui";
-import { IOrder } from "../../interfaces";
+import { AdminLayout } from "../../../components/layouts";
+import { MessageModal, OrdersActions } from "../../../components/orders";
+import { FullScreenLoading } from "../../../components/ui";
+import { IOrder } from "../../../interfaces";
 import {
   useGetAllOrdersQuery,
   useRetryConfirmOrderMutation,
-} from "../../store/RTKQuery/ordersApi";
-import { currency } from "../../utils";
-import { printOrder } from "../../utils/printOrder";
+} from "../../../store/RTKQuery/ordersApi";
+import { currency } from "../../../utils";
+import { printOrder } from "../../../utils/printOrder";
 
 const OrdersPage = () => {
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);

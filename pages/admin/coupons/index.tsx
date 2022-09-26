@@ -44,6 +44,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
   const columns: GridColDef[] = [
     {
       field: "name",
+      flex: 1,
       headerName: "Nombre",
       width: 150,
       renderCell: ({ row }: GridValueGetterParams) => {
@@ -56,11 +57,13 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
     },
     {
       field: "code",
+      flex: 1,
       headerName: "Código",
       width: 120,
     },
     {
       field: "startIn",
+      flex: 1,
       headerName: "Fecha inicio",
       width: 280,
       renderCell: ({ row }: GridValueGetterParams) => {
@@ -77,6 +80,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
     },
     {
       field: "expireIn",
+      flex: 1,
       headerName: "Fecha expiración",
       width: 280,
       renderCell: ({ row }: GridValueGetterParams) => {
@@ -94,6 +98,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
     {
       field: "Expirado",
       width: 150,
+      flex: 1,
       headerName: "Estado",
       renderCell: ({ row }: GridValueGetterParams) => {
         if (row.qtyUsed >= row.qtyAvailable) {
@@ -145,6 +150,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
       field: "Ocupados",
       headerName: "Ocupados",
       width: 100,
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row.qtyUsed < row.qtyAvailable ? (
           <Chip
@@ -167,6 +173,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
       field: "discount",
       headerName: "Descuento",
       width: 100,
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row?.type === "percentage"
           ? `${row.discount}%`
@@ -177,6 +184,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
       field: "minPurchase",
       headerName: "Mín. Compra",
       width: 100,
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row?.minPurchase ? currency.format(row?.minPurchase) : "";
       },
@@ -185,6 +193,7 @@ const ProductsPage: FC<Props> = ({ cupones }) => {
       field: "maxDiscount",
       headerName: "Max. Desc.",
       width: 100,
+      flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row?.maxDiscount ? currency.format(row?.maxDiscount) : "";
       },

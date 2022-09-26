@@ -62,6 +62,7 @@ const orderSchema = new Schema(
         image: { type: String, required: true },
         price: { type: Number, required: true },
         note: { type: String },
+        type: { type: String, required: true },
       },
     ],
     shippingAddress: {
@@ -77,6 +78,7 @@ const orderSchema = new Schema(
     deliverPrice: { type: Number, required: true },
     isPaid: { type: Boolean, required: true, default: false },
     paidAt: { type: String },
+    discount: { type: Number },
     wspReceived: { type: Boolean, required: true, default: true },
     status: {
       type: String,

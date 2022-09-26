@@ -10,6 +10,7 @@ import Coupon from "../../../models/Coupon";
 import { sendMessage } from "../../../utils/whatsapp";
 import axios from "axios";
 import { orderMessageWsp } from "../../../utils/orderMessageWsp";
+import { Boy } from "@mui/icons-material";
 type Data =
   | {
       message: string;
@@ -98,7 +99,6 @@ const createNewOrder = async (
 
     // TODO falta sumar despacho
     if (subTotal !== body.subTotal) {
-      console.log({ subTotal, subbody: body.subTotal });
       throw new Error("Ha ocurrido un error, valores han sido alterados");
     }
 
@@ -106,6 +106,7 @@ const createNewOrder = async (
     let discount = 0;
     let cuponType = "";
     let maxDiscount = undefined;
+    let minPurchase = undefined;
     if (body?.coupon as ICoupon) {
       const cupon = await Coupon.findById((body?.coupon! as ICoupon)._id! ?? "")
         .select("-__v -createdAt -updatedAt")
@@ -117,15 +118,22 @@ const createNewOrder = async (
       discount = cupon.discount;
       cuponType = cupon.type;
       maxDiscount = cupon?.maxDiscount;
+      minPurchase = cupon?.minPurchase;
     }
     let total = subTotal;
+    if (minPurchase) {
+      if (minPurchase < subTotal)
+        throw new Error("Compra es inferior a requerido por cupón utilizado");
+    }
     if (discount != 0) {
       if (cuponType === "percentage") {
         const discountAmount = total * (discount / 100);
+        console.log({ discountAmount });
         if (maxDiscount) {
           if (discountAmount > maxDiscount) {
             total = total - maxDiscount;
           }
+          total = total - total * (discount / 100);
         } else {
           total = total - total * (discount / 100);
         }
@@ -135,6 +143,10 @@ const createNewOrder = async (
     }
 
     if (total + body.deliverPrice !== body.total) {
+      console.log({
+        bbdd: total + body.deliverPrice,
+        body: body.total,
+      });
       throw new Error("Ha ocurrido un error, valores han sido alterados");
     }
 
@@ -183,7 +195,7 @@ const createNewOrder = async (
     await db.disconnect();
     return res.status(201).json({ message: "creada" });
   } catch (error) {
-    console.log(error);
+    console.log(error.message);
     await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

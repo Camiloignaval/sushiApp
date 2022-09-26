@@ -19,6 +19,8 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
     case "PUT":
       return changeStatus(req, res);
+    case "DELETE":
+      return anulateOrder(req, res);
 
     default:
       return res.status(405).json({
@@ -42,6 +44,23 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     await db.disconnect();
     return res.status(200).json(orders as any);
   } catch (error) {
+    await db.disconnect();
+
+    return res.status(400).json({ message: "Ha ocurrido un error..." });
+  }
+};
+const anulateOrder = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const idsOrder = req.body;
+  try {
+    await db.connect();
+    await Order.updateMany({ _id: { $in: idsOrder } }, { deleted: true });
+    await db.disconnect();
+    return res.status(200).json({ message: "Eliminadas" });
+  } catch (error) {
+    console.log({ error: error.message });
     await db.disconnect();
 
     return res.status(400).json({ message: "Ha ocurrido un error..." });

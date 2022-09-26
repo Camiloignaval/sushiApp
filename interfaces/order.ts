@@ -21,6 +21,7 @@ export interface IOrder {
   createdAt?: string;
   coupon?: ICoupon | string;
   wspReceived?: boolean;
+  discount: number;
 }
 
 export interface IOrderWithPaginate {

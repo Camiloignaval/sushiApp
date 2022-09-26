@@ -18,7 +18,10 @@ interface Props {
   editable?: boolean;
 }
 
+const isAdmin = true;
+
 export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
+  console.log({ prod });
   const { extraProduct } = useSelector((state: RootState) => state.cart);
   const [extraToSendCart, setExtraToSendCart] = useState<ICartProduct>({
     _id: prod?._id!,
@@ -69,7 +72,7 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
             display: "flex",
 
             justifyContent: "center",
-            opacity: prod.inStock ? 1 : 0.3,
+            opacity: prod.inStock || isAdmin ? 1 : 0.3,
           }}
         />
         <Chip
@@ -113,12 +116,20 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
           alignItems="center"
           variant="subtitle2"
         >
-          <>
-            {extraProduct.find((e) => e._id === prod._id)?.quantity}{" "}
-            {extraProduct.find((e) => e._id === prod._id)?.quantity === 1
-              ? "unidad"
-              : "unidades"}
-          </>
+          {isAdmin ? (
+            <>
+              {`${(prod as any).quantity} ${
+                (prod as any)?.quantity === 1 ? "unidad" : "unidades"
+              }`}
+            </>
+          ) : (
+            <>
+              {extraProduct.find((e) => e._id === prod._id)?.quantity}{" "}
+              {extraProduct.find((e) => e._id === prod._id)?.quantity === 1
+                ? "unidad"
+                : "unidades"}
+            </>
+          )}
         </Typography>
       )}
     </Grid>

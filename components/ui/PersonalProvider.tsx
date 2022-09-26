@@ -70,7 +70,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       const couponSaved = localStorage.getItem("coupon")
         ? JSON.parse(localStorage.getItem("coupon")!)
         : undefined;
-      couponSaved && addCoupon(couponSaved);
+      couponSaved !== undefined && addCoupon(couponSaved);
       // dispatch(addCoupon(couponSaved));
     } catch (error) {
       console.log(error);

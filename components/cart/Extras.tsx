@@ -8,18 +8,25 @@ import { ExtraProducts } from "../customRoll";
 interface Props {
   productData: IProduct[];
   editable?: boolean;
+  isAdmin?: boolean;
 }
 
-export const Extras: FC<Props> = ({ productData, editable = false }) => {
-  const { extraProduct } = useSelector((state: RootState) => state.cart);
+const isAdmin = true;
 
+export const Extras: FC<Props> = ({
+  productData,
+  editable = false,
+  isAdmin = false,
+}) => {
+  const { extraProduct } = useSelector((state: RootState) => state.cart);
+  console.log({ extraProduct });
   return (
     <FormControl
       sx={{ m: 3, width: "100%" }}
       component="fieldset"
       variant="standard"
     >
-      {extraProduct.find((e) => e.type === "sauce" || editable) && (
+      {extraProduct.find((e) => e.type === "sauce" || editable || isAdmin) && (
         <FormLabel component="legend" sx={{ mb: 3 }}>
           {editable ? "Agrega salsas extra" : "Salsas extra"}
         </FormLabel>
@@ -28,7 +35,7 @@ export const Extras: FC<Props> = ({ productData, editable = false }) => {
       <ExtraProducts
         editable={editable}
         products={
-          editable
+          editable || isAdmin
             ? productData!?.filter((prod) => prod.type === "sauce")
             : extraProduct!?.filter(
                 (prod) => prod.type === "sauce" && prod.quantity > 0
@@ -36,7 +43,7 @@ export const Extras: FC<Props> = ({ productData, editable = false }) => {
         }
       />
       {/* otros extras */}
-      {extraProduct.find((e) => e.type === "other" || editable) && (
+      {extraProduct.find((e) => e.type === "other" || editable || isAdmin) && (
         <FormLabel component="legend" sx={{ marginY: 3 }}>
           {editable ? "Agrega otros productos" : "Otros productos"}
         </FormLabel>
@@ -44,7 +51,7 @@ export const Extras: FC<Props> = ({ productData, editable = false }) => {
       <ExtraProducts
         editable={editable}
         products={
-          editable
+          editable || isAdmin
             ? productData!?.filter((prod) => prod.type === "other")
             : extraProduct!?.filter(
                 (prod) => prod.type === "other" && prod.quantity > 0

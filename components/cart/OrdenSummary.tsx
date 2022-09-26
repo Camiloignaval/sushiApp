@@ -17,6 +17,7 @@ import { HiOutlineTicket } from "react-icons/hi";
 import { useValidateCouponMutation } from "../../store/RTKQuery/couponApi";
 import { addCoupon, removeCoupon } from "../../store/Slices/CartSlice";
 import { useRouter } from "next/router";
+import { IOrder } from "../../interfaces";
 
 interface Props {
   editable?: boolean;
@@ -25,10 +26,16 @@ interface Props {
     subTotal: number;
     tax: number;
     total: number;
+    deliverPrice: number;
   };
+  order?: IOrder | undefined;
 }
 
-export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
+export const OrdenSummary: FC<Props> = ({
+  infoPrices,
+  editable = false,
+  order = undefined,
+}) => {
   const { cart } = useSelector((state: RootState) => state);
   const dispatch = useDispatch();
   const { asPath } = useRouter();
@@ -39,6 +46,7 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
     subTotal: 0,
     tax: 0,
     total: 0,
+    deliverPrice: 0,
   });
 
   const onQueryCoupon = async () => {
@@ -62,6 +70,7 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
         subTotal: cart.subTotal,
         tax: cart.tax,
         total: cart.total,
+        deliverPrice: cart.deliverPrice,
       });
     }
   }, [cart, infoPrices]);
@@ -73,8 +82,8 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
       </Grid>
       <Grid item xs={6} display="flex" justifyContent="end">
         <Typography>
-          {infoToShow.numberOfItems}{" "}
-          {infoToShow.numberOfItems > 1 ? "items" : "item"}
+          {(order ? order : infoToShow).numberOfItems}{" "}
+          {(order ? order : infoToShow).numberOfItems > 1 ? "items" : "item"}
         </Typography>
       </Grid>
       <Grid item xs={6}>
@@ -83,7 +92,7 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
       <Grid item xs={6} display="flex" justifyContent="end">
         <Typography>
           {currency.format(
-            cart.extraProduct.reduce(
+            (order ? order.orderExtraItems! : cart.extraProduct).reduce(
               (acc, curr) => +acc + +curr.price * +curr.quantity,
               0
             )
@@ -96,7 +105,9 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
         <Typography>Subtotal</Typography>
       </Grid>
       <Grid item xs={6} display="flex" justifyContent="end">
-        <Typography>{currency.format(infoToShow.subTotal)}</Typography>
+        <Typography>
+          {currency.format((order ? order : infoToShow).subTotal)}
+        </Typography>
       </Grid>
       {/* impuestos
       <Grid item xs={6}>
@@ -185,7 +196,9 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
         )}
       </Grid>
       <Grid item xs={6} display="flex" justifyContent="end">
-        <Typography>{currency.format(cart.discount)}</Typography>
+        <Typography>
+          {currency.format((order ? order : cart).discount)}
+        </Typography>
       </Grid>
       <Divider sx={{ my: 2 }} />
       {/* despacho */}
@@ -199,7 +212,9 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
         display="flex"
         justifyContent="end"
       >
-        <Typography>{currency.format(cart.deliverPrice)}</Typography>
+        <Typography>
+          {currency.format((order ? order : infoToShow).deliverPrice)}
+        </Typography>
       </Grid>
 
       {/* total */}
@@ -214,7 +229,7 @@ export const OrdenSummary: FC<Props> = ({ infoPrices, editable = false }) => {
         justifyContent="end"
       >
         <Typography variant="subtitle1">
-          {currency.format(infoToShow.total)}
+          {currency.format((order ? order : infoToShow).total)}
         </Typography>
       </Grid>
     </Grid>

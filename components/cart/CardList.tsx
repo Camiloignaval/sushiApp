@@ -29,7 +29,7 @@ import { TextSnippetOutlined } from "@mui/icons-material";
 
 interface Props {
   editable?: boolean;
-  products?: IOrderItem[];
+  orderProduct?: IOrderItem[] | boolean;
 }
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -43,13 +43,15 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-export const CardList: FC<Props> = ({ editable = false, products }) => {
+const isAdmin = true;
+
+export const CardList: FC<Props> = ({
+  editable = false,
+  orderProduct = false,
+}) => {
   const dispatch = useDispatch();
   const { cart } = useSelector((state: RootState) => state.cart);
   const [noteOpen, setNoteOpen] = useState(false);
-  // const [productToShow, setproductToShow] = useState<
-  //   IOrderItem[] | ICartProduct[]
-  // >([]);
 
   const onNewCartQty = (product: ICartProduct, newQty: number) => {
     // const productClone = { ...product };
@@ -61,72 +63,44 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
     dispatch(removeFromCart(product._id ?? ""));
   };
 
-  // useEffect(() => {
-  //   if (products) {
-  //     setproductToShow(products);
-  //   } else {
-  //     setproductToShow(cart);
-  //   }
-  // }, [cart, products]);
-
   return (
     <>
       {!cart ? (
         <FullScreenLoading />
       ) : (
-        cart.map((product, i) => (
-          <Box key={i}>
-            <Divider sx={{ mb: 2 }} />
-            <Grid container spacing={3} marginBottom={2} key={i}>
-              <Grid item xs={3}>
-                {/* <NextLink href={`/product/${product.slug}`} passHref> */}
-                {/* <Link> */}
-                <CardActionArea>
-                  <CardMedia
-                    image={product.image.toString()}
-                    component="img"
-                    sx={{ borderRadius: "5px" }}
-                  />
-                </CardActionArea>
-                {/* </Link>
-            </NextLink> */}
-              </Grid>
-              <Grid item xs={7}>
-                <Box display="flex" flexDirection="column">
-                  <Typography variant="body1">
-                    <>
-                      {product.name} ({product.quantity}{" "}
-                      {product.quantity === 1 ? "unidad" : "unidades"})
-                    </>
-                  </Typography>
-                  <Typography variant="body1">
-                    {/* {editable ? ( */}
-                    {product.name === "Roll personalizado" && (
-                      <Box>
-                        <Typography variant="subtitle2" marginBottom={-1}>
-                          Envoltura
-                        </Typography>
-                        <Grid
-                          container
-                          style={{ margin: "0", display: "flex" }}
-                        >
-                          {product.envelopes!.map((env, i) => (
-                            <Grid key={i} item style={{ margin: "0 30px 0 0" }}>
-                              <Typography variant="caption">
-                                <VscDebugBreakpointLog /> {env.name}
-                              </Typography>
-                            </Grid>
-                          ))}
-                        </Grid>
-                        <Typography variant="subtitle2" marginBottom={-1}>
-                          Relleno
-                        </Typography>
-                        <Grid
-                          container
-                          style={{ margin: "0", display: "flex" }}
-                        >
-                          {[...product.proteins!, ...product.vegetables!]!.map(
-                            (env, i) => (
+        (orderProduct ? (orderProduct as ICartProduct[]) : cart).map(
+          (product, i) => (
+            <Box key={i}>
+              <Divider sx={{ mb: 2 }} />
+              <Grid container spacing={3} marginBottom={2} key={i}>
+                <Grid item xs={3}>
+                  <CardActionArea>
+                    <CardMedia
+                      image={product.image.toString()}
+                      component="img"
+                      sx={{ borderRadius: "5px" }}
+                    />
+                  </CardActionArea>
+                </Grid>
+                <Grid item xs={7}>
+                  <Box display="flex" flexDirection="column">
+                    <Typography variant="body1">
+                      <>
+                        {product.name} ({product.quantity}{" "}
+                        {product.quantity === 1 ? "unidad" : "unidades"})
+                      </>
+                    </Typography>
+                    <Typography variant="body1">
+                      {product.name === "Roll personalizado" && (
+                        <Box>
+                          <Typography variant="subtitle2" marginBottom={-1}>
+                            Envoltura
+                          </Typography>
+                          <Grid
+                            container
+                            style={{ margin: "0", display: "flex" }}
+                          >
+                            {product.envelopes!.map((env, i) => (
                               <Grid
                                 key={i}
                                 item
@@ -136,86 +110,113 @@ export const CardList: FC<Props> = ({ editable = false, products }) => {
                                   <VscDebugBreakpointLog /> {env.name}
                                 </Typography>
                               </Grid>
-                            )
+                            ))}
+                          </Grid>
+                          <Typography variant="subtitle2" marginBottom={-1}>
+                            Relleno
+                          </Typography>
+                          <Grid
+                            container
+                            style={{ margin: "0", display: "flex" }}
+                          >
+                            {[
+                              ...product.proteins!,
+                              ...product.vegetables!,
+                            ]!.map((env, i) => (
+                              <Grid
+                                key={i}
+                                item
+                                style={{ margin: "0 30px 0 0" }}
+                              >
+                                <Typography variant="caption">
+                                  <VscDebugBreakpointLog /> {env.name}
+                                </Typography>
+                              </Grid>
+                            ))}
+                          </Grid>
+                          {product.extraProduct!.length > 0 && (
+                            <>
+                              <Typography variant="subtitle2" marginBottom={-1}>
+                                Extras
+                              </Typography>
+                              <Grid
+                                container
+                                style={{ margin: "0", display: "flex" }}
+                              >
+                                {[...product.extraProduct!]!.map((env, i) => (
+                                  <Grid
+                                    key={i}
+                                    item
+                                    style={{ margin: "0 30px 0 0" }}
+                                  >
+                                    <Typography variant="caption">
+                                      <VscDebugBreakpointLog /> {env.name}
+                                    </Typography>
+                                  </Grid>
+                                ))}
+                              </Grid>
+                            </>
                           )}
-                        </Grid>
-                        {product.extraProduct!.length > 0 && (
+                        </Box>
+                      )}
+                    </Typography>
+                  </Box>
+                </Grid>
+                <Grid
+                  item
+                  xs={2}
+                  display="flex"
+                  alignItems="center"
+                  flexDirection="column"
+                >
+                  <Typography variant="subtitle1">
+                    {currency.format(+product.price)} <small>c/u</small>
+                  </Typography>
+
+                  {editable ||
+                    (isAdmin && (
+                      <>
+                        {!isAdmin && (
+                          <Button
+                            onClick={() =>
+                              handleDelete(product as ICartProduct)
+                            }
+                            variant="text"
+                            color="secondary"
+                          >
+                            Eliminar
+                          </Button>
+                        )}
+                        {/* notas especiales */}
+                        {product.note && (
                           <>
-                            <Typography variant="subtitle2" marginBottom={-1}>
-                              Extras
-                            </Typography>
-                            <Grid
-                              container
-                              style={{ margin: "0", display: "flex" }}
-                            >
-                              {[...product.extraProduct!]!.map((env, i) => (
-                                <Grid
-                                  key={i}
-                                  item
-                                  style={{ margin: "0 30px 0 0" }}
-                                >
-                                  <Typography variant="caption">
-                                    <VscDebugBreakpointLog /> {env.name}
+                            <HtmlTooltip
+                              title={
+                                <>
+                                  <Typography color="inherit">
+                                    Notas especiales
                                   </Typography>
-                                </Grid>
-                              ))}
-                            </Grid>
+                                  {product.note}
+                                </>
+                              }
+                              placement="left-start"
+                            >
+                              <IconButton
+                                onClick={() => setNoteOpen(true)}
+                                aria-label="delete"
+                              >
+                                <TextSnippetOutlined />
+                              </IconButton>
+                            </HtmlTooltip>
                           </>
                         )}
-                      </Box>
-                    )}
-                  </Typography>
-                </Box>
-              </Grid>
-              <Grid
-                item
-                xs={2}
-                display="flex"
-                alignItems="center"
-                flexDirection="column"
-              >
-                <Typography variant="subtitle1">
-                  {currency.format(+product.price)} <small>c/u</small>
-                </Typography>
-
-                {editable && (
-                  <>
-                    <Button
-                      onClick={() => handleDelete(product as ICartProduct)}
-                      variant="text"
-                      color="secondary"
-                    >
-                      Eliminar
-                    </Button>
-                    {/* notas especiales */}
-                    {product.note && (
-                      <>
-                        <HtmlTooltip
-                          title={
-                            <>
-                              <Typography color="inherit">
-                                Notas especiales
-                              </Typography>
-                              {product.note}
-                            </>
-                          }
-                          placement="left-start"
-                        >
-                          <IconButton
-                            onClick={() => setNoteOpen(true)}
-                            aria-label="delete"
-                          >
-                            <TextSnippetOutlined />
-                          </IconButton>
-                        </HtmlTooltip>
                       </>
-                    )}
-                  </>
-                )}
+                    ))}
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
-        ))
+            </Box>
+          )
+        )
       )}
     </>
   );

@@ -30,17 +30,6 @@ export const ordersApi = createApi({
         });
       },
     }),
-    // getOrder: builder.query<IResponse, IOrder>({
-    //   query: (orderId) => ({
-    //     url: `/orders/${orderId}`,
-    //     method: "get",
-    //   }),
-    //   onQueryStarted(_, { queryFulfilled }) {
-    //     queryFulfilled.catch(() => {
-    //       toast.error("Ha ocurrido un error al obtener orden");
-    //     });
-    //   },
-    // }),
     createOrder: builder.mutation<IResponse, IOrder>({
       query: (body) => ({
         url: `/orders`,
@@ -99,24 +88,21 @@ export const ordersApi = createApi({
         });
       },
     }),
-
-    // payOrder: builder.mutation<
-    //   IResponse,
-    //   { transactionId: string; orderId: string }
-    // >({
-    //   query: (body) => ({
-    //     url: `/orders/pay`,
-    //     method: "post",
-    //     body,
-    //   }),
-    //   onQueryStarted(_, { queryFulfilled, dispatch }) {
-    //     toast.promise(queryFulfilled, {
-    //       loading: "Finalizando pago...",
-    //       success: "Orden pagada con éxito",
-    //       error: ({ error }) => error.data.message.toString(),
-    //     });
-    //   },
-    // }),
+    anulateOrders: builder.mutation<IResponse, string[]>({
+      query: (body) => ({
+        url: `/admin/orders`,
+        method: "delete",
+        body,
+      }),
+      invalidatesTags: ["Orders"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Anulando orden...",
+          success: "Orden anulada con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
@@ -125,4 +111,5 @@ export const {
   useGetAllOrdersQuery,
   useChangeOrderStatusMutation,
   useRetryConfirmOrderMutation,
+  useAnulateOrdersMutation,
 } = ordersApi;

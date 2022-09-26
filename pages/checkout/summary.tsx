@@ -38,6 +38,7 @@ const SummaryPage = () => {
     note,
     coupon,
     deliverPrice,
+    discount,
   } = useSelector((state: RootState) => state.cart);
   const [createNewOrder, createNewOrderState] = useCreateOrderMutation();
   const { data: productData, isLoading } = useGetProductsQuery(null);
@@ -63,6 +64,7 @@ const SummaryPage = () => {
       numberOfItems,
       subTotal,
       total,
+      discount,
       isPaid: false,
       orderItems: cart.map((item) => {
         if (item.name !== "Roll personalizado") return item;
@@ -113,7 +115,7 @@ const SummaryPage = () => {
       deliverPrice,
       coupon: coupon,
     };
-
+    console.log({ orderToSend });
     try {
       await createNewOrder(orderToSend).unwrap();
       dispatch(cleanCart());

@@ -20,6 +20,7 @@ import {
   LocationCityOutlined,
   LoginOutlined,
   VpnKeyOutlined,
+  WhatsappOutlined,
 } from "@mui/icons-material";
 import { useState } from "react";
 import { toggleMenu } from "../../store/Slices/UISlice";
@@ -165,6 +166,17 @@ export const SideMenu = () => {
                 <AdminPanelSettings />
               </ListItemIcon>
               <ListItemText primary={"Clientes"} />
+            </ListItem>
+            <ListItem
+              button
+              onClick={() =>
+                window.open("https://whatsapp-api-cv.herokuapp.com/", "_blank")
+              }
+            >
+              <ListItemIcon>
+                <WhatsappOutlined />
+              </ListItemIcon>
+              <ListItemText primary={"Whatsapp"} />
             </ListItem>
           </>
           {/* )} */}

@@ -61,7 +61,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
       setPromoToSendCart({
         _id: promotion?._id!,
         image: promotion.images[0]!,
-        price: promotion.price!,
+        price: promotion.inOffer ? promotion.offerPrice! : promotion.price!,
         name: promotion.name!,
         quantity: 1,
         extraProduct: [],
@@ -149,7 +149,11 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
 
           <Box justifyContent={"end"} display="flex" marginX={4}>
             <Typography variant="h6">
-              {currency.format(+promotion.price * +promoToSendCart.quantity)}
+              {promotion.inOffer
+                ? currency.format(
+                    +promotion!.offerPrice! * +promoToSendCart.quantity
+                  )
+                : currency.format(+promotion.price * +promoToSendCart.quantity)}
             </Typography>
           </Box>
 

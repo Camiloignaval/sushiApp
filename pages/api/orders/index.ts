@@ -71,10 +71,13 @@ const createNewOrder = async (
       await Promise.all(
         promos.map(async (promo) => {
           const promoFound = await Promotion.findById(promo._id).select(
-            "price"
+            "price inOffer offerPrice"
           );
           if (promoFound) {
-            priceTotalPromos += +promoFound.price * +promo.quantity;
+            priceTotalPromos +=
+              (promoFound.inOffer
+                ? +promoFound!.offerPrice!
+                : +promoFound.price) * +promo.quantity;
           }
         })
       );
@@ -98,6 +101,7 @@ const createNewOrder = async (
 
     // TODO falta sumar despacho
     if (subTotal !== body.subTotal) {
+      console.log({ subTotal, body: body.subTotal });
       throw new Error("Ha ocurrido un error, valores han sido alterados");
     }
 

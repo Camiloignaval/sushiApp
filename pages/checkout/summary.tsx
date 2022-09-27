@@ -115,14 +115,19 @@ const SummaryPage = () => {
       deliverPrice,
       coupon: coupon,
     };
+    orderToSend.shippingAddress = {
+      ...orderToSend.shippingAddress,
+      phone: "+56" + orderToSend.shippingAddress.phone,
+    };
+
     console.log({ orderToSend });
     try {
-      await createNewOrder(orderToSend).unwrap();
-      dispatch(cleanCart());
-      Cookies.remove("address");
-      // // TODO hacer lo que se necesite como enviar whatsap o en backend
-      router.replace("/");
-      setDisabledSubmit(true);
+      // await createNewOrder(orderToSend).unwrap();
+      // dispatch(cleanCart());
+      // Cookies.remove("address");
+      // // // TODO hacer lo que se necesite como enviar whatsap o en backend
+      // router.replace("/");
+      // setDisabledSubmit(true);
     } catch (error) {
       console.log({ error });
     }
@@ -164,7 +169,7 @@ const SummaryPage = () => {
               </Box>
               <Typography>{shippingAddress?.username}</Typography>
               <Typography>{shippingAddress?.address}</Typography>
-              <Typography>{shippingAddress?.phone}</Typography>
+              <Typography>{"+56" + shippingAddress?.phone}</Typography>
               <Divider sx={{ my: 1 }} />
               <Box display="flex" justifyContent={"end"}>
                 <NextLink href="/cart" passHref>

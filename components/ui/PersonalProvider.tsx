@@ -162,7 +162,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       }
     }
 
-    const total = subTotal - discount + deliverPrice;
+    const total = subTotal - discount + (deliverPrice ? deliverPrice : 0);
     const ordenSummary = {
       numberOfItems,
       subTotal,

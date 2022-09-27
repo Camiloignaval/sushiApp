@@ -317,7 +317,6 @@ const ProductInfoPage: FC<Props> = ({ product }) => {
 export const getServerSideProps: GetServerSideProps = async ({ query }) => {
   const { id = "" } = query;
   const product = await dbProducts.getProductById(id.toString());
-  console.log({ product });
 
   if (!product) {
     return {

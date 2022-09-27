@@ -21,7 +21,6 @@ interface Props {
 const isAdmin = true;
 
 export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
-  console.log({ prod });
   const { extraProduct } = useSelector((state: RootState) => state.cart);
   const [extraToSendCart, setExtraToSendCart] = useState<ICartProduct>({
     _id: prod?._id!,

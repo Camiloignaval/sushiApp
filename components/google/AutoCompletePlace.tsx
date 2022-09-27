@@ -99,9 +99,9 @@ export const AutoCompletePlace: React.FC<Props> = ({
   const dispatch = useDispatch();
   const [coords, setCoords] = React.useState({});
 
-  const deliveryPolygon = new window.google.maps.Polygon({
-    paths: deliveryCoords,
-  });
+  // const deliveryPolygon = new window.google.maps.Polygon({
+  //   paths: deliveryCoords,
+  // });
 
   const deliverPolygon =
     typeof window !== "undefined"

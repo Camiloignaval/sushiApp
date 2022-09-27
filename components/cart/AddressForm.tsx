@@ -88,12 +88,12 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
   };
 
   const findClient = async () => {
-    const phone = getValues("phone").trim();
+    const phone = `+56${getValues("phone").trim()}`;
     try {
       const { data } = await axios.post(`/api/user/findUser`, { phone });
       setAddressFound(data.address);
       setValue("username", data.name);
-      setValue("phone", data.phone);
+      setValue("phone", data.phone.replace("+56", ""));
       setValue("address", data.address);
       setPlaceIdState(data.placeId);
       searchPriceDeliverIfWasSaved(data.placeId, data.address);
@@ -141,6 +141,7 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
                 startAdornment: (
                   <InputAdornment position="start">
                     <PhoneAndroidOutlined />
+                    +56
                   </InputAdornment>
                 ),
               }}
@@ -159,8 +160,8 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
 
                 validate: (value) => {
                   return (
-                    isValidPhoneNumber(value) ||
-                    "Ingresar en formato +569xxxxxxxx"
+                    isValidPhoneNumber(`+56${value}`) ||
+                    "Ingresar en formato 9xxxxxxxx (Sin +56)"
                   );
                 },
               })}

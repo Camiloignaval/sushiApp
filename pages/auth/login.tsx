@@ -119,33 +119,6 @@ const LoginPage = () => {
                 <Link underline="always">No tienes cuenta?</Link>
               </NextLink>
             </Grid>
-            {/* providers nextauth */}
-            <Grid
-              marginTop={2}
-              item
-              xs={12}
-              display="flex"
-              flexDirection="column"
-              justifyContent="end"
-            >
-              <Divider sx={{ width: "100%", mb: 2 }} />
-              {Object.values(providers)
-                .filter((p: any) => p.id !== "credentials")
-                .map((provider: any) => {
-                  return (
-                    <Button
-                      key={provider.id}
-                      variant="outlined"
-                      fullWidth
-                      color="primary"
-                      sx={{ mb: 1 }}
-                      onClick={() => signIn(provider.id)}
-                    >
-                      {provider.name}
-                    </Button>
-                  );
-                })}
-            </Grid>
           </Grid>
         </Box>
       </form>

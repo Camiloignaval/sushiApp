@@ -188,12 +188,5 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   //   console.log(error);
   // }
 
-  // * effect para nextauth
-  useEffect(() => {
-    if (status === "authenticated") {
-      dispatch(LogIn(data?.user as IUser));
-    }
-  }, [status, data, dispatch]);
-
   return <>{children}</>;
 };

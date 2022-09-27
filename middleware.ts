@@ -8,10 +8,10 @@ export async function middleware(req: NextRequest) {
   // const session: any = await getSession({
   //   req: { headers: { cookie } } as any,
   // });
-  const session: any = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET,
-  });
+  // const session: any = await getToken({
+  //   req,
+  //   secret: process.env.NEXTAUTH_SECRET,
+  // });
 
   // if (!session) {
   //   if (req.nextUrl.pathname.startsWith("/api/admin")) {

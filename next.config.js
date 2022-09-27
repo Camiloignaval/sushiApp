@@ -7,4 +7,15 @@ const nextConfig = {
   },
 };
 
+module.exports = {
+  async rewrites() {
+    return [
+      {
+        source: "/maps/api/:path*",
+        destination: "https://maps.googleapis.com/:path*",
+      },
+    ];
+  },
+};
+
 module.exports = nextConfig;

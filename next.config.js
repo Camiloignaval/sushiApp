@@ -12,7 +12,7 @@ module.exports = {
     return [
       {
         // matching all API routes
-        source: "/maps/api/:path*",
+        source: "https://maps.googleapis.com/maps/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
           { key: "Access-Control-Allow-Origin", value: "*" },
@@ -35,8 +35,8 @@ module.exports = {
   async rewrites() {
     return [
       {
-        source: "/maps/api/:path*",
-        destination: "https://maps.googleapis.com/:path*",
+        source: "https://maps.googleapis.com/maps/api/:path*",
+        destination: "https://sushipanko.cl/:path*",
       },
     ];
   },

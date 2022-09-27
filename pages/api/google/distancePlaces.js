@@ -3,7 +3,6 @@ import cors from "cors";
 import axios from "axios";
 
 const distancePlaces = nc()
-  // use connect based middleware
   .use(cors())
   .post(async (req, res) => {
     const { destino = "", origen = "" } = req.body;

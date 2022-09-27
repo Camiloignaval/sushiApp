@@ -3,8 +3,6 @@ import cors from "cors";
 import axios from "axios";
 
 const detailsPlace = nc(/* { req, res } */)
-  // const { place_id = "" } = req.body
-  // use connect based middleware
   .use(cors())
   .post(async (req, res) => {
     const { place_id } = req.body;

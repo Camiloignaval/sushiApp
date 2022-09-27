@@ -181,7 +181,6 @@ export const AutoCompletePlace: React.FC<Props> = ({
             // calcular tarifa de delivery
             let deliveryPrice = 1000;
             const { rows } = dataDistance;
-            console.log({ rows });
             const { distance, duration } = rows[0].elements[0];
             if (distance.value > 2000) {
               deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;

@@ -24,7 +24,7 @@ import { IShippingAdress } from "../../interfaces";
 import { TimePicker } from "@mui/x-date-pickers/TimePicker";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { SettingsSchedule } from "../../components/SettingsSchedule";
+// import { SettingsSchedule } from "../../components/SettingsSchedule";
 
 const daysArray = [
   "lunes",
@@ -113,14 +113,14 @@ const SettingsPage = () => {
               {/* Dias */}
               {/* Lunes */}
 
-              {daysArray.map((d) => (
+              {/* {daysArray.map((d) => (
                 <SettingsSchedule
                   getValues={getValues}
                   setValue={setValue}
                   d={d}
                   key={d}
                 />
-              ))}
+              ))} */}
               {/* martes */}
             </Grid>
           </Grid>

@@ -61,12 +61,13 @@ const ProductsPage = () => {
         );
       },
     },
-    { field: "type", headerName: "Categoría", flex: 1, minWidth: 50 },
-    // { field: "importance", headerName: "N°", flex: 1, width: 150 },
+    { field: "type", headerName: "Categoría", flex: 1, minWidth: 100 },
+    { field: "importance", headerName: "N°", flex: 1, minWidth: 50 },
     {
       field: "inStock",
       flex: 1,
       headerName: "Stock",
+      minWidth: 80,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <Switch
@@ -86,6 +87,8 @@ const ProductsPage = () => {
       field: "price",
       flex: 1,
       headerName: "Precio",
+      minWidth: 80,
+
       renderCell: ({ row }: GridValueGetterParams) => {
         return currency.format(row.price);
       },

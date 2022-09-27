@@ -127,7 +127,6 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
   };
 
   const onDeleteImage = (img: string) => {
-    console.log({ img });
     // TODO BORRAR DE CLOUDINARY
     setValue(
       "images",
@@ -137,13 +136,13 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
   };
 
   const onAddItems = (e: React.KeyboardEvent<HTMLImageElement>) => {
-    if (e.code !== "Period") return;
+    if (e.code !== "Slash") return;
     if (newItemValue === "") return;
     if (getValues("promotionItems").includes(newItemValue.trim())) return;
     if (getValues("promotionItems")) {
       setValue(
         "promotionItems",
-        [...getValues("promotionItems"), newItemValue.trim().replace(".", "")],
+        [...getValues("promotionItems"), newItemValue.trim().replace("-", "")],
         {
           shouldValidate: true,
         }
@@ -158,7 +157,6 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
   };
 
   const onDeleteTag = (tag: string) => {
-    console.log({ eliminare: tag });
     setValue(
       "promotionItems",
       getValues("promotionItems").filter((t) => t !== tag),
@@ -166,9 +164,7 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
     );
   };
 
-  useEffect(() => {
-    console.log({ ahora: getValues("promotionItems") });
-  }, [getValues("promotionItems")]);
+  useEffect(() => {}, [getValues("promotionItems")]);
 
   const onSubmit = (formData: FormData) => {
     if (getValues("inOffer")) {
@@ -177,7 +173,6 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
         return;
       }
     }
-    console.log({ formData });
 
     updatePromotion(formData)
       .unwrap()
@@ -406,7 +401,7 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
                 variant="filled"
                 fullWidth
                 sx={{ mb: 1 }}
-                helperText="Presiona [.] para agregar"
+                helperText="Presiona [-] para agregar"
                 onKeyDown={onAddItems}
                 value={newItemValue}
                 onChange={(e) => setNewItemValue(e.target.value)}

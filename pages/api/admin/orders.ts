@@ -96,7 +96,7 @@ const changeStatus = async (
                 `${process.env.HOST_WSP_API ?? ""}/send-message`,
                 {
                   number: n.shippingAddress.phone,
-                  message: "Buenas noticias, su pedido ya va en camino!",
+                  message: "Hola denuevo, su pedido ya va en camino!",
                   key: process.env.KEY_API_WSP ?? "",
                 }
               )

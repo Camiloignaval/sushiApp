@@ -2,6 +2,7 @@ import { IProduct } from "./../interfaces/products";
 import { IOrder } from "./../interfaces/order";
 import { ConectorPlugin } from "./conectorPlugin";
 import { currency } from ".";
+import { toast } from "react-hot-toast";
 
 interface IProductCustomRoll {
   name?: string;
@@ -9,7 +10,7 @@ interface IProductCustomRoll {
   _id?: string;
 }
 
-export const printOrder = (order: IOrder) => {
+export const printOrder = async (order: IOrder) => {
   const conector = new ConectorPlugin();
   console.log({ order });
   conector
@@ -119,4 +120,12 @@ export const printOrder = (order: IOrder) => {
         console.log("Error. La respuesta es: " + respuestaAlImprimir);
       }
     });
+};
+
+export const printIsConnected = async () => {
+  const resp = await ConectorPlugin.obtenerImpresoras();
+  if (resp.includes("ImpresoraTermica")) {
+    return false;
+  }
+  return true;
 };

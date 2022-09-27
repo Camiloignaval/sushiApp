@@ -19,6 +19,7 @@ import {
   LocalOfferOutlined,
   LocationCityOutlined,
   LoginOutlined,
+  SettingsOutlined,
   VpnKeyOutlined,
   WhatsappOutlined,
 } from "@mui/icons-material";
@@ -166,6 +167,12 @@ export const SideMenu = () => {
                 <AdminPanelSettings />
               </ListItemIcon>
               <ListItemText primary={"Clientes"} />
+            </ListItem>
+            <ListItem button onClick={() => navigateTo(`/admin/settings`)}>
+              <ListItemIcon>
+                <SettingsOutlined />
+              </ListItemIcon>
+              <ListItemText primary={"Configuración"} />
             </ListItem>
             <ListItem
               button

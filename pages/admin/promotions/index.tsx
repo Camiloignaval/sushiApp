@@ -52,7 +52,7 @@ const ProductsPage = () => {
       field: "name",
       flex: 1,
       headerName: "Nombre",
-      width: 250,
+      minWidth: 200,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <NextLink href={`/admin/promotions/${row.id}`} passHref>
@@ -61,7 +61,8 @@ const ProductsPage = () => {
         );
       },
     },
-    { field: "type", headerName: "Categoría", flex: 1, width: 150 },
+    { field: "type", headerName: "Categoría", flex: 1, minWidth: 50 },
+    // { field: "importance", headerName: "N°", flex: 1, width: 150 },
     {
       field: "inStock",
       flex: 1,

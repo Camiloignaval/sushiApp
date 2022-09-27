@@ -107,15 +107,12 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
       }
       toast.success("Imágen cargada con éxito");
     } catch (error) {
-      console.log(error);
       console.log({ error });
       toast.error("Ha ocurrido un error subiendo las imágenes..");
     }
   };
 
   const onDeleteImage = (img: string) => {
-    console.log({ img });
-
     // TODO BORRAR DE CLOUDINARY
     setValue(
       "images",
@@ -125,13 +122,13 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
   };
 
   const onAddItems = (e: React.KeyboardEvent<HTMLImageElement>) => {
-    if (e.code !== "Period") return;
+    if (e.code !== "Slash") return;
     if (newItemValue === "") return;
     if (getValues("promotionItems")?.includes(newItemValue.trim())) return;
     if (getValues("promotionItems")) {
       setValue(
         "promotionItems",
-        [...getValues("promotionItems"), newItemValue.trim().replace(".", "")],
+        [...getValues("promotionItems"), newItemValue.trim().replace("-", "")],
         {
           shouldValidate: true,
         }
@@ -147,7 +144,6 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
   };
 
   const onDeleteTag = (tag: string) => {
-    console.log({ eliminare: tag });
     setValue(
       "promotionItems",
       getValues("promotionItems").filter((t) => t !== tag),
@@ -155,9 +151,7 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
     );
   };
 
-  useEffect(() => {
-    console.log({ ahora: getValues("promotionItems") });
-  }, [getValues("promotionItems")]);
+  useEffect(() => {}, [getValues("promotionItems")]);
 
   const onSubmit = (formData: FormData) => {
     if (!formData?.images || formData.images.length === 0) {
@@ -171,7 +165,6 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
       }
     }
 
-    console.log({ formData });
     // TODO GUARDAR PROMO
     updatePromotion(formData)
       .unwrap()
@@ -401,7 +394,7 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
                 variant="filled"
                 fullWidth
                 sx={{ mb: 1 }}
-                helperText="Presiona [.] para agregar"
+                helperText="Presiona [-] para agregar"
                 onKeyDown={onAddItems}
                 value={newItemValue}
                 onChange={(e) => setNewItemValue(e.target.value)}

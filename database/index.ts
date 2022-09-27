@@ -6,6 +6,7 @@ export * as dbOrders from "./dbOrders";
 export * as dbPromotions from "./dbPromotions";
 export * as dbCategories from "./dbCategories";
 export * as dbCoupons from "./dbCoupons";
+export * as dbSettings from "./dbSettings";
 
 // datos de prueba
 export * as seedDataBase from "./seed-data";

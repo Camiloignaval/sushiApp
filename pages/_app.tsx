@@ -5,7 +5,6 @@ import { lightTheme } from "../themes";
 import { SWRConfig } from "swr";
 import { Provider } from "react-redux";
 import { store } from "../store";
-
 import { Toaster } from "react-hot-toast";
 import { PersonalProvider } from "../components/ui/PersonalProvider";
 import { SessionProvider } from "next-auth/react";

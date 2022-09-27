@@ -146,55 +146,56 @@ export const AutoCompletePlace: React.FC<Props> = ({
   }, [inputValue]);
 
   const searchLatLngByPlaceId = async () => {
-    if (!window.google) return;
-    try {
-      const { data } = await axios(
-        `https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedDirection!
-          .place_id!}&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
-      );
-      const latlng = data?.result?.geometry?.location;
-      setCoords(latlng);
-
-      // ------------
-
-      if (latlng) {
-        const isInPolygon = window.google.maps.geometry.poly.containsLocation(
-          latlng,
-          deliverPolygon!
+    if (typeof window !== "undefined") {
+      try {
+        const { data } = await axios(
+          `https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedDirection!
+            .place_id!}&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
         );
-        if (isInPolygon) {
-          // si esta en zona de reparto
+        const latlng = data?.result?.geometry?.location;
+        setCoords(latlng);
 
-          const respMatrix = await axios(
-            `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${selectedDirection?.place_id}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
+        // ------------
+
+        if (latlng) {
+          const isInPolygon = window.google.maps.geometry.poly.containsLocation(
+            latlng,
+            deliverPolygon!
           );
+          if (isInPolygon) {
+            // si esta en zona de reparto
 
-          // calcular tarifa de delivery
-          let deliveryPrice = 1000;
-          const {
-            data: { rows },
-          } = respMatrix;
-          const { distance, duration } = rows[0].elements[0];
-          if (distance.value > 2000) {
-            deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;
+            const respMatrix = await axios(
+              `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${selectedDirection?.place_id}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
+            );
+
+            // calcular tarifa de delivery
+            let deliveryPrice = 1000;
+            const {
+              data: { rows },
+            } = respMatrix;
+            const { distance, duration } = rows[0].elements[0];
+            if (distance.value > 2000) {
+              deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;
+            }
+            dispatch(
+              addDeliveryPrice({
+                deliveryPrice: Math.round(+deliveryPrice / 100) * 100,
+                valuedAddress: selectedDirection?.description,
+                valuedPlaceId: selectedDirection?.place_id,
+              })
+            );
+            setValue("address", selectedDirection?.description!);
+            setPlaceIdState(selectedDirection?.place_id!);
+          } else {
+            toast.error("Lo sentimos, aún no llegamos a tu dirección", {
+              duration: 4000,
+            });
           }
-          dispatch(
-            addDeliveryPrice({
-              deliveryPrice: Math.round(+deliveryPrice / 100) * 100,
-              valuedAddress: selectedDirection?.description,
-              valuedPlaceId: selectedDirection?.place_id,
-            })
-          );
-          setValue("address", selectedDirection?.description!);
-          setPlaceIdState(selectedDirection?.place_id!);
-        } else {
-          toast.error("Lo sentimos, aún no llegamos a tu dirección", {
-            duration: 4000,
-          });
         }
+      } catch (error) {
+        console.log({ error });
       }
-    } catch (error) {
-      console.log({ error });
     }
   };
 

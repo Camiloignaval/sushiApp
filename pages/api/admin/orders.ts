@@ -1,4 +1,3 @@
-import { ShippingAddress } from "./../../../interfaces/paypal";
 import { isValidObjectId } from "mongoose";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";

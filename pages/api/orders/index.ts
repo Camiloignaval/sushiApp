@@ -1,4 +1,3 @@
-import { Shipping } from "./../../../interfaces/paypal";
 import { validateCoupon } from "./../../../utils/validateCoupon";
 import { ro } from "date-fns/locale";
 import type { NextApiRequest, NextApiResponse } from "next";

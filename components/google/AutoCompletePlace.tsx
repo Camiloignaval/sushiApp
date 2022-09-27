@@ -146,6 +146,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
   }, [inputValue]);
 
   const searchLatLngByPlaceId = async () => {
+    if (!window.google) return;
     try {
       const { data } = await axios(
         `https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedDirection!
@@ -206,7 +207,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
 
   useEffect(() => {
     selectedDirection?.place_id && searchLatLngByPlaceId();
-  }, [selectedDirection]);
+  }, [selectedDirection, window.google]);
 
   const buscarDireccion = () => {
     let active = true;

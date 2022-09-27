@@ -7,7 +7,6 @@ import {
   Typography,
   Divider,
 } from "@mui/material";
-import { getSession, signIn, getProviders } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
@@ -36,22 +35,12 @@ const LoginPage = () => {
     [router]
   );
 
-  const [providers, setProviders] = useState<any>({});
-
-  useEffect(() => {
-    getProviders().then((prov) => {
-      setProviders(prov);
-    });
-  }, []);
-
   useEffect(() => {
     loginState.isSuccess && router.replace(destination);
   }, [loginState.isSuccess, router]);
 
   const onLoginUser = async ({ email, password }: FormData) => {
     // logIn({ email, password });
-    // * linea para nexauth
-    signIn("credentials", { email, password });
   };
 
   return (
@@ -130,7 +119,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   query,
 }) => {
-  const session = await getSession({ req });
+  const session = false; /*  await getSession({ req }); */
   const { p = "/" } = query;
   if (session) {
     return {

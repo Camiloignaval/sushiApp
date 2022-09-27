@@ -2,7 +2,6 @@ import { Shipping } from "./../../../interfaces/paypal";
 import { validateCoupon } from "./../../../utils/validateCoupon";
 import { ro } from "date-fns/locale";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
 import { db } from "../../../database";
 import { ICoupon, IOrder, IProduct } from "../../../interfaces";
 import { Order, Product, Promotion, User } from "../../../models";

@@ -29,7 +29,6 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import Cookies from "js-cookie";
-import { signOut } from "next-auth/react";
 
 export const SideMenu = () => {
   const router = useRouter();
@@ -55,7 +54,6 @@ export const SideMenu = () => {
     Cookies.remove("cart");
     Cookies.remove("address");
     // router.reload();
-    signOut();
   };
 
   return (

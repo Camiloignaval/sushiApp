@@ -1,6 +1,5 @@
 import { Box, Button, Grid, Link, TextField, Typography } from "@mui/material";
 import { GetServerSideProps } from "next";
-import { getSession, signIn } from "next-auth/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useMemo } from "react";
@@ -37,7 +36,6 @@ const RegisterPage = () => {
   const onRegisterUser = async ({ email, password, name }: FormData) => {
     try {
       doRegister({ email, password, name });
-      await signIn("credentials", { email, password });
     } catch (error) {
       console.log(error);
     }
@@ -135,7 +133,7 @@ export const getServerSideProps: GetServerSideProps = async ({
   req,
   query,
 }) => {
-  const session = await getSession({ req });
+  const session = false;
   const { p = "/" } = query;
   if (session) {
     return {

@@ -1,5 +1,4 @@
 import Cookie from "js-cookie";
-import { useSession } from "next-auth/react";
 import React, { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
@@ -36,7 +35,6 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     valuedAddress,
     valuedPlaceId,
   } = useSelector((state: RootState) => state.cart);
-  const { data, status } = useSession();
 
   // atento al carrito
   // -----------------

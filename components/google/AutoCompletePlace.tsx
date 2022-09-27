@@ -179,7 +179,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
           }
           dispatch(
             addDeliveryPrice({
-              deliveryPrice: +deliveryPrice,
+              deliveryPrice: Math.round(+deliveryPrice / 100) * 100,
               valuedAddress: selectedDirection?.description,
               valuedPlaceId: selectedDirection?.place_id,
             })

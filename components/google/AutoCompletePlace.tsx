@@ -148,14 +148,17 @@ export const AutoCompletePlace: React.FC<Props> = ({
   const searchLatLngByPlaceId = async () => {
     if (typeof window !== "undefined") {
       try {
-        const { data } = await axios(
-          `https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedDirection!
-            .place_id!}&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
-        );
+        // const { data } = await axios(
+        //   `https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedDirection!
+        //     .place_id!}&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
+        // );
+        const { data } = await axios.post("/api/google/detailsPlace", {
+          place_id: selectedDirection!.place_id,
+        });
         const latlng = data?.result?.geometry?.location;
         setCoords(latlng);
 
-        // ------------
+        // // ------------
 
         if (latlng) {
           const isInPolygon = window.google.maps.geometry.poly.containsLocation(
@@ -165,15 +168,20 @@ export const AutoCompletePlace: React.FC<Props> = ({
           if (isInPolygon) {
             // si esta en zona de reparto
 
-            const respMatrix = await axios(
-              `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${selectedDirection?.place_id}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
+            // const respMatrix = await axios(
+            //   `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${selectedDirection?.place_id}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
+            // );
+            const { data: dataDistance } = await axios.post(
+              "/api/google/distancePlaces",
+              {
+                origen: placeIdDesire,
+                destino: selectedDirection?.place_id,
+              }
             );
-
             // calcular tarifa de delivery
             let deliveryPrice = 1000;
-            const {
-              data: { rows },
-            } = respMatrix;
+            const { rows } = dataDistance;
+            console.log({ rows });
             const { distance, duration } = rows[0].elements[0];
             if (distance.value > 2000) {
               deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;

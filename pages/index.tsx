@@ -93,8 +93,8 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
 
   return (
     <MainShopLayout
-      title="ShopApp - Home"
-      pageDescription="Encuentra los mejores productos aqui"
+      title="SushiPanko - Home"
+      pageDescription="Encuentra los mejores Sushis!"
     >
       <DrawerCustomRoll open={open} setOpen={setOpen} />
       <Tabs

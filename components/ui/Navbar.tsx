@@ -54,7 +54,15 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
       }}
     >
       <Toolbar>
-        <img width={40} alt="Logo" src="/logos/logo-sushi-panko.png"></img>
+        {/* <img width={40} alt="Logo" src="/logos/logo-sushi-panko.png"></img> */}
+
+        <Image
+          onDoubleClick={() => router.push("/login")}
+          width={40}
+          height={40}
+          alt="Logo"
+          src="/logos/logo-sushi-panko-pequeno.webp"
+        ></Image>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">
             <Typography

@@ -35,7 +35,7 @@ export const MainShopLayout: FC<Props> = ({
       </nav>
       <SideMenu />
 
-      <img
+      {/* <img
         style={{
           width: "calc(100vw - 1px)",
           height: "calc(100vh - 50px)",
@@ -45,7 +45,25 @@ export const MainShopLayout: FC<Props> = ({
         src="/images/sushi-portada.jpg"
         alt="Imagen portada"
         // loading="eager"
-      />
+      /> */}
+      <Box
+        sx={{
+          position: "relative",
+          width: "calc(100vw - 1px)",
+          height: "calc(100vh - 50px)",
+        }}
+      >
+        <Image
+          width={"100%"}
+          height={"100%"}
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          src="/images/sushi-portada.webp"
+          alt="Imagen portada"
+          loading="eager"
+        />
+      </Box>
 
       <main
         style={{

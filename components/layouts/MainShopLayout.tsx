@@ -58,10 +58,10 @@ export const MainShopLayout: FC<Props> = ({
           height={"100%"}
           layout="fill"
           objectFit="cover"
-          quality={100}
+          // quality={100}
           src="/images/sushi-portada.png"
           alt="Imagen portada"
-          loading="eager"
+          // loading="eager"
         />
       </Box>
 

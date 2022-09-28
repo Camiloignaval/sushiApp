@@ -144,6 +144,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
             objectFit: "cover",
             maxHeight: "400px",
           }}
+          loading="eager"
           // onLoad={() => setIsImageLoaded(true)}
         />
         <CardContent>

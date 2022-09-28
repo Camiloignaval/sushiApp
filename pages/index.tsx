@@ -9,7 +9,6 @@ import {
   Card,
 } from "@mui/material";
 import type { GetServerSideProps, NextPage } from "next";
-import NextLink from "next/link";
 import { Link } from "react-scroll";
 
 import { PromotionCategory } from "../components/products/PromotionCategory";
@@ -26,6 +25,7 @@ import { FaCircle } from "react-icons/fa";
 import { useGetCategoriesQuery } from "../store/RTKQuery/categoriesApi";
 import { dbCategories, dbPromotions } from "../database";
 import { useState, useEffect } from "react";
+import { CartInMobile } from "../components/cart/CartInMobile";
 
 interface Props {
   promotions: IPromotion[];
@@ -33,12 +33,10 @@ interface Props {
 }
 
 const HomePage: NextPage<Props> = ({ promotions, categories }) => {
-  const {
-    ui: { scrollIsDown },
-    cart: { numberOfItems, total },
-  } = useSelector((state: RootState) => state);
+  const { scrollIsDown } = useSelector((state: RootState) => state.ui);
   const [promosByCategory, setPromosByCategory] = useState({});
   const [open, setOpen] = useState(false);
+  const [positionOfMobileCart, setpositionOfMobileCart] = useState(40);
   const dispatch = useDispatch();
 
   console.log({ promotions });
@@ -68,6 +66,12 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
       window.removeEventListener("scroll", logit);
     };
   });
+
+  useEffect(() => {
+    if (typeof window !== undefined) {
+      setpositionOfMobileCart(window.innerHeight - 100);
+    }
+  }, []);
 
   useEffect(() => {
     if (promotions) {
@@ -160,52 +164,10 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
         </Box>
       </Tabs>
       {/* carrito para mobiles */}
-      {/* // TODO POR ALGUNA RAZON AL PONER MOBILE NO FUNCIONA PERO SI EN RESONSIVE */}
-      <Box
-        sx={{
-          display: { xs: "flex", sm: "none" },
-          position: "sticky",
-          height: "10px",
-          top: 1083,
-          marginLeft: 5,
-          zIndex: 200,
-          color: "red",
-        }}
-      >
-        <Card
-          sx={{
-            width: "70px",
-            height: "70px",
-            boxShadow: "5px 5px 15px 5px rgba(0,0,0,0.51)",
-          }}
-        >
-          <Box display={"flex"} justifyContent="center" marginTop={0.8}>
-            <NextLink href="/cart" passHref>
-              <MuiLink>
-                <IconButton>
-                  <Badge
-                    badgeContent={numberOfItems > 9 ? "+9" : numberOfItems}
-                    color="secondary"
-                  >
-                    <AiOutlineShoppingCart />
-                  </Badge>
-                </IconButton>
-              </MuiLink>
-            </NextLink>
-          </Box>
+      {/* // TODO POR ALGUNA RAZON AL PONER MOBILE NO FUNCIONA PERO SI EN RESPONSIVE */}
 
-          <Box
-            display={"flex"}
-            position="relative"
-            bottom={4}
-            justifyContent="center"
-          >
-            <Typography color={"primary"} variant="body2">
-              {currency.format(total)}
-            </Typography>
-          </Box>
-        </Card>
-      </Box>
+      <CartInMobile positionOfMobileCart={positionOfMobileCart} />
+
       {Object.values(promosByCategory).length > 0
         ? Object.entries(promosByCategory)?.map((promotion, i) => (
             <PromotionCategory key={i} promotions={promotion} />

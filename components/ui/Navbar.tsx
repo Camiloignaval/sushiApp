@@ -60,23 +60,37 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
               alt="Logo"
               src="/logos/logo-sushi-panko-pequeno.png"
             ></Image>
-            <Typography marginLeft={2} variant="h6">
-              SUSHI Panko |
+            <Typography
+              marginLeft={{ xs: 1, sm: 2 }}
+              // variant={}
+              sx={{
+                fontSize: { xs: ".9rem", sm: "1.2rem" },
+                fontWeight: 600,
+                transform: { xs: "scale(1, 1.3)", sm: "scale(1, 1)" },
+              }}
+            >
+              Sushi Panko |
             </Typography>
-            <Typography sx={{ marginLeft: 0.5 }}>Maipú</Typography>
+            <Typography
+              variant="overline"
+              mt={0.3}
+              sx={{ marginLeft: { xs: 0.2, sm: 0.5 } }}
+            >
+              Maipú
+            </Typography>
           </Link>
         </NextLink>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 1 }} />
         {/* pantallas pequeños */}
-        <IconButton
+        {/* <IconButton
           sx={{ display: { xs: "", sm: "none" } }}
           onClick={() => dispatch(toggleMenu())}
         >
           <BiSearchAlt />
-        </IconButton>
+        </IconButton> */}
         {/* pantallas grandes */}
-        {isSearchVisible ? (
+        {/* {isSearchVisible ? (
           <Input
             sx={{ display: { xs: "none", sm: "flex" } }}
             autoFocus
@@ -105,7 +119,7 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
           >
             <BiSearchAlt />
           </IconButton>
-        )}
+        )} */}
         {showPrice && (
           <>
             <Box sx={{ display: { xs: "none", sm: "flex" } }}>

@@ -3,11 +3,8 @@ import {
   Button,
   CardActions,
   CardContent,
-  CardMedia,
   Divider,
   Drawer,
-  FormControl,
-  FormLabel,
   TextField,
   Typography,
 } from "@mui/material";
@@ -15,7 +12,7 @@ import Image from "next/image";
 import React, { FC, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { ICartProduct, IOrder, IPromotion } from "../../interfaces";
+import { ICartProduct, IPromotion } from "../../interfaces";
 import { RootState } from "../../store";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { addOrUpdateCart } from "../../store/Slices/CartSlice";
@@ -121,6 +118,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
           width="100%"
           objectFit="cover"
           height="70px"
+          loading="eager"
           // onLoad={() => setIsImageLoaded(true)}
         />
         <CardContent>
@@ -157,17 +155,6 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             </Typography>
           </Box>
 
-          {/* Salsas extras */}
-          {/* <FormControl sx={{ m: 3 }} component="fieldset" variant="standard"> */}
-          {/* <FormLabel component="legend" sx={{ mb: 3 }}>
-              Agrega salsas extra
-            </FormLabel> */}
-          {/* <ExtraSauces
-              sauceProducts={sauseProduct!}
-              setPromoToSendCart={setPromoToSendCart}
-              idPromo={promotion._id!.toString()}
-            /> */}
-          {/* </FormControl> */}
           <TextField
             id="outlined-multiline-flexible"
             label="Notas extras"
@@ -206,6 +193,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
           src="/logos/logo-sushi-panko.webp"
           style={{ opacity: 0.5, marginTop: 20 }}
           layout="responsive"
+          loading="eager"
         ></Image>
       </Box>
     </Drawer>

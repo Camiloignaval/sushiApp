@@ -1,5 +1,6 @@
 import { Box, Typography, IconButton, Badge } from "@mui/material";
 import Head from "next/head";
+import Image from "next/image";
 import { FC } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { currency } from "../../utils";
@@ -33,18 +34,24 @@ export const MainShopLayout: FC<Props> = ({
         <Navbar showPrice />
       </nav>
       <SideMenu />
-
-      <img
-        style={{
+      <Box
+        sx={{
+          position: "relative",
           width: "calc(100vw - 1px)",
           height: "calc(100vh - 50px)",
-          position: "relative",
-          objectFit: "cover",
         }}
-        src="/images/sushi-portada.webp"
-        alt="Imagen portada"
-        loading="eager"
-      />
+      >
+        <Image
+          width={"100%"}
+          height={"100%"}
+          layout="fill"
+          objectFit="cover"
+          quality={100}
+          src="/images/sushi-portada.webp"
+          alt="Imagen portada"
+          loading="eager"
+        />
+      </Box>
 
       <main
         style={{

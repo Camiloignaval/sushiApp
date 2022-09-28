@@ -66,27 +66,6 @@ export const SideMenu = () => {
     >
       <Box sx={{ width: 250, paddingTop: 5 }}>
         <List>
-          {/* <ListItem>
-            <Input
-              autoFocus
-              onKeyPress={(e) => (e.key == "Enter" ? onSearchTerm() : null)}
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              type="search"
-              placeholder="Buscar..."
-              endAdornment={
-                <InputAdornment position="end">
-                  <IconButton
-                    onClick={onSearchTerm}
-                    aria-label="toggle password visibility"
-                  >
-                    <SearchOutlined />
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </ListItem> */}
-
           {!isLoggedIn ? (
             <ListItem
               button
@@ -113,7 +92,6 @@ export const SideMenu = () => {
           </ListItem>
 
           {/* Admin */}
-          {/* {isLoggedIn && user?.role === "admin" && ( */}
           <>
             <Divider />
             <ListSubheader>Admin Panel</ListSubheader>

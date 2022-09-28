@@ -99,7 +99,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
               label={
                 <Grid container>
                   <Grid item xs={12}>
-                    <Image
+                    <img
                       src={product.image}
                       key={product._id}
                       width="60px"
@@ -109,8 +109,8 @@ export const CustomRollCategoryOption: FC<Props> = ({
                         justifyContent: "center",
                         opacity: product.inStock ? 1 : 0.3,
                       }}
-                      layout="fixed"
-                      loading="lazy"
+                      // layout="fixed"
+                      // loading="lazy"
                     />
                   </Grid>
                   <Grid

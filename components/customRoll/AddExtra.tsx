@@ -64,7 +64,7 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
   return (
     <Grid item xs={6} md={4} lg={3}>
       <Box position={"relative"} display={"flex"} justifyContent={"center"}>
-        <Image
+        <img
           src={prod!.image.toString()}
           alt="Producto Extra"
           width="60px"
@@ -75,7 +75,7 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
             justifyContent: "center",
             opacity: prod.inStock || isAdmin ? 1 : 0.3,
           }}
-          loading="lazy"
+          // loading="lazy"
         />
         <Chip
           label={`$${prod.price}`}

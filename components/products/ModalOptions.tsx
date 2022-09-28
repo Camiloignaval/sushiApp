@@ -196,15 +196,12 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             {isInCart ? "Actualizar" : "Agregar"}
           </Button>
         </CardActions>
-        <Image
+        <img
           width={"100%"}
-          height={"100%"}
           alt="Logo"
-          src="/logos/logo-sushi-panko.jpf"
+          src="/logos/logo-sushi-panko.png"
           style={{ opacity: 0.5, marginTop: 20 }}
-          layout="responsive"
-          loading="eager"
-        ></Image>
+        />
       </Box>
     </Drawer>
   );

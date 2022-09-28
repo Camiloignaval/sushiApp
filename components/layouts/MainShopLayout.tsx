@@ -34,24 +34,18 @@ export const MainShopLayout: FC<Props> = ({
         <Navbar showPrice />
       </nav>
       <SideMenu />
-      <Box
-        sx={{
-          position: "relative",
+
+      <img
+        style={{
           width: "calc(100vw - 1px)",
           height: "calc(100vh - 50px)",
+          position: "relative",
+          objectFit: "cover",
         }}
-      >
-        <Image
-          width={"100%"}
-          height={"100%"}
-          layout="fill"
-          objectFit="cover"
-          quality={100}
-          src="/images/sushi-portada.jpg"
-          alt="Imagen portada"
-          loading="eager"
-        />
-      </Box>
+        src="/images/sushi-portada.jpg"
+        alt="Imagen portada"
+        // loading="eager"
+      />
 
       <main
         style={{

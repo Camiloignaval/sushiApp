@@ -48,11 +48,11 @@ const LoginPage = () => {
             justifyContent={"center"}
             sx={{ opacity: 0.1, transform: "translate(-50%,-30%)" }}
           >
-            <Image
+            {/* <Image
               src="/logos/logo-sushi-panko.png"
               height={"800px"}
               width={"800px"}
-            />
+            /> */}
           </Grid>{" "}
           <Grid item xs={12} display="flex" justifyContent={"center"}>
             <Box

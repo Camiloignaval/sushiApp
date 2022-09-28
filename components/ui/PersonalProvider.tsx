@@ -25,6 +25,7 @@ interface Props {
 
 export const PersonalProvider: FC<Props> = ({ children }) => {
   const [firstRender, setFirstRender] = useState(true);
+  const { data } = useCheckTokenQuery();
   const dispatch = useDispatch();
   const {
     cart,
@@ -181,7 +182,6 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   // auth
   try {
     Cookie.get("token");
-    useCheckTokenQuery();
   } catch (error) {
     console.log(error);
   }

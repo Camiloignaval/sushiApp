@@ -126,7 +126,7 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
                 display: "inline-block",
                 margin: "20px",
                 position: "relative",
-                top: -15,
+                top: -11,
                 fontSize: "1.7rem",
                 letterSpacing: 4,
                 cursor: "pointer",
@@ -147,7 +147,7 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
             display: "inline-block",
             margin: "20px",
             position: "relative",
-            top: -15,
+            top: -11,
           }}
           onClick={() => setOpen(true)}
         >

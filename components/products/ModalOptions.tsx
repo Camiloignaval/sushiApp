@@ -5,9 +5,11 @@ import {
   CardContent,
   Divider,
   Drawer,
+  IconButton,
   TextField,
   Typography,
 } from "@mui/material";
+import CloseIcon from "@mui/icons-material/Close";
 import Image from "next/image";
 import React, { FC, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
@@ -105,6 +107,14 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
       }}
     >
       <Box sx={{ width: { xs: "100%", md: "550px" } }}>
+        <Button
+          onClick={() => setOpen(false)}
+          size="large"
+          sx={{ position: "absolute", zIndex: "200" }}
+          variant="text"
+        >
+          <CloseIcon />
+        </Button>
         <Image
           className="fadeIn"
           // image={promotion?.images[0].toString() ?? ""}

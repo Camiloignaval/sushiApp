@@ -49,7 +49,7 @@ const LoginPage = () => {
             sx={{ opacity: 0.1, transform: "translate(-50%,-30%)" }}
           >
             <Image
-              src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko_qtifjs.webp"
+              src="/logos/logo-sushi-panko.jpg"
               height={"800px"}
               width={"800px"}
             />

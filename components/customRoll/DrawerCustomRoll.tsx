@@ -137,7 +137,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
 
         <CardMedia
           className="fadeIn"
-          image="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357156/SushiApp/logocustomroll_fuceqk.webp"
+          image="/images/logocustomroll.jpg"
           component="img"
           alt={"handrollImage"}
           sx={{

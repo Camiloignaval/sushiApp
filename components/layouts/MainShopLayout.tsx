@@ -47,7 +47,7 @@ export const MainShopLayout: FC<Props> = ({
           layout="fill"
           objectFit="cover"
           quality={100}
-          src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357156/SushiApp/sushi-portada_rqe7im.webp"
+          src="/images/sushi-portada.jpg"
           alt="Imagen portada"
           loading="eager"
         />

@@ -128,7 +128,8 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
           width="100%"
           objectFit="cover"
           height="70px"
-          loading="eager"
+          priority
+          // loading="eager"
           // onLoad={() => setIsImageLoaded(true)}
         />
         <CardContent>
@@ -196,12 +197,23 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             {isInCart ? "Actualizar" : "Agregar"}
           </Button>
         </CardActions>
-        <img
+        {/* <img
           width={"100%"}
           alt="Logo"
           src="/logos/logo-sushi-panko.png"
           style={{ opacity: 0.5, marginTop: 20 }}
-        />
+        /> */}
+        <Image
+          width={"100%"}
+          height={"100%"}
+          alt="Logo"
+          // src="/logos/logo-sushi-panko.jpf"
+          src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko_qtifjs.webp"
+          style={{ opacity: 0.5, marginTop: 20 }}
+          layout="responsive"
+          // loading="eager"
+          priority
+        ></Image>
       </Box>
     </Drawer>
   );

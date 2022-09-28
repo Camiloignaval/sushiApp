@@ -54,6 +54,7 @@ export const MainShopLayout: FC<Props> = ({
         }}
       >
         <Image
+          priority
           width={"100%"}
           height={"100%"}
           layout="fill"

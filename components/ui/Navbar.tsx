@@ -59,7 +59,7 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
           width={40}
           height={40}
           alt="Logo"
-          src="/logos/logo-sushi-panko-pequeno.jpg"
+          src="/logos/logo-sushi-panko-pequeno.webp"
         ></Image>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">

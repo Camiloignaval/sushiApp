@@ -49,7 +49,7 @@ const LoginPage = () => {
             sx={{ opacity: 0.1, transform: "translate(-50%,-30%)" }}
           >
             <Image
-              src="/logos/logo-sushi-panko.jpg"
+              src="/logos/logo-sushi-panko.webp"
               height={"800px"}
               width={"800px"}
             />

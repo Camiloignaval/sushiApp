@@ -137,7 +137,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
 
         <CardMedia
           className="fadeIn"
-          image="/images/logocustomroll.jpg"
+          image="/images/logocustomroll.webp"
           component="img"
           alt={"handrollImage"}
           sx={{

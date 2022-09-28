@@ -59,7 +59,7 @@ export const MainShopLayout: FC<Props> = ({
           layout="fill"
           objectFit="cover"
           quality={100}
-          src="/images/sushi-portada.webp"
+          src="/images/sushi-portada.png"
           alt="Imagen portada"
           loading="eager"
         />

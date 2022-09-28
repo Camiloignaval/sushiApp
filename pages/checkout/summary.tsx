@@ -122,12 +122,12 @@ const SummaryPage = () => {
 
     console.log({ orderToSend });
     try {
-      // await createNewOrder(orderToSend).unwrap();
-      // dispatch(cleanCart());
-      // Cookies.remove("address");
-      // // // TODO hacer lo que se necesite como enviar whatsap o en backend
-      // router.replace("/");
-      // setDisabledSubmit(true);
+      await createNewOrder(orderToSend).unwrap();
+      dispatch(cleanCart());
+      Cookies.remove("address");
+      // // TODO hacer lo que se necesite como enviar whatsap o en backend
+      router.replace("/");
+      setDisabledSubmit(true);
     } catch (error) {
       console.log({ error });
     }

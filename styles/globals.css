@@ -1,12 +1,23 @@
-
 @keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
-} 
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
 
 @-webkit-keyframes fadeIn {
-  0% {opacity: 0;}
-  100% {opacity: 1;}
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+html {
+  overflow-x: hidden;
 }
 
 .fadeIn {
@@ -19,7 +30,6 @@
   animation-name: fadeIn;
 }
 
-
 .circular-btn {
   border-radius: 30px;
 }
@@ -27,7 +37,6 @@
 .circular-btn:hover {
   background-color: #274494;
 }
-
 
 .summary-card {
   border: 1px solid rgba(0, 0, 0, 0.1);

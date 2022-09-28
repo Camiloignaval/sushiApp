@@ -21,6 +21,7 @@ import { IoMdClose } from "react-icons/io";
 import { RootState } from "../../store";
 import { currency } from "../../utils";
 import { MapOutlined } from "@mui/icons-material";
+import Image from "next/image";
 
 interface Props {
   showPrice?: boolean;
@@ -53,7 +54,12 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
       <Toolbar>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">
-            <img width={40} alt="Logo" src="/logos/logo-sushi-panko.png"></img>
+            <Image
+              width={40}
+              height={40}
+              alt="Logo"
+              src="/logos/logo-sushi-panko-pequeno.png"
+            ></Image>
             <Typography marginLeft={2} variant="h6">
               SUSHI Panko |
             </Typography>

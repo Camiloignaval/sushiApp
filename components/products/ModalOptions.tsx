@@ -202,7 +202,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
         <img
           width={"100%"}
           alt="Logo"
-          src="/logos/logo-sushi-panko.png"
+          src="/logos/logo-sushi-panko.webp"
           style={{ opacity: 0.5, marginTop: 20 }}
         ></img>
       </Box>

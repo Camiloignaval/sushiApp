@@ -1,5 +1,6 @@
 import { Box, Chip, Grid, Typography } from "@mui/material";
 import { profile } from "console";
+import Image from "next/image";
 import React, {
   Dispatch,
   FC,
@@ -63,8 +64,9 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
   return (
     <Grid item xs={6} md={4} lg={3}>
       <Box position={"relative"} display={"flex"} justifyContent={"center"}>
-        <img
+        <Image
           src={prod!.image.toString()}
+          alt="Producto Extra"
           width="60px"
           height="60px"
           style={{
@@ -73,6 +75,7 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
             justifyContent: "center",
             opacity: prod.inStock || isAdmin ? 1 : 0.3,
           }}
+          loading="lazy"
         />
         <Chip
           label={`$${prod.price}`}

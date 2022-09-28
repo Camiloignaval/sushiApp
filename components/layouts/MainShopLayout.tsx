@@ -41,8 +41,9 @@ export const MainShopLayout: FC<Props> = ({
           position: "relative",
           objectFit: "cover",
         }}
-        src="/images/sushi-portada.jpg"
+        src="/images/sushi-portada.webp"
         alt="Imagen portada"
+        loading="eager"
       />
 
       <main

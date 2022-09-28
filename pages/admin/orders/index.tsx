@@ -4,6 +4,7 @@ import {
   MessageOutlined,
   ReplayOutlined,
 } from "@mui/icons-material";
+import { printOrderv1 } from "../../../utils/conectorPluginV1";
 import { Box, Chip, Grid, IconButton } from "@mui/material";
 import {
   DataGrid,
@@ -170,7 +171,10 @@ const OrdersPage = () => {
         return (
           <IconButton
             onClick={() =>
-              printOrder(
+              // printOrder(
+              //   dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
+              // )
+              printOrderv1(
                 dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
               )
             }

@@ -1,3 +1,4 @@
+import axios from "axios";
 import { currency } from "./";
 
 // export const Impresora = (() => {
@@ -102,53 +103,28 @@ class Impresora {
     }
     this.operaciones.push(new OperacionTicket(C.AccionFeed, n));
   }
+  // imprimirEnImpresora(nombreImpresora) {
+  //   const payload = {
+  //     operaciones: this.operaciones,
+  //     impresora: nombreImpresora,
+  //   };
+  //   return fetch("/api/print", {
+  //     method: "POST",
+  //     // body: JSON.stringify(payload),
+  //     body: JSON.stringify(payload),
+  //   });
+  // }
   imprimirEnImpresora(nombreImpresora) {
     const payload = {
       operaciones: this.operaciones,
       impresora: nombreImpresora,
     };
-    return fetch(this.ruta + "/imprimir_en", {
-      method: "POST",
-      body: JSON.stringify(payload),
-    }).then((r) => r.json());
-  }
-
-  end() {
-    return fetch(this.ruta + "/imprimir", {
-      method: "POST",
-      body: JSON.stringify(this.operaciones),
-    }).then((r) => r.json());
-  }
-
-  validarMedida(medida) {
-    medida = parseInt(medida);
-    if (
-      medida !== C.Medida80 &&
-      medida !== C.Medida100 &&
-      medida !== C.Medida156 &&
-      medida !== C.Medida200 &&
-      medida !== C.Medida300 &&
-      medida !== C.Medida350
-    ) {
-      throw Error("Valor para medida del barcode inválido");
-    }
-  }
-
-  validarTipo(tipo) {
-    if (
-      [
-        C.AccionBarcode128,
-        C.AccionBarcode39,
-        C.AccionBarcode93,
-        C.AccionBarcodeEAN,
-        C.AccionBarcodeTwoOfFiveInterleaved,
-        C.AccionBarcodeTwoOfFiveSinInterleaved,
-        C.AccionBarcodeCodabar,
-        C.AccionBarcodeUPCA,
-        C.AccionBarcodeUPCE,
-      ].indexOf(tipo) === -1
-    )
-      throw Error("Tipo de código de barras no soportado");
+    // return axios.post()
+    return axios
+      .post("/api/print", {
+        body: JSON.stringify(payload),
+      })
+      .then((r) => console.log(r));
   }
 }
 

@@ -168,7 +168,14 @@ const createNewOrder = async (
 
     const userUpdated = await User.findOneAndUpdate(
       { phone },
-      { $set: { name: username, address, placeId, email: "hola" } },
+      {
+        $set: {
+          name: username,
+          address,
+          placeId,
+          userName: username.replaceAll(" ", ""),
+        },
+      },
       { upsert: true, new: true }
     );
 

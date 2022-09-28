@@ -5,6 +5,7 @@ export interface IUser {
   role: string;
   phone: string;
   address?: string;
+  userName?: string;
   placeId?: string;
   createdAt?: string;
   updatedAt?: string;

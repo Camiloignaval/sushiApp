@@ -29,6 +29,8 @@ import { useRouter } from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../../store";
 import Cookies from "js-cookie";
+import { cleanCart } from "../../store/Slices/CartSlice";
+import { LogOut } from "../../store/Slices/AuthSlice";
 
 export const SideMenu = () => {
   const router = useRouter();
@@ -49,11 +51,13 @@ export const SideMenu = () => {
     navigateTo(`/search/${searchTerm}`);
   };
 
-  const onLogout = () => {
+  const handleLogout = () => {
     // Cookies.remove("token");
     Cookies.remove("cart");
     Cookies.remove("address");
-    // router.reload();
+    dispatch(cleanCart());
+    dispatch(LogOut());
+    router.reload();
   };
 
   return (
@@ -77,19 +81,19 @@ export const SideMenu = () => {
               <ListItemText primary={"Ingresar"} />
             </ListItem>
           ) : (
-            <ListItem button onClick={onLogout}>
+            <ListItem button onClick={handleLogout}>
               <ListItemIcon>
                 <LoginOutlined />
               </ListItemIcon>
               <ListItemText primary={"Salir"} />
             </ListItem>
           )}
-          <ListItem button onClick={onLogout}>
+          {/* <ListItem button onClick={onLogout}>
             <ListItemIcon>
               <LocationCityOutlined />
             </ListItemIcon>
             <ListItemText primary={"Consulta tu dirección"} />
-          </ListItem>
+          </ListItem> */}
 
           {/* Admin */}
           <>

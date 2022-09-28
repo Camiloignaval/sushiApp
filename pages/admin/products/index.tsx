@@ -31,7 +31,6 @@ const dictType = {
 
 const ProductsPage = () => {
   const { data: dataProducts } = useGetProductsQuery(null);
-  console.log({ dataProducts });
   const [updateProduct] = useUpdateProductByPropertyMutation();
   const { onDeleteProduct, deleteProductStatus } = useDeleteProduct();
   const columns: GridColDef[] = [

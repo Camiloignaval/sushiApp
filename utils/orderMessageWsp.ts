@@ -1,7 +1,9 @@
 import { IOrder } from "./../interfaces/order";
 export const orderMessageWsp = (order: IOrder) => {
   const message = [
-    `Hola ${order.shippingAddress.username}!\nTu orden ha sido recibida.\n\n`,
+    `Hola ${
+      order.shippingAddress.username.split(" ")[0]
+    }!\nTu orden ha sido recibida.\n\n`,
   ];
 
   order.orderItems.forEach((item) => {
@@ -55,7 +57,7 @@ export const orderMessageWsp = (order: IOrder) => {
     });
   }
   message.push(
-    `\nPuedes ver el estado de tu pedido en el sieuignte link: ${process.env.HOST_NAME}/order/${order._id}`
+    `\nPuedes ver el estado de tu pedido en el siguiente link: ${process.env.HOST_NAME}/order/${order._id}`
   );
   return message.join("");
 };

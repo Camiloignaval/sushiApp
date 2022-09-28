@@ -179,12 +179,12 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   }, [dispatch]);
 
   // auth
-  // try {
-  //   Cookie.get("token");
-  //   useCheckTokenQuery();
-  // } catch (error) {
-  //   console.log(error);
-  // }
+  try {
+    Cookie.get("token");
+    useCheckTokenQuery();
+  } catch (error) {
+    console.log(error);
+  }
 
   return <>{children}</>;
 };

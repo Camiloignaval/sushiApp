@@ -22,23 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           <PersonalProvider>
             <Component {...pageProps} />
           </PersonalProvider>
-          <Toaster
-          // toastOptions={{
-          //   success: {
-          //     style: {
-          //       background: "green",
-          //       color: "white",
-          //     },
-          //   },
-          //   error: {
-          //     style: {
-          //       background: "white",
-          //       color: "black",
-          //       fontWeight: "500",
-          //     },
-          //   },
-          // }}
-          />
+          <Toaster />
         </ThemeProvider>
       </SWRConfig>
     </Provider>

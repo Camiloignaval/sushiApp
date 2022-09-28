@@ -15,7 +15,7 @@ export const authApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   tagTypes: ["User"],
   endpoints: (builder) => ({
-    LogIn: builder.mutation<IResponse, { email: string; password: string }>({
+    LogIn: builder.mutation<IResponse, { userName: string; password: string }>({
       query: (body) => ({
         url: `/user/login`,
         method: "post",

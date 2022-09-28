@@ -20,7 +20,7 @@ import { toggleMenu } from "../../store/Slices/UISlice";
 import { IoMdClose } from "react-icons/io";
 import { RootState } from "../../store";
 import { currency } from "../../utils";
-import { MapOutlined } from "@mui/icons-material";
+import { HomeOutlined, MapOutlined } from "@mui/icons-material";
 import Image from "next/image";
 
 interface Props {
@@ -30,9 +30,11 @@ interface Props {
 export const Navbar: FC<Props> = ({ showPrice = false }) => {
   const { asPath, push } = useRouter();
   const dispatch = useDispatch();
+  const router = useRouter();
   // const pathName = useMemo(() => router.pathname, [router]);
   const [searchTerm, setSearchTerm] = useState("");
   const { scrollIsDown } = useSelector((state: RootState) => state.ui);
+  const { isLoggedIn } = useSelector((state: RootState) => state.auth);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const { numberOfItems, total } = useSelector(
     (state: RootState) => state.cart
@@ -52,14 +54,15 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
       }}
     >
       <Toolbar>
+        <Image
+          onDoubleClick={() => router.push("/login")}
+          width={40}
+          height={40}
+          alt="Logo"
+          src="/logos/logo-sushi-panko-pequeno.png"
+        ></Image>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">
-            <Image
-              width={40}
-              height={40}
-              alt="Logo"
-              src="/logos/logo-sushi-panko-pequeno.png"
-            ></Image>
             <Typography
               marginLeft={{ xs: 1, sm: 2 }}
               // variant={}
@@ -83,12 +86,12 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 1 }} />
         {/* pantallas pequeños */}
-        {/* <IconButton
+        <IconButton
           sx={{ display: { xs: "", sm: "none" } }}
           onClick={() => dispatch(toggleMenu())}
         >
           <BiSearchAlt />
-        </IconButton> */}
+        </IconButton>
         {/* pantallas grandes */}
         {/* {isSearchVisible ? (
           <Input
@@ -152,12 +155,22 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
             </NextLink>
           </>
         )}
-        <Button
-          sx={{ backgroundColor: "transparent" }}
-          onClick={() => dispatch(toggleMenu())}
-        >
-          Menú
-        </Button>
+        {isLoggedIn ? (
+          <Button
+            sx={{ backgroundColor: "transparent" }}
+            onClick={() => dispatch(toggleMenu())}
+          >
+            Menú
+          </Button>
+        ) : (
+          <IconButton
+            onClick={() => router.push("/")}
+            aria-label="delete"
+            size="large"
+          >
+            <HomeOutlined fontSize="inherit" />
+          </IconButton>
+        )}
       </Toolbar>
     </AppBar>
   );

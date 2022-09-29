@@ -145,8 +145,9 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
 
   return (
     <ShopLayout
-      title={"Sigue tu pedido"}
-      pageDescription={"Pagina para seguir el estado del pedido"}
+      title="Sigue tu pedido"
+      pageDescription="Página para ver estado de pedido"
+      imageFullUrl="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko_qtifjs.webp"
     >
       <Stepper
         alternativeLabel

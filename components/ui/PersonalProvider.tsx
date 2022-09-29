@@ -87,7 +87,6 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
         : dispatch(closeStore());
 
       Cookie.set("settings", JSON.stringify(settingsData));
-      dispatch(closeStore());
     }
   }, [settingsData, storeIsOpen]);
 

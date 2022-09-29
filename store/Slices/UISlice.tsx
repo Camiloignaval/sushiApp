@@ -10,7 +10,7 @@ export interface UIState {
 const initialState: UIState = {
   sideBarIsOpen: false,
   scrollIsDown: false,
-  storeIsOpen: false,
+  storeIsOpen: true,
 };
 
 export const UISlice = createSlice({

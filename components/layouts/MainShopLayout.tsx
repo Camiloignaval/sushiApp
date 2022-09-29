@@ -3,6 +3,8 @@ import Head from "next/head";
 import Image from "next/image";
 import { FC } from "react";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store";
 import { currency } from "../../utils";
 import { Navbar, SideMenu } from "../ui";
 
@@ -19,6 +21,8 @@ export const MainShopLayout: FC<Props> = ({
   imageFullUrl,
   title,
 }) => {
+  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
+
   return (
     <>
       <Head>
@@ -66,30 +70,32 @@ export const MainShopLayout: FC<Props> = ({
         />
       </Box>
       {/* CARTEL CERRADO */}
-      <Box
-        sx={{
-          position: "absolute",
-          top: 25,
-          left: -40,
-          width: { xs: 300, sm: 500 },
-          height: { xs: 300, sm: 500 },
-          zIndex: 900,
-          textShadow: "0px 5px 6px #FFFFFF;",
-          filter: "drop-shadow(5px 6px 10px rgba(0, 0, 0, 0.40))",
-        }}
-      >
-        <Image
-          priority
-          // width={"20vw"}
-          // height={"500px"}
-          layout="fill"
-          // objectFit="cover"
-          // quality={100}
-          alt="Imagen cerrado"
-          src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664437330/SushiApp/lo-siento-estamos-cartel-cerrado_wed11n.webp"
-          // loading="eager"
-        />
-      </Box>
+      {!storeIsOpen && (
+        <Box
+          sx={{
+            position: "absolute",
+            top: 25,
+            left: -40,
+            width: { xs: 300, sm: 500 },
+            height: { xs: 300, sm: 500 },
+            zIndex: 900,
+            textShadow: "0px 5px 6px #FFFFFF;",
+            filter: "drop-shadow(5px 6px 10px rgba(0, 0, 0, 0.40))",
+          }}
+        >
+          <Image
+            priority
+            // width={"20vw"}
+            // height={"500px"}
+            layout="fill"
+            // objectFit="cover"
+            // quality={100}
+            alt="Imagen cerrado"
+            src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664437330/SushiApp/lo-siento-estamos-cartel-cerrado_wed11n.webp"
+            // loading="eager"
+          />
+        </Box>
+      )}
 
       <main
         style={{

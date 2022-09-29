@@ -10,7 +10,7 @@ import {
 } from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import NextLink from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { AdminLayout } from "../../../components/layouts";
 import { FullScreenLoading } from "../../../components/ui";
 import { useDeleteProduct } from "../../../hooks";
@@ -33,6 +33,7 @@ const ProductsPage = () => {
   const { data: dataProducts } = useGetProductsQuery(null);
   const [updateProduct] = useUpdateProductByPropertyMutation();
   const { onDeleteProduct, deleteProductStatus } = useDeleteProduct();
+  const [pageSize, setPageSize] = useState(10);
   const columns: GridColDef[] = [
     {
       field: "img",
@@ -141,8 +142,9 @@ const ProductsPage = () => {
           disableSelectionOnClick={true}
           rows={rows ?? []}
           columns={columns}
-          pageSize={10}
+          pageSize={pageSize}
           rowsPerPageOptions={[10, 20, 30]}
+          onPageSizeChange={(value) => setPageSize(value)}
         ></DataGrid>
       </Grid>
     </AdminLayout>

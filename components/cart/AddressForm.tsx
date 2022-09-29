@@ -201,6 +201,10 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
                   value: 3,
                   message: "Nombre es demasiado corto",
                 },
+                validate: (value) => {
+                  if (value?.trim().split(" ").length < 2)
+                    return "Debe ingresar Nombre y Apellido";
+                },
               })}
               error={!!errors.username}
               helperText={errors?.username?.message}

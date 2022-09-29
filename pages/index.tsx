@@ -38,8 +38,7 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
   const [open, setOpen] = useState(false);
   const [positionOfMobileCart, setpositionOfMobileCart] = useState(40);
   const dispatch = useDispatch();
-
-  console.log({ promotions });
+  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
 
   function logit() {
     const isDownOfTheScreen = window.pageYOffset > window.innerHeight - 100;
@@ -172,7 +171,9 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
       {/* carrito para mobiles */}
       {/* // TODO POR ALGUNA RAZON AL PONER MOBILE NO FUNCIONA PERO SI EN RESPONSIVE */}
 
-      <CartInMobile positionOfMobileCart={positionOfMobileCart} />
+      {storeIsOpen && (
+        <CartInMobile positionOfMobileCart={positionOfMobileCart} />
+      )}
 
       {Object.values(promosByCategory).length > 0
         ? Object.entries(promosByCategory)?.map((promotion, i) => (

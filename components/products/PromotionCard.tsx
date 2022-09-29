@@ -150,6 +150,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                 ) : (
                   <>
                     <Button
+                      disabled={!storeIsOpen}
                       onClick={onDelete}
                       color="error"
                       className={style["roundedButtonDelete"]}
@@ -164,6 +165,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                       <DeleteIcon color="info" />
                     </Button>
                     <Button
+                      disabled={!storeIsOpen}
                       onClick={() => setOpen((prev) => !prev)}
                       className={style["roundedButtonEdit"]}
                       color="warning"

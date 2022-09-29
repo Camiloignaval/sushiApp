@@ -126,9 +126,7 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
 
     // calcular tarifa de delivery
     let deliveryPrice = 1000;
-    const {
-      data: { rows },
-    } = dataDistance;
+    const { rows } = dataDistance;
     const { distance, duration } = rows[0].elements[0];
     if (distance.value > 2000) {
       deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;

@@ -5,7 +5,7 @@ import mongoose_delete from "mongoose-delete";
 const productSchema = new Schema(
   {
     image: { type: String },
-    inStock: { type: Boolean },
+    inStock: { type: Boolean, default: true },
     price: { type: Number, required: true, default: 0 },
     name: { type: String, required: true, default: "" },
     fillingType: {

@@ -13,7 +13,7 @@ import {
   SaveOutlined,
   UploadOutlined,
 } from "@mui/icons-material";
-import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import {
   Box,
   Grid,
@@ -108,11 +108,12 @@ const NewProductPage = () => {
     if (!formData.image) return toast.error("Debe seleccionar una imágen");
     if (!formData.type)
       return toast.error("Debe seleccionar un tipo de producto");
-    updateProduct(formData)
-      .unwrap()
-      .then(() => {
-        // router.replace("/admin/products");
-      });
+    console.log({ formData });
+    // updateProduct(formData)
+    //   .unwrap()
+    //   .then(() => {
+    //     // router.replace("/admin/products");
+    //   });
     return true;
   };
   return (

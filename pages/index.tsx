@@ -92,8 +92,8 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
 
   return (
     <MainShopLayout
-      title="SushiPanko - Home"
-      pageDescription="Encuentra los mejores Sushis!"
+      title="SushiPanko Maipú"
+      pageDescription="Encuentra los mejores Sushis y más!"
       imageFullUrl="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko_qtifjs.webp"
     >
       <DrawerCustomRoll open={open} setOpen={setOpen} />

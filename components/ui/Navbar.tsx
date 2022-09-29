@@ -55,7 +55,6 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
     >
       <Toolbar>
         {/* <img width={40} alt="Logo" src="/logos/logo-sushi-panko.png"></img> */}
-
         <Image
           onDoubleClick={() => router.push("/login")}
           width={40}
@@ -88,12 +87,12 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 1 }} />
         {/* pantallas pequeños */}
-        <IconButton
+        {/* <IconButton
           sx={{ display: { xs: "", sm: "none" } }}
           onClick={() => dispatch(toggleMenu())}
         >
           <BiSearchAlt />
-        </IconButton>
+        </IconButton> */}
         {/* pantallas grandes */}
         {/* {isSearchVisible ? (
           <Input
@@ -156,22 +155,21 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
               </Link>
             </NextLink>
           </>
-        )}
-        {isLoggedIn ? (
+        )}{" "}
+        <IconButton
+          onClick={() => router.push("/")}
+          aria-label="delete"
+          size="large"
+        >
+          <HomeOutlined fontSize="inherit" />
+        </IconButton>
+        {isLoggedIn && (
           <Button
             sx={{ backgroundColor: "transparent" }}
             onClick={() => dispatch(toggleMenu())}
           >
             Menú
           </Button>
-        ) : (
-          <IconButton
-            onClick={() => router.push("/")}
-            aria-label="delete"
-            size="large"
-          >
-            <HomeOutlined fontSize="inherit" />
-          </IconButton>
         )}
       </Toolbar>
     </AppBar>

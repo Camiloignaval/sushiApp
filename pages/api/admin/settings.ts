@@ -29,10 +29,10 @@ const updateSettings = async (
   res: NextApiResponse<Data>
 ) => {
   const body = req.body;
-  console.log({ body });
   try {
     await db.connect();
     await Settings.findOneAndReplace({}, body, { upsert: true });
+    await db.disconnect();
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
     await db.disconnect();
@@ -50,6 +50,7 @@ const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
     const settings = await Settings.findOne({});
+    await db.disconnect();
     return res.status(200).json(settings!);
   } catch (error) {
     await db.disconnect();

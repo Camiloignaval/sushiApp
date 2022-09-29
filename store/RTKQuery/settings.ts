@@ -18,7 +18,7 @@ export const settingsApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   tagTypes: ["Settings"],
   endpoints: (builder) => ({
-    getSettingsStore: builder.query<IResponse, void>({
+    getSettingsStore: builder.query<ISettingsStore, void>({
       query: (body) => ({
         url: `/admin/settings`,
         method: "get",

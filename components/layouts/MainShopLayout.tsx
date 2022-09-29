@@ -50,7 +50,7 @@ export const MainShopLayout: FC<Props> = ({
         sx={{
           position: "relative",
           width: "calc(100vw - 1px)",
-          height: "calc(100vh - 50px)",
+          height: { xs: "calc(100vh - 90px)", sm: "calc(100vh - 50px)" },
         }}
       >
         <Image

@@ -136,7 +136,13 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
               {category.name}
             </Link>
             <FaCircle
-              style={{ width: "10px", position: "relative", top: 18 }}
+              style={{
+                width: "10px",
+                position: "relative",
+                top: 18,
+                color: "red",
+                zIndex: 1000,
+              }}
             />
           </Box>
         ))}

@@ -1,3 +1,4 @@
+import { ExtraProducts } from "./../components/customRoll/ExtraProducts";
 export interface ISettingsStore {
   _id?: string;
   lunes: {
@@ -42,5 +43,6 @@ export interface ISettingsStore {
     proteins: number;
     vegetables: number;
     sauces: number;
+    extraProducts: number;
   };
 }

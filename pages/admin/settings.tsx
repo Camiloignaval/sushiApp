@@ -528,7 +528,7 @@ const SettingsPage: FC<Props> = ({ settings }) => {
                   Roll personalizado
                 </Typography>
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   label="Proteinas"
                   variant="filled"
@@ -543,7 +543,7 @@ const SettingsPage: FC<Props> = ({ settings }) => {
                   helperText={errors.customRoll!?.proteins?.message}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   fullWidth
                   label="Vegetales"
@@ -558,7 +558,7 @@ const SettingsPage: FC<Props> = ({ settings }) => {
                   helperText={errors.customRoll!?.vegetables?.message}
                 />
               </Grid>
-              <Grid item xs={4}>
+              <Grid item xs={3}>
                 <TextField
                   fullWidth
                   label="Salsas"
@@ -571,6 +571,21 @@ const SettingsPage: FC<Props> = ({ settings }) => {
                   })}
                   error={!!errors.customRoll!?.sauces}
                   helperText={errors.customRoll!?.sauces?.message}
+                />
+              </Grid>
+              <Grid item xs={3}>
+                <TextField
+                  fullWidth
+                  label="Extras"
+                  variant="filled"
+                  type={"number"}
+                  sx={{ mb: 1 }}
+                  {...register("customRoll.extraProducts", {
+                    required: "Este campo es requerido",
+                    min: { value: 1, message: "Debe ser minimo 1" },
+                  })}
+                  error={!!errors.customRoll!?.extraProducts}
+                  helperText={errors.customRoll!?.extraProducts?.message}
                 />
               </Grid>
             </Grid>

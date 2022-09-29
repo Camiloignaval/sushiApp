@@ -1,4 +1,11 @@
-import { FormControl, FormHelperText, FormLabel } from "@mui/material";
+import { HelpOutline } from "@mui/icons-material";
+import {
+  FormControl,
+  FormHelperText,
+  FormLabel,
+  IconButton,
+  Tooltip,
+} from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { ICartProduct, IProduct } from "../../interfaces";
 import { CustomRollCategoryOption } from "./CustomRollCategoryOption";
@@ -38,7 +45,7 @@ export const FormControlByCategory: FC<Props> = ({
   promoToSendCart,
 }) => {
   const [error, setError] = useState(false);
-
+  console.log({ label });
   useEffect(() => {
     const isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty;
     setError(isLessThanMax);
@@ -63,7 +70,15 @@ export const FormControlByCategory: FC<Props> = ({
         // sx={{ display: "flex", justifyContent: "end" }}
         id="my-helper-text"
       >
-        {`Favor seleccione máximo ${maxQty}`}
+        {`Favor seleccione máximo ${maxQty}`}{" "}
+        {label == "Salsas" && "incluida(s) en roll"}
+        {label == "Salsas" && (
+          <Tooltip title="En el carrito podrá incluir más salsas">
+            <IconButton size="small" sx={{ opacity: 0.5 }}>
+              <HelpOutline />
+            </IconButton>
+          </Tooltip>
+        )}
       </FormHelperText>
     </FormControl>
   );

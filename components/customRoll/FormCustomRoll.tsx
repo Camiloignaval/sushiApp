@@ -1,7 +1,9 @@
 import { Box, FormControl, FormLabel, Grid } from "@mui/material";
+import Typography from "@mui/material/Typography";
 import React, { useState, FC, useEffect } from "react";
 import { ICartProduct } from "../../interfaces";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
+import { useGetSettingsStoreQuery } from "../../store/RTKQuery/settings";
 import { FullScreenLoading } from "../ui";
 import { CustomRollCategoryOption } from "./CustomRollCategoryOption";
 import { FormControlByCategory } from "./FormControlByCategory";
@@ -26,7 +28,15 @@ export const FormCustomRoll: FC<Props> = ({
   setPromoToSendCart,
 }) => {
   const { data: productData } = useGetProductsQuery(null);
-
+  const { data: settingsData } = useGetSettingsStoreQuery();
+  console.log(settingsData);
+  const [maxQty, setMaxQty] = useState({
+    proteins: settingsData?.customRoll!.proteins ?? 1,
+    vegetables: settingsData?.customRoll!.vegetables ?? 1,
+    envelopes: 1,
+    sauces: settingsData?.customRoll!.sauces ?? 1,
+    extraProduct: settingsData?.customRoll!.extraProducts ?? 1,
+  });
   useEffect(() => {
     const { extraProduct, proteins, vegetables, envelopes, sauces } =
       promoToSendCart;
@@ -55,7 +65,13 @@ export const FormCustomRoll: FC<Props> = ({
     (product) => product?.type === "envelope"
   );
   const sauseProduct = productData?.filter(
-    (product) => product?.type === "sauce"
+    (product) =>
+      product?.type === "sauce" &&
+      product.name
+        .split(" ")
+        .filter((p) =>
+          ["soja", "soya", "teriyaki", "agridulce"].includes(p.toLowerCase())
+        )
   );
 
   if (!productData) {

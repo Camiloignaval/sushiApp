@@ -47,6 +47,7 @@ const settingsSchema = new Schema(
       proteins: { type: Number, required: true },
       vegetables: { type: Number, required: true },
       sauces: { type: Number, required: true },
+      extraProducts: { type: Number, required: true },
     },
   },
   { timestamps: true, versionKey: false }

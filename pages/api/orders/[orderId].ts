@@ -1,12 +1,17 @@
+import { IOrder } from "./../../../interfaces/order";
 import type { NextApiRequest, NextApiResponse } from "next";
+import { db } from "../../../database";
+import { Order } from "../../../models";
 
-type Data = {
-  message: string;
-};
+type Data =
+  | {
+      message: string;
+    }
+  | IOrder;
 
 export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
-    case "POST":
+    case "GET":
       return getOrder(req, res);
 
     default:
@@ -16,8 +21,11 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   }
 }
 
-const getOrder = (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  return res.status(200).json({
-    message: "bien",
-  });
+const getOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const { orderId } = req.query;
+  await db.connect();
+  const order = await Order.findById(orderId).lean();
+  await db.disconnect();
+
+  return res.status(200).json(order);
 };

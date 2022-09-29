@@ -19,12 +19,56 @@ import {
   PersonOutlineOutlined,
 } from "@mui/icons-material";
 import Image from "next/image";
+import { useSearchOrderByIdQuery } from "../../store/RTKQuery/ordersApi";
+import { FullScreenLoading } from "../../components/ui";
+import confetti from "canvas-confetti";
 
 interface Props {
   order: IOrder;
 }
 
-const OrderInfoPage: FC<Props> = ({ order }) => {
+const ingestedGif =
+  "https://res.cloudinary.com/dc6vako2z/image/upload/v1663116833/SushiApp/tumblr_o1ligs21271uswgqqo1_400_wtaavy.webp";
+const inprocessGif =
+  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664409965/SushiApp/2eec3eddd566037c4e2b8e1d902a01e8_gbzxid.gif";
+const deliveryGif =
+  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664409595/SushiApp/deliveryStatus_yykii4.gif";
+const dispatchedGif =
+  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664416497/SushiApp/pig-piglet_hpp7m2.gif";
+
+const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
+  const { data: order, isLoading } = useSearchOrderByIdQuery(
+    orderByServer._id!,
+    {
+      // poolingInterval: 3000,
+      pollingInterval: 3000,
+    }
+  );
+
+  useEffect(() => {
+    console.log("analize");
+    var colors = ["#bb0000", "#ffffff"];
+
+    if (order && !isLoading) {
+      if ((order as IOrder).status === "delivered") {
+        confetti({
+          particleCount: 400,
+          angle: 60,
+          spread: 55,
+          origin: { x: 0 },
+          colors: colors,
+        });
+        confetti({
+          particleCount: 400,
+          angle: 120,
+          spread: 55,
+          origin: { x: 1 },
+          colors: colors,
+        });
+      }
+    }
+  }, [order, isLoading]);
+
   const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
       top: 22,
@@ -74,6 +118,8 @@ const OrderInfoPage: FC<Props> = ({ order }) => {
     }),
   }));
 
+  if (!order || isLoading) return <FullScreenLoading />;
+
   function ColorlibStepIcon(props: StepIconProps) {
     const { active, completed, className } = props;
 
@@ -104,7 +150,9 @@ const OrderInfoPage: FC<Props> = ({ order }) => {
     >
       <Stepper
         alternativeLabel
-        activeStep={stepinBd.findIndex((step) => step === order.status)}
+        activeStep={stepinBd.findIndex(
+          (step) => step === (order as IOrder).status
+        )}
         connector={<ColorlibConnector />}
       >
         {steps.map((label) => (
@@ -118,20 +166,38 @@ const OrderInfoPage: FC<Props> = ({ order }) => {
         <Grid item xs={11}>
           <Typography variant="subtitle1">
             <PersonOutlineOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {order.shippingAddress.username}
+            {(order as IOrder).shippingAddress.username}
           </Typography>{" "}
           <Typography variant="subtitle1">
             <HomeOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {order.shippingAddress.address}
+            {(order as IOrder).shippingAddress.address}
           </Typography>
         </Grid>
       </Grid>
-      <Box sx={{ display: "flex", justifyContent: "end" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          mt: 4,
+        }}
+      >
         <Image
+          style={{
+            borderRadius: "15px",
+            borderImage: "revert",
+          }}
           layout="fixed"
-          width={"400px"}
-          height={"400px"}
-          src="https://res.cloudinary.com/dc6vako2z/image/upload/v1663116833/SushiApp/tumblr_o1ligs21271uswgqqo1_400_wtaavy.webp"
+          width={"300px"}
+          height={"300px"}
+          src={
+            (order as IOrder).status === "ingested"
+              ? ingestedGif
+              : (order as IOrder).status === "inprocess"
+              ? inprocessGif
+              : (order as IOrder).status === "dispatched"
+              ? deliveryGif
+              : dispatchedGif
+          }
           alt=""
         />
       </Box>

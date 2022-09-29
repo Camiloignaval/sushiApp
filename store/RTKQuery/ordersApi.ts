@@ -5,12 +5,14 @@ import { IOrder } from "../../interfaces";
 import { useRouter } from "next/router";
 import { GridRowId } from "@mui/x-data-grid";
 
-interface IResponse {
-  data: {
-    message: string;
-    error?: object;
-  };
-}
+type IResponse =
+  | {
+      data: {
+        message: string;
+        error?: object;
+      };
+    }
+  | IOrder;
 
 // Define a service using a base URL and expected endpoints
 export const ordersApi = createApi({
@@ -103,6 +105,20 @@ export const ordersApi = createApi({
         });
       },
     }),
+    searchOrderById: builder.query<IResponse, string>({
+      query: (id) => ({
+        url: `/orders/${id}`,
+        method: "get",
+      }),
+      providesTags: ["Order"],
+      // onQueryStarted(_, { queryFulfilled }) {
+      //   toast.promise(queryFulfilled, {
+      //     loading: "Anulando orden...",
+      //     success: "Orden anulada con éxito",
+      //     error: ({ error }) => error.data.message.toString(),
+      //   });
+      // },
+    }),
   }),
 });
 
@@ -112,4 +128,5 @@ export const {
   useChangeOrderStatusMutation,
   useRetryConfirmOrderMutation,
   useAnulateOrdersMutation,
+  useSearchOrderByIdQuery,
 } = ordersApi;

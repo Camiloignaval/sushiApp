@@ -115,6 +115,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
         >
           <CloseIcon />
         </Button>
+        {/* TODO optimizar carga */}
         <Image
           className="fadeIn"
           // image={promotion?.images[0].toString() ?? ""}

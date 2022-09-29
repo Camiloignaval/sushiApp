@@ -15,27 +15,27 @@ export const CartInMobile: FC<Props> = ({ positionOfMobileCart }) => {
     (state: RootState) => state.cart
   );
   return (
-    <Box
-      sx={{
-        mt: 4,
-        display: { xs: "flex", sm: "none" },
-        position: "sticky",
-        height: "10px",
-        top: positionOfMobileCart,
-        marginLeft: 1.5,
-        zIndex: 900,
-      }}
-    >
-      <Card
-        sx={{
-          width: "70px",
-          height: "70px",
-          boxShadow: "5px 5px 15px 5px rgba(0,0,0,0.51)",
-        }}
-      >
-        <Box display={"flex"} justifyContent="center" marginTop={0.8}>
-          <NextLink href="/cart" passHref>
-            <Link>
+    <NextLink href="/cart" passHref>
+      <Link>
+        <Box
+          sx={{
+            mt: 4,
+            display: { xs: "flex", sm: "none" },
+            position: "sticky",
+            height: "10px",
+            top: positionOfMobileCart,
+            marginLeft: 1.5,
+            zIndex: 900,
+          }}
+        >
+          <Card
+            sx={{
+              width: "70px",
+              height: "70px",
+              boxShadow: "5px 5px 15px 5px rgba(0,0,0,0.51)",
+            }}
+          >
+            <Box display={"flex"} justifyContent="center" marginTop={0.8}>
               <IconButton>
                 <Badge
                   badgeContent={numberOfItems > 9 ? "+9" : numberOfItems}
@@ -44,21 +44,21 @@ export const CartInMobile: FC<Props> = ({ positionOfMobileCart }) => {
                   <AiOutlineShoppingCart />
                 </Badge>
               </IconButton>
-            </Link>
-          </NextLink>
-        </Box>
+            </Box>
 
-        <Box
-          display={"flex"}
-          position="relative"
-          bottom={4}
-          justifyContent="center"
-        >
-          <Typography color={"primary"} variant="body2">
-            {currency.format(total)}
-          </Typography>
+            <Box
+              display={"flex"}
+              position="relative"
+              bottom={4}
+              justifyContent="center"
+            >
+              <Typography color={"primary"} variant="body2">
+                {currency.format(total)}
+              </Typography>
+            </Box>
+          </Card>
         </Box>
-      </Card>
-    </Box>
+      </Link>
+    </NextLink>
   );
 };

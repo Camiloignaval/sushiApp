@@ -30,9 +30,9 @@ interface Props {
 const ingestedGif =
   "https://res.cloudinary.com/dc6vako2z/image/upload/v1663116833/SushiApp/tumblr_o1ligs21271uswgqqo1_400_wtaavy.webp";
 const inprocessGif =
-  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664409965/SushiApp/2eec3eddd566037c4e2b8e1d902a01e8_gbzxid.gif";
+  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664418614/SushiApp/making-food-food_folwnk.gif";
 const deliveryGif =
-  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664409595/SushiApp/deliveryStatus_yykii4.gif";
+  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664418581/SushiApp/a7c1a9375f2d007d601e2bb7e815fdcc_ljrmzu.gif";
 const dispatchedGif =
   "https://res.cloudinary.com/dc6vako2z/image/upload/v1664416497/SushiApp/pig-piglet_hpp7m2.gif";
 

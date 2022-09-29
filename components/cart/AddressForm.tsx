@@ -14,7 +14,11 @@ import { FC, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { IShippingAdress } from "../../interfaces";
-import { addDeliveryPrice, updateAdress } from "../../store/Slices/CartSlice";
+import {
+  addDeliveryPrice,
+  cleanDeliverPrice,
+  updateAdress,
+} from "../../store/Slices/CartSlice";
 import { PersonOutline, PhoneAndroidOutlined } from "@mui/icons-material";
 import { isValidPhoneNumber } from "libphonenumber-js";
 import { RootState } from "../../store";
@@ -67,6 +71,8 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
           shippingAddress.address
         );
       }
+    } else {
+      dispatch(cleanDeliverPrice());
     }
   }, []);
 

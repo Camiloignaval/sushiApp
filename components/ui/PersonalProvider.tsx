@@ -35,7 +35,16 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     deliverPrice,
     valuedAddress,
     valuedPlaceId,
+    shippingAddress,
   } = useSelector((state: RootState) => state.cart);
+
+  // useEffect(() => {
+  //   first
+
+  //   return () => {
+  //     second
+  //   }
+  // }, [shippingAddress])
 
   // atento al carrito
   // -----------------

@@ -31,13 +31,16 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const queryParams = req.query;
   try {
-    let { page = 1, limit = 20, status } = queryParams;
-    const statusQuery = status ? { status } : {};
+    let {
+      page = 1,
+      limit = 20,
+      status = ["ingested", "inprocess", "dispatched"],
+    } = queryParams;
     await db.connect();
     //TODO agregar filtros
     const orders = await Order.paginate(
-      { ...statusQuery },
-      { page, limit, sort: { createdAt: "desc" } }
+      { status: { $in: status } },
+      { page, limit, sort: { createdAt: "asc" } }
     );
 
     await db.disconnect();

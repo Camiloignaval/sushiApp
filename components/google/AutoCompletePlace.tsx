@@ -104,7 +104,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
   // });
 
   const deliverPolygon =
-    typeof window !== "undefined"
+    typeof window?.google?.maps !== "undefined"
       ? new window.google.maps.Polygon({
           paths: deliveryCoords,
         })
@@ -146,7 +146,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
   }, [inputValue]);
 
   const searchLatLngByPlaceId = async () => {
-    if (typeof window !== "undefined") {
+    if (typeof window?.google?.maps !== "undefined") {
       try {
         // const { data } = await axios(
         //   `https://maps.googleapis.com/maps/api/place/details/json?placeid=${selectedDirection!
@@ -212,6 +212,20 @@ export const AutoCompletePlace: React.FC<Props> = ({
       setSelectedDirection(null);
     }
   }, [inputValue]);
+
+  // ocultar opciones
+  useEffect(() => {
+    console.log({ options });
+    if (options.length === 0) {
+      document
+        .querySelector(".MuiAutocomplete-popper")
+        ?.classList.add("withoutOptions");
+    } else {
+      document
+        .querySelector(".MuiAutocomplete-popper")
+        ?.classList.remove("withoutOptions");
+    }
+  }, [options]);
 
   useEffect(() => {
     selectedDirection?.place_id && searchLatLngByPlaceId();
@@ -307,6 +321,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
   return (
     <Box display={"flex"}>
       <Autocomplete
+        disablePortal={options.length === 0}
         inputValue={inputValue}
         disabled={disableInput}
         fullWidth

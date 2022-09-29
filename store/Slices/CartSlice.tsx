@@ -91,11 +91,18 @@ export const CartSlice = createSlice({
       state.total = 0;
       state.shippingAddress = undefined;
       state.deliverPrice = 0;
+      state.valuedAddress = "";
+      state.valuedPlaceId = "";
     },
     addDeliveryPrice: (state, action: PayloadAction<any>) => {
       state.deliverPrice = Number(action.payload.deliveryPrice);
       state.valuedAddress = action.payload.valuedAddress;
       state.valuedPlaceId = action.payload.valuedPlaceId;
+    },
+    cleanDeliverPrice: (state) => {
+      state.deliverPrice = 0;
+      state.valuedAddress = "";
+      state.valuedPlaceId = "";
     },
   },
 });
@@ -112,6 +119,7 @@ export const {
   addCoupon,
   removeCoupon,
   addDeliveryPrice,
+  cleanDeliverPrice,
 } = CartSlice.actions;
 
 export default CartSlice.reducer;

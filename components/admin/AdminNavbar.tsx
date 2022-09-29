@@ -13,8 +13,7 @@ export const AdminNavbar = () => {
       <Toolbar>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">
-            <Typography variant="h6">Shop |</Typography>
-            <Typography sx={{ marginLeft: 0.5 }}>App</Typography>
+            <Typography variant="h6">Sushi Panko</Typography>
           </Link>
         </NextLink>
         <Box sx={{ flexGrow: 1 }} />

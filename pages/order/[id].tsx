@@ -41,7 +41,7 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
     orderByServer._id!,
     {
       // poolingInterval: 3000,
-      pollingInterval: 3000,
+      pollingInterval: 60000, // 1 minuto,
     }
   );
 

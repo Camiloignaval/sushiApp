@@ -135,7 +135,7 @@ const NewCuponPage = () => {
               {...register("code", {
                 required: "Este campo es requerido",
                 minLength: { value: 4, message: "Mínimo 4 caracteres" },
-                maxLength: { value: 10, message: "Máximo 10 caracteres" },
+                maxLength: { value: 20, message: "Máximo 20 caracteres" },
               })}
               error={!!errors.code}
               helperText={errors.code?.message}

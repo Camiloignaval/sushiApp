@@ -52,7 +52,7 @@ export const FormControlByCategory: FC<Props> = ({
       variant="standard"
     >
       <FormLabel component="legend" sx={{ mb: 3 }}>
-        {label} ({maxQty} máx.)
+        {label === "Vegetales" ? "Vegetales y otros" : label} ({maxQty} máx.)
       </FormLabel>
       <CustomRollCategoryOption
         listProducts={productList!}

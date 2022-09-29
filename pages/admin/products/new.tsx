@@ -109,11 +109,11 @@ const NewProductPage = () => {
     if (!formData.type)
       return toast.error("Debe seleccionar un tipo de producto");
     console.log({ formData });
-    // updateProduct(formData)
-    //   .unwrap()
-    //   .then(() => {
-    //     // router.replace("/admin/products");
-    //   });
+    updateProduct(formData)
+      .unwrap()
+      .then(() => {
+        router.replace("/admin/products");
+      });
     return true;
   };
   return (

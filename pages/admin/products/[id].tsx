@@ -112,6 +112,7 @@ const ProductInfoPage: FC<Props> = ({ product }) => {
   //   };
 
   const onSubmit = (formData: FormData) => {
+    console.log({ formData });
     updateProduct(formData)
       .unwrap()
       .then(() => {

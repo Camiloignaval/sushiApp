@@ -71,6 +71,7 @@ const updateProduct = async (
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
+    console.log({ error });
     await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

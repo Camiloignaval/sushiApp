@@ -7,6 +7,7 @@ import {
   Drawer,
   IconButton,
   TextField,
+  Tooltip,
   Typography,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
@@ -20,6 +21,7 @@ import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { addOrUpdateCart } from "../../store/Slices/CartSlice";
 import { currency } from "../../utils";
 import { FullScreenLoading, ItemCounter } from "../ui";
+import { HelpOutline } from "@mui/icons-material";
 
 interface Props {
   open: boolean;
@@ -142,6 +144,11 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             component="h2"
           >
             Opciones para {promotion.name}
+            <Tooltip title="Si desea cambiar salsas, indicarlo en notas extras">
+              <IconButton size="small" sx={{ opacity: 0.7 }}>
+                <HelpOutline />
+              </IconButton>
+            </Tooltip>
           </Typography>
           <Divider sx={{ mb: 5 }} />
           <Box display={"flex"} paddingX={3.3}>

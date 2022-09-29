@@ -112,15 +112,23 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
     placeId: string,
     addressDir: string
   ) => {
-    const respMatrix = await axios(
-      `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${placeId}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
+    // const respMatrix = await axios(
+    //   `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${placeId}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
+    // );
+
+    const { data: dataDistance } = await axios.post(
+      "/api/google/distancePlaces",
+      {
+        origen: placeIdDesire,
+        destino: placeId,
+      }
     );
 
     // calcular tarifa de delivery
     let deliveryPrice = 1000;
     const {
       data: { rows },
-    } = respMatrix;
+    } = dataDistance;
     const { distance, duration } = rows[0].elements[0];
     if (distance.value > 2000) {
       deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;

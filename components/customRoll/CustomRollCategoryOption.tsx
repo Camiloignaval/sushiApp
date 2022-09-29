@@ -16,6 +16,7 @@ interface Props {
   showPrice?: boolean;
   setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
   label: Label;
+  isVeggie?: boolean;
 }
 
 type Label =
@@ -36,6 +37,7 @@ const dictCategory: any = {
 export const CustomRollCategoryOption: FC<Props> = ({
   listProducts,
   showPrice = false,
+  isVeggie,
   setPromoToSendCart,
   label,
 }) => {
@@ -84,10 +86,20 @@ export const CustomRollCategoryOption: FC<Props> = ({
               control={
                 <Checkbox
                   onChange={handleChange}
-                  disabled={!product.inStock}
+                  disabled={
+                    !product.inStock ||
+                    (isVeggie === true &&
+                      product.type === "filling" &&
+                      product.fillingType === "protein")
+                  }
                   name={product._id}
                   icon={
-                    product.inStock ? (
+                    product.inStock &&
+                    !(
+                      isVeggie === true &&
+                      product.type === "filling" &&
+                      product.fillingType === "protein"
+                    ) ? (
                       <SushiOutlined />
                     ) : (
                       <SushiOutlined color={"#E0E0E0"} />
@@ -107,7 +119,15 @@ export const CustomRollCategoryOption: FC<Props> = ({
                       style={{
                         display: "flex",
                         justifyContent: "center",
-                        opacity: product.inStock ? 1 : 0.3,
+                        opacity:
+                          product.inStock &&
+                          !(
+                            isVeggie === true &&
+                            product.type === "filling" &&
+                            product.fillingType === "protein"
+                          )
+                            ? 1
+                            : 0.3,
                       }}
                       // layout="fixed"
                       // loading="lazy"

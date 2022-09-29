@@ -125,7 +125,13 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
     >
       <Box
         sx={{
-          width: { xs: "100vw", sm: "70vw", md: "50vw", lg: "35vw" },
+          width: {
+            xs: "100vw",
+            sm: "70vw",
+            md: "50vw",
+            lg: "37vw",
+            overflowX: "none",
+          },
         }}
       >
         <IconButton
@@ -153,10 +159,10 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
             display={"flex"}
             justifyContent={"center"}
             id="modal-modal-title"
-            variant="h5"
+            variant="h4"
             component="h2"
           >
-            Escoge tus ingredientes
+            Arma tu Roll
           </Typography>
 
           <FormCustomRoll

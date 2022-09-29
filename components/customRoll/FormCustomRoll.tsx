@@ -1,4 +1,14 @@
-import { Box, FormControl, FormLabel, Grid } from "@mui/material";
+import { HelpOutline } from "@mui/icons-material";
+import {
+  Box,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid,
+  IconButton,
+  Switch,
+  Tooltip,
+} from "@mui/material";
 import Typography from "@mui/material/Typography";
 import React, { useState, FC, useEffect } from "react";
 import { ICartProduct } from "../../interfaces";
@@ -38,21 +48,49 @@ export const FormCustomRoll: FC<Props> = ({
     sauces: settingsData?.customRoll!.sauces ?? 1,
     extraProduct: settingsData?.customRoll!.extraProducts ?? 1,
   });
+  const [qtyProteiMoreVeg, setQtyProteiMoreVeg] = useState(0);
+  const [isVeggie, setIsVeggie] = useState(false);
+
+  useEffect(() => {
+    if (settingsData) {
+      setQtyProteiMoreVeg(
+        settingsData?.customRoll?.proteins +
+          settingsData?.customRoll?.vegetables
+      );
+    }
+  }, [settingsData]);
+
+  console.log({ settingsData });
   useEffect(() => {
     const { extraProduct, proteins, vegetables, envelopes, sauces } =
       promoToSendCart;
-    if (
-      extraProduct!.length > maxQty.extraProduct ||
-      proteins!.length > maxQty.proteins ||
-      vegetables!.length > maxQty.vegetables ||
-      sauces!.length > maxQty.sauces ||
-      envelopes!.length > maxQty.envelopes
-    ) {
-      setisError(true);
+
+    if (isVeggie) {
+      console.log({ isVeggie, elegidos: vegetables!.length, qtyProteiMoreVeg });
+      if (
+        extraProduct!.length > maxQty.extraProduct ||
+        vegetables!.length > qtyProteiMoreVeg ||
+        sauces!.length > maxQty.sauces ||
+        envelopes!.length > maxQty.envelopes
+      ) {
+        setisError(true);
+      } else {
+        setisError(false);
+      }
     } else {
-      setisError(false);
+      if (
+        extraProduct!.length > maxQty.extraProduct ||
+        proteins!.length > maxQty.proteins ||
+        vegetables!.length > maxQty.vegetables ||
+        sauces!.length > maxQty.sauces ||
+        envelopes!.length > maxQty.envelopes
+      ) {
+        setisError(true);
+      } else {
+        setisError(false);
+      }
     }
-  }, [promoToSendCart]);
+  }, [promoToSendCart, isVeggie, qtyProteiMoreVeg]);
 
   const proteinProduct = productData?.filter(
     (product) =>
@@ -91,10 +129,35 @@ export const FormCustomRoll: FC<Props> = ({
           productList={envelopeProduct!}
         />
       </Grid>
+      <Grid container mt={2} ml={2}>
+        <Grid item xs>
+          <Typography variant="h5">
+            Ingredientes{" "}
+            <Tooltip title="En caso de querer doble porción de un producto, seleccionar menos cantidad, e indicar en notas extras">
+              <IconButton size="small" sx={{ opacity: 0.7 }}>
+                <HelpOutline />
+              </IconButton>
+            </Tooltip>
+          </Typography>
+        </Grid>
+        <Grid item xs>
+          <FormControlLabel
+            label="Soy vegetariano!"
+            labelPlacement="start"
+            control={
+              <Switch
+                onChange={(e) => setIsVeggie((prev) => !prev)}
+                checked={isVeggie}
+              />
+            }
+          />
+        </Grid>
+      </Grid>
 
       {/* Proteinas */}
       <Grid container>
         <FormControlByCategory
+          isVeggie={isVeggie}
           promoToSendCart={promoToSendCart}
           setPromoToSendCart={setPromoToSendCart}
           label={"Proteinas"}
@@ -105,6 +168,8 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Vegetales */}
       <Grid container>
         <FormControlByCategory
+          qtyProteiMoreVeg={qtyProteiMoreVeg}
+          isVeggie={isVeggie}
           promoToSendCart={promoToSendCart}
           setPromoToSendCart={setPromoToSendCart}
           label={"Vegetales"}

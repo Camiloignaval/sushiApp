@@ -8,6 +8,7 @@ import {
 } from "@mui/material";
 import React, { FC, useEffect, useState } from "react";
 import { ICartProduct, IProduct } from "../../interfaces";
+import { useGetSettingsStoreQuery } from "../../store/RTKQuery/settings";
 import { CustomRollCategoryOption } from "./CustomRollCategoryOption";
 
 interface Props {
@@ -16,6 +17,8 @@ interface Props {
   productList: IProduct[];
   setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
   promoToSendCart: any;
+  isVeggie?: boolean;
+  qtyProteiMoreVeg?: number;
 }
 
 // type Labels =
@@ -43,14 +46,31 @@ export const FormControlByCategory: FC<Props> = ({
   productList,
   setPromoToSendCart,
   promoToSendCart,
+  isVeggie,
+  qtyProteiMoreVeg,
 }) => {
   const [error, setError] = useState(false);
-  console.log({ label });
-  useEffect(() => {
-    const isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty;
-    setError(isLessThanMax);
-  }, [promoToSendCart[dictCategory[label]], maxQty, label, promoToSendCart]);
 
+  useEffect(() => {
+    let isLessThanMax = false;
+    if (!isVeggie || label !== "Vegetales") {
+      isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty;
+    } else {
+      console.log({ label: label });
+      isLessThanMax =
+        promoToSendCart[dictCategory[label]].length > qtyProteiMoreVeg!;
+    }
+    setError(isLessThanMax);
+  }, [
+    promoToSendCart[dictCategory[label]],
+    maxQty,
+    label,
+    promoToSendCart,
+    isVeggie,
+    qtyProteiMoreVeg,
+  ]);
+
+  console.log({ qtyProteiMoreVeg, label });
   return (
     <FormControl
       error={error}
@@ -59,9 +79,13 @@ export const FormControlByCategory: FC<Props> = ({
       variant="standard"
     >
       <FormLabel component="legend" sx={{ mb: 3 }}>
-        {label === "Vegetales" ? "Vegetales y otros" : label} ({maxQty} máx.)
+        {label === "Vegetales" ? "Vegetales y otros" : label}{" "}
+        {!isVeggie || label !== "Proteinas" ? "(" : ""}
+        {isVeggie ? qtyProteiMoreVeg : maxQty}{" "}
+        {!isVeggie || label !== "Proteinas" ? "máx.)" : ""}
       </FormLabel>
       <CustomRollCategoryOption
+        isVeggie={isVeggie}
         listProducts={productList!}
         setPromoToSendCart={setPromoToSendCart}
         label={label}
@@ -70,7 +94,8 @@ export const FormControlByCategory: FC<Props> = ({
         // sx={{ display: "flex", justifyContent: "end" }}
         id="my-helper-text"
       >
-        {`Favor seleccione máximo ${maxQty}`}{" "}
+        {(!isVeggie || label !== "Proteinas") &&
+          `Favor seleccione máximo ${isVeggie ? qtyProteiMoreVeg : maxQty}`}
         {label == "Salsas" && "incluida(s) en roll"}
         {label == "Salsas" && (
           <Tooltip title="En el carrito podrá incluir más salsas">

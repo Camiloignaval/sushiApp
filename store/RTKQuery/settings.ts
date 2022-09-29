@@ -20,15 +20,15 @@ export const settingsApi = createApi({
   endpoints: (builder) => ({
     getSettingsStore: builder.query<ISettingsStore, void>({
       query: (body) => ({
-        url: `/admin/settings`,
+        url: `/settings`,
         method: "get",
         body,
       }),
-      onQueryStarted(data, { queryFulfilled }) {
-        queryFulfilled.catch(() => {
-          toast.error("Ha ocurrido un error obteniendo configuraciones");
-        });
-      },
+      // onQueryStarted(data, { queryFulfilled }) {
+      //   queryFulfilled.catch(() => {
+      //     toast.error("Ha ocurrido un error obteniendo configuraciones");
+      //   });
+      // },
     }),
     updateConfig: builder.mutation<IResponse, ISettingsStore>({
       query: (body) => ({

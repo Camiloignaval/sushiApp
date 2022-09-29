@@ -1,11 +1,15 @@
+import { format, isAfter, isBefore } from "date-fns";
 import Cookie from "js-cookie";
 import React, { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { IUser } from "../../interfaces";
+import { ISettingsStore, IUser } from "../../interfaces";
 import { RootState } from "../../store";
 import { useCheckTokenQuery } from "../../store/RTKQuery/authApi";
+import { useGetSettingsStoreQuery } from "../../store/RTKQuery/settings";
 import { LogIn } from "../../store/Slices/AuthSlice";
+import esLocale from "date-fns/locale/es";
+
 import {
   addCoupon,
   addDeliveryPrice,
@@ -16,6 +20,8 @@ import {
   updateSummary,
 } from "../../store/Slices/CartSlice";
 import { currency } from "../../utils";
+import { closeStore, openStore } from "../../store/Slices/UISlice";
+import { analizeIfStoreIsOpen } from "../../utils/analizeIfStoreIsOpen";
 
 interface Props {
   children: React.ReactNode;
@@ -24,6 +30,7 @@ interface Props {
 // * En este archivo se crearan las funciones necesarias que este atento el store global
 
 export const PersonalProvider: FC<Props> = ({ children }) => {
+  const { data: settingsData } = useGetSettingsStoreQuery();
   const [firstRender, setFirstRender] = useState(true);
   const { data } = useCheckTokenQuery();
   const dispatch = useDispatch();
@@ -37,14 +44,52 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     valuedPlaceId,
     shippingAddress,
   } = useSelector((state: RootState) => state.cart);
+  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
 
-  // useEffect(() => {
-  //   first
+  // analizar si esta abierta la tienda o no
+  useEffect(() => {
+    if (settingsData) {
+      // const today = format(new Date(), "EEEE", { locale: esLocale });
+      // const hourNow = format(new Date(), "HH:mm");
+      // const horaApertura = format(
+      //   new Date((settingsData as any)[today].scheduleOpen),
+      //   "HH:mm"
+      // );
+      // const horaCierre = format(
+      //   new Date((settingsData as any)[today].scheduleClose),
+      //   "HH:mm"
+      // );
 
-  //   return () => {
-  //     second
-  //   }
-  // }, [shippingAddress])
+      // const isAfterOfOpen = isAfter(
+      //   new Date(`2022-06-06 ${hourNow}`),
+      //   new Date(`2022-06-06 ${horaApertura}`)
+      // );
+      // const isBeforeOfOpen = isBefore(
+      //   new Date(`2022-06-06 ${hourNow}`),
+      //   new Date(`2022-06-06 ${horaCierre}`)
+      // );
+
+      // // if (settingsData.forceOpen) {
+      // //   dispatch(openStore());
+      // //   return;
+      // // }
+      // // if (settingsData.forceClose) {
+      // //   dispatch(closeStore());
+      // //   return;
+      // // }
+
+      // // if (isAfterOfOpen && isBeforeOfOpen) {
+      // //   dispatch(openStore());
+      // //   return;
+      // // }
+      analizeIfStoreIsOpen(settingsData)
+        ? dispatch(openStore())
+        : dispatch(closeStore());
+
+      Cookie.set("settings", JSON.stringify(settingsData));
+      dispatch(closeStore());
+    }
+  }, [settingsData, storeIsOpen]);
 
   // atento al carrito
   // -----------------

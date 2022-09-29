@@ -3,6 +3,7 @@ import {
   Badge,
   Box,
   Button,
+  Chip,
   IconButton,
   Input,
   InputAdornment,
@@ -39,6 +40,7 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
   const { numberOfItems, total } = useSelector(
     (state: RootState) => state.cart
   );
+  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
 
   const onSearchTerm = () => {
     if (searchTerm.trim().length === 0) return;
@@ -134,9 +136,9 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
               >
                 {currency.format(total)}
               </Typography>
-              <NextLink href="/cart" passHref>
+              <NextLink href={!storeIsOpen ? "/" : "/cart"} passHref>
                 <Link>
-                  <IconButton>
+                  <IconButton disabled={!storeIsOpen}>
                     <Badge
                       badgeContent={numberOfItems > 9 ? "+9" : numberOfItems}
                       color="secondary"

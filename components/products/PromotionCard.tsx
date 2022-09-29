@@ -34,6 +34,8 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
   const [open, setOpen] = React.useState(false);
   const [isHovered, setisHovered] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
+  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
+
   const dispatch = useDispatch();
   const productImage = useMemo(() => {
     return isHovered && promotion.inStock
@@ -132,6 +134,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                   </>
                 ) : !isInCart ? (
                   <Button
+                    disabled={!storeIsOpen}
                     onClick={() => setOpen((prev) => !prev)}
                     variant="contained"
                     color="success"

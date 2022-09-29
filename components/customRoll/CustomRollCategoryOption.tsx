@@ -123,7 +123,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
                       backdropFilter: "blur(5.8px)",
                       fontWeight: 800,
                       userSelect: "none",
-                      textShadow: "0px 5px 6px #FFFFFF;",
+                      textShadow: "0px 5px 6px #FFFFFF",
                     }}
                     xs={12}
                   >

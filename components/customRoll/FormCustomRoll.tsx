@@ -27,9 +27,10 @@ export const FormCustomRoll: FC<Props> = ({
   promoToSendCart,
   setPromoToSendCart,
 }) => {
-  const { data: productData } = useGetProductsQuery(null);
-  const { data: settingsData } = useGetSettingsStoreQuery();
-  console.log(settingsData);
+  const { data: productData, isLoading: isLoadingProducts } =
+    useGetProductsQuery(null);
+  const { data: settingsData, isLoading: isLoadingSettings } =
+    useGetSettingsStoreQuery();
   const [maxQty, setMaxQty] = useState({
     proteins: settingsData?.customRoll!.proteins ?? 1,
     vegetables: settingsData?.customRoll!.vegetables ?? 1,
@@ -74,7 +75,7 @@ export const FormCustomRoll: FC<Props> = ({
         )
   );
 
-  if (!productData) {
+  if (!productData || !settingsData || isLoadingProducts || isLoadingSettings) {
     return <FullScreenLoading />;
   }
 

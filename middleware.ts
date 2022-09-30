@@ -14,7 +14,13 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/cart")
   ) {
     try {
-      const settings = JSON.parse(req.cookies.get("settings") ?? "");
+      const settings = req?.cookies?.get("settings")
+        ? JSON.parse(req.cookies.get("settings")!)
+        : undefined;
+      console.log({ settings });
+      if (!settings) {
+        return NextResponse.redirect(`${protocol}/${host}/`);
+      }
       const isOpen = analizeIfStoreIsOpen(settings);
       if (!isOpen) {
         return NextResponse.redirect(`${protocol}/${host}/`);

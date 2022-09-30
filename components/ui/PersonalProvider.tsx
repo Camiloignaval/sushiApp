@@ -49,42 +49,9 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   // analizar si esta abierta la tienda o no
   useEffect(() => {
     if (settingsData) {
-      // const today = format(new Date(), "EEEE", { locale: esLocale });
-      // const hourNow = format(new Date(), "HH:mm");
-      // const horaApertura = format(
-      //   new Date((settingsData as any)[today].scheduleOpen),
-      //   "HH:mm"
-      // );
-      // const horaCierre = format(
-      //   new Date((settingsData as any)[today].scheduleClose),
-      //   "HH:mm"
-      // );
-
-      // const isAfterOfOpen = isAfter(
-      //   new Date(`2022-06-06 ${hourNow}`),
-      //   new Date(`2022-06-06 ${horaApertura}`)
-      // );
-      // const isBeforeOfOpen = isBefore(
-      //   new Date(`2022-06-06 ${hourNow}`),
-      //   new Date(`2022-06-06 ${horaCierre}`)
-      // );
-
-      // // if (settingsData.forceOpen) {
-      // //   dispatch(openStore());
-      // //   return;
-      // // }
-      // // if (settingsData.forceClose) {
-      // //   dispatch(closeStore());
-      // //   return;
-      // // }
-
-      // // if (isAfterOfOpen && isBeforeOfOpen) {
-      // //   dispatch(openStore());
-      // //   return;
-      // // }
-      analizeIfStoreIsOpen(settingsData)
-        ? dispatch(openStore())
-        : dispatch(closeStore());
+      const isOpen = analizeIfStoreIsOpen(settingsData);
+      console.log({ isOpen });
+      isOpen ? dispatch(openStore()) : dispatch(closeStore());
 
       Cookie.set("settings", JSON.stringify(settingsData));
     }

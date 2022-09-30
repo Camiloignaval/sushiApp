@@ -62,7 +62,7 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
           width={40}
           height={40}
           alt="Logo"
-          src="/logos/logo-sushi-panko-pequeno.png"
+          src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko-pequeno_cijlft.png"
         ></Image>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">

@@ -47,15 +47,15 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   const { storeIsOpen } = useSelector((state: RootState) => state.ui);
 
   // analizar si esta abierta la tienda o no
-  useEffect(() => {
-    if (settingsData) {
-      const isOpen = analizeIfStoreIsOpen(settingsData);
-      console.log({ isOpen });
-      isOpen ? dispatch(openStore()) : dispatch(closeStore());
+  // useEffect(() => {
+  //   if (settingsData) {
+  //     const isOpen = analizeIfStoreIsOpen(settingsData);
+  //     console.log({ isOpen });
+  //     isOpen ? dispatch(openStore()) : dispatch(closeStore());
 
-      Cookie.set("settings", JSON.stringify(settingsData));
-    }
-  }, [settingsData, storeIsOpen]);
+  //     Cookie.set("settings", JSON.stringify(settingsData));
+  //   }
+  // }, [settingsData, storeIsOpen]);
 
   // atento al carrito
   // -----------------

@@ -102,13 +102,11 @@ const NewProductPage = () => {
   };
 
   const onSubmit = (formData: FormData) => {
-    console.log({ formData });
     if (formData.type === "filling" && !formData.fillingType)
       return toast.error("Debe seleccionar un tipo de relleno");
     if (!formData.image) return toast.error("Debe seleccionar una imágen");
     if (!formData.type)
       return toast.error("Debe seleccionar un tipo de producto");
-    console.log({ formData });
     updateProduct(formData)
       .unwrap()
       .then(() => {

@@ -26,7 +26,6 @@ interface Props {
 
 const OrderPage: FC<Props> = ({ order }) => {
   const { shippingAddress: sa } = order;
-  console.log({ order });
 
   return (
     <AdminLayout

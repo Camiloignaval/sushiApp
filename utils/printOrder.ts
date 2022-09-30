@@ -45,7 +45,6 @@ interface IProductCustomRoll {
 
 export const printOrder = async (order: IOrder) => {
   const conector = new ConectorPlugin();
-  console.log({ order });
   conector
     .establecerTamanioFuente(2, 2)
     .establecerEnfatizado(1)

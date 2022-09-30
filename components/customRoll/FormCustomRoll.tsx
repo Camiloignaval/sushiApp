@@ -60,13 +60,11 @@ export const FormCustomRoll: FC<Props> = ({
     }
   }, [settingsData]);
 
-  console.log({ settingsData });
   useEffect(() => {
     const { extraProduct, proteins, vegetables, envelopes, sauces } =
       promoToSendCart;
 
     if (isVeggie) {
-      console.log({ isVeggie, elegidos: vegetables!.length, qtyProteiMoreVeg });
       if (
         extraProduct!.length > maxQty.extraProduct ||
         vegetables!.length > qtyProteiMoreVeg ||

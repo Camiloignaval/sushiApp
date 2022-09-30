@@ -75,7 +75,6 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
   useEffect(() => {
     if (promotions) {
       let promosSeparate: any = {};
-      console.log({ promotions });
       promotions!.forEach((promo: IPromotion) => {
         const nameCategory = promo?.category?.name;
         promosSeparate = {
@@ -86,7 +85,6 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
         };
       });
       setPromosByCategory(promosSeparate);
-      console.log({ promosSeparate });
     }
   }, [promotions]);
 

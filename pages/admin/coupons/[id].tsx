@@ -80,7 +80,6 @@ const PromotionInfoPage: FC<Props> = ({ cupon }) => {
   }, [activeMinPurchase]);
 
   const onSubmit = async (formData: FormData) => {
-    console.log("llegue a submit");
     formData.startIn = new Date(formData.startIn).toISOString();
     // eliminar expireIn
     if (!formData.expire && formData?.expireIn) {

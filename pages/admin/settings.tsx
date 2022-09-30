@@ -39,7 +39,6 @@ interface Props {
 }
 
 const SettingsPage: FC<Props> = ({ settings }) => {
-  console.log({ settings });
   const [updateSettings] = useUpdateConfigMutation();
   const { data, isLoading } = useGetSettingsStoreQuery();
 
@@ -54,7 +53,6 @@ const SettingsPage: FC<Props> = ({ settings }) => {
   });
 
   const onSubmit = (formData: ISettingsStore) => {
-    console.log({ formData });
     updateSettings(formData);
   };
 

@@ -37,10 +37,8 @@ export const checkUserEmailPassword = async (
 
 export const findUserByPhone = async (phone: string) => {
   try {
-    console.log("entre a finduser");
     await db.connect();
     const user = await User.findOne({ phone });
-    console.log({ user });
     await db.disconnect();
     if (!user) {
       return null;

@@ -36,7 +36,6 @@ const OrderPage: FC<Props> = ({ order: orderFromServer }) => {
   const router = useRouter();
   const [order, setorder] = useState<IOrder>();
   const [anulateOrderQuery, anulateOrderStatus] = useAnulateOrdersMutation();
-  console.log({ order });
 
   useEffect(() => {
     setorder(orderFromServer);

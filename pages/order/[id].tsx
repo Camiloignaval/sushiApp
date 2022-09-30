@@ -46,7 +46,6 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
   );
 
   useEffect(() => {
-    console.log("analize");
     var colors = ["#bb0000", "#ffffff"];
 
     if (order && !isLoading) {

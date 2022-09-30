@@ -59,13 +59,11 @@ const updatePromotion = async (
           const [fileId, extension] = (img as string)
             .substring(img.lastIndexOf("/") + 1)
             .split(".");
-          console.log("entre y destruire el anterior", fileId);
           await cloudinary.uploader.destroy(fileId);
           cloudinary.api.delete_resources_by_prefix(`SushiApp/${fileId}`);
         }
       })
     );
-    console.log("salio todo bien ");
     await Promotion.findByIdAndUpdate(body._id, body);
     await db.disconnect();
 
@@ -84,7 +82,6 @@ const createPromotion = async (
   res: NextApiResponse<Data>
 ) => {
   try {
-    console.log({ llegue: req.body });
     const { name = "" } = req.body;
     await db.connect();
     const findBySameName = await Promotion.findOne({ name });

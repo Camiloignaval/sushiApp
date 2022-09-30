@@ -56,7 +56,6 @@ export const FormControlByCategory: FC<Props> = ({
     if (!isVeggie || label !== "Vegetales") {
       isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty;
     } else {
-      console.log({ label: label });
       isLessThanMax =
         promoToSendCart[dictCategory[label]].length > qtyProteiMoreVeg!;
     }
@@ -70,7 +69,6 @@ export const FormControlByCategory: FC<Props> = ({
     qtyProteiMoreVeg,
   ]);
 
-  console.log({ qtyProteiMoreVeg, label });
   return (
     <FormControl
       error={error}

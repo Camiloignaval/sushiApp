@@ -120,7 +120,6 @@ const SummaryPage = () => {
       phone: "+56" + orderToSend.shippingAddress.phone,
     };
 
-    console.log({ orderToSend });
     try {
       await createNewOrder(orderToSend).unwrap();
       dispatch(cleanCart());

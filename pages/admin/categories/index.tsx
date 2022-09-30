@@ -141,7 +141,6 @@ const CategoriesPage = () => {
             params: GridCellEditCommitParams // arreglar  GridCellEditCommitParams,
           ) => {
             if (categories.find((c) => c._id)?.name !== params.value) {
-              console.log({ paramsDesdeCommmit: params });
               updateName({ id: params.id, name: params.value });
             }
           }}

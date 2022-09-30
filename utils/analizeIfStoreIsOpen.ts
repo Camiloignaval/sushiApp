@@ -13,7 +13,6 @@ export const analizeIfStoreIsOpen = (settingsData: ISettingsStore) => {
     new Date((settingsData as any)[today].scheduleClose),
     "HH:mm"
   );
-  console.log({ horaApertura, horaCierre });
 
   const isAfterOfOpen = isAfter(
     new Date(`2022-06-06 ${hourNow}`),
@@ -23,7 +22,6 @@ export const analizeIfStoreIsOpen = (settingsData: ISettingsStore) => {
     new Date(`2022-06-06 ${hourNow}`),
     new Date(`2022-06-06 ${horaCierre}`)
   );
-  console.log({ settingsData: settingsData.forceOpen });
   if (settingsData.forceOpen === true) {
     return true;
   }

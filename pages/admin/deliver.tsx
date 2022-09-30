@@ -24,7 +24,6 @@ const DeliverPage = () => {
     `status=dispatched&page=${page + 1}&limit=${pageSize}`
   );
 
-  console.log({ dataOrders });
   const columns: GridColDef[] = [
     {
       field: "id",

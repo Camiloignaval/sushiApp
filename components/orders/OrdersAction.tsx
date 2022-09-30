@@ -90,7 +90,6 @@ export const OrdersActions: React.FC<Props> = ({ data = [], rowsId = [] }) => {
   const handleProcess = () => {
     changeStatus({ ids: rowsId, newStatus: "inprocess" });
     data.forEach((orden) => {
-      console.log({ ordenenhandle: orden });
       printOrder(orden);
     });
     handleClose();

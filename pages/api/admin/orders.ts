@@ -46,7 +46,7 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     await db.disconnect();
     return res.status(200).json(orders as any);
   } catch (error) {
-    console.log({ error });
+    console.log({ errorinorders: error });
     await db.disconnect();
     return res.status(400).json({ message: "Ha ocurrido un error..." });
   }
@@ -62,7 +62,7 @@ const anulateOrder = async (
     await db.disconnect();
     return res.status(200).json({ message: "Eliminadas" });
   } catch (error) {
-    console.log({ error: error.message });
+    console.log({ errorinorders: error });
     await db.disconnect();
 
     return res.status(400).json({ message: "Ha ocurrido un error..." });
@@ -113,7 +113,7 @@ const changeStatus = async (
     return res.status(200).json({ message: "Ordenes actualizadas" });
   } catch (error) {
     await db.disconnect();
-    console.log({ error });
+    console.log({ errorinorders: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

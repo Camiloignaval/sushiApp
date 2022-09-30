@@ -38,7 +38,7 @@ const getPromotions = async (
 
     res.status(200).json(promotions);
   } catch (error) {
-    console.log(error);
+    console.log({ errorinpromotionsclient: error });
     await db.disconnect();
 
     if (error instanceof Error) {

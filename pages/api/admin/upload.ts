@@ -46,7 +46,11 @@ const parseFiles = async (req: NextApiRequest): Promise<string> => {
 };
 
 const uploadFile = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  console.log({ llegue: "hola" });
-  const imageUrl = await parseFiles(req);
-  return res.status(200).json({ message: imageUrl });
+  try {
+    const imageUrl = await parseFiles(req);
+    return res.status(200).json({ message: imageUrl });
+  } catch (error) {
+    console.log({ errorinupload: error });
+    return res.status(400).json({ message: "Ha ocurrido un error" });
+  }
 };

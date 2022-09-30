@@ -73,7 +73,7 @@ const createCoupon = async (
     await db.disconnect();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
-    console.log({ error });
+    console.log({ errorincoupons: error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }

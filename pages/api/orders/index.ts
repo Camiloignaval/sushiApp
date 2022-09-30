@@ -203,7 +203,7 @@ const createNewOrder = async (
     await db.disconnect();
     return res.status(201).json({ message: "creada" });
   } catch (error) {
-    console.log(error.message);
+    console.log({ errororderclient: error.message });
     await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

@@ -22,10 +22,15 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const getOrder = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { orderId } = req.query;
-  await db.connect();
-  const order = await Order.findById(orderId).lean();
-  await db.disconnect();
+  try {
+    const { orderId } = req.query;
+    await db.connect();
+    const order = await Order.findById(orderId).lean();
+    await db.disconnect();
 
-  return res.status(200).json(order);
+    return res.status(200).json(order);
+  } catch (error) {
+    console.log({ errorinordersclient: error });
+    return res.status(200).json({ message: "Ha ocurrido un error" });
+  }
 };

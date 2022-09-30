@@ -36,7 +36,7 @@ const updateSettings = async (
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
     await db.disconnect();
-
+    console.log({ errorinsettings: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -46,7 +46,6 @@ const updateSettings = async (
 };
 const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const body = req.body;
-  console.log({ body });
   try {
     await db.connect();
     const settings = await Settings.findOne({});
@@ -54,7 +53,7 @@ const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(200).json(settings!);
   } catch (error) {
     await db.disconnect();
-
+    console.log({ errorinsettings: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

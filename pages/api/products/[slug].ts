@@ -38,7 +38,7 @@ const getProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     }
     return res.status(200).json(product);
   } catch (error) {
-    console.log(error);
+    console.log({ errorproductclient: error });
     await db.disconnect();
 
     if (error instanceof Error) {

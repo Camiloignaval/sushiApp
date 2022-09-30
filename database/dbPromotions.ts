@@ -5,13 +5,19 @@ import { Product, Promotion } from "../models";
 export const getPromotionById = async (
   id: string
 ): Promise<IPromotion | null> => {
-  await db.connect();
-  const promotion = await Promotion.findById(id).lean();
-  await db.disconnect();
-  if (!promotion) {
+  try {
+    await db.connect();
+    const promotion = await Promotion.findById(id).lean();
+    await db.disconnect();
+    if (!promotion) {
+      return null;
+    }
+    return JSON.parse(JSON.stringify(promotion));
+  } catch (error) {
+    await db.disconnect();
+    console.log({ errordbpromotions: error });
     return null;
   }
-  return JSON.parse(JSON.stringify(promotion));
 };
 
 interface ProductSlugs {
@@ -19,9 +25,15 @@ interface ProductSlugs {
 }
 
 export const getAllPromotions = async (): Promise<IProduct[]> => {
-  await db.connect();
-  const products = await Promotion.find({}).populate("category").lean();
-  await db.disconnect();
+  try {
+    await db.connect();
+    const products = await Promotion.find({}).populate("category").lean();
+    await db.disconnect();
 
-  return JSON.parse(JSON.stringify(products));
+    return JSON.parse(JSON.stringify(products));
+  } catch (error) {
+    await db.disconnect();
+    console.log({ errordbpromotions: error });
+    return [];
+  }
 };

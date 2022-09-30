@@ -43,7 +43,7 @@ const searchProducts = async (
     await db.disconnect();
     return res.status(200).json(products);
   } catch (error) {
-    console.log(error);
+    console.log({ errorsearch: error });
     await db.disconnect();
 
     if (error instanceof Error) {

@@ -22,7 +22,6 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const body = req.body;
-  console.log({ body });
   try {
     await db.connect();
     const settings = await Settings.findOne({});
@@ -30,7 +29,7 @@ const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(200).json(settings!);
   } catch (error) {
     await db.disconnect();
-
+    console.log({ errorsettings: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

@@ -41,6 +41,7 @@ const validCoupon = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     validateCoupon(cupon, +amount);
     return res.status(200).json({ cupon });
   } catch (error) {
+    console.log({ errorincoupon: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

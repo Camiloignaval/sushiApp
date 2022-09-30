@@ -108,6 +108,8 @@ const createPromotion = async (
 
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
+    console.log({ errorinpromotions: error });
+
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }
@@ -132,7 +134,7 @@ const deletePromotion = async (
 
     res.status(200).json({ message: "Promoción eliminada con éxito" });
   } catch (error) {
-    console.log({ error });
+    console.log({ errorinpromotions: error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }

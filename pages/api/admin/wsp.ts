@@ -30,12 +30,13 @@ const sendMessage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         key: process.env.KEY_API_WSP ?? "",
       });
     } catch (error) {
-      console.log({ error });
+      console.log({ errorinwsp: error });
       throw new Error("No ha sido posible enviar mensaje...");
     }
 
     return res.status(200).json({ message: "Mensaje enviado" });
   } catch (error) {
+    console.log({ errorinwsp: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

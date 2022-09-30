@@ -45,14 +45,14 @@ const retryConfirmOrder = async (
       });
       await Order.findByIdAndUpdate({ _id: orderId }, { wspReceived: true });
     } catch (error) {
-      console.log({ error });
+      console.log({ errorinorder: error });
       throw new Error("No ha sido posible enviar mensaje...");
     }
 
     await db.disconnect();
     return res.status(200).json({ message: "Confirmacion exitosa" });
   } catch (error) {
-    // console.log(error);
+    console.log({ errorinorder: error });
     await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

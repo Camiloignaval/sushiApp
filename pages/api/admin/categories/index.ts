@@ -99,6 +99,7 @@ const deleteCategory = async (
     if (!category) throw new Error("Id solicitado no existe");
     res.status(200).json({ message: "Eliminada con éxito" });
   } catch (error) {
+    console.log({ errorincategories: error });
     if (error instanceof Error) {
       await db.disconnect();
 

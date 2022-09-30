@@ -1,1 +1,1 @@
-export * from "./inputImportanceTable";
+export * from "./InputImportanceTable";

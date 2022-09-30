@@ -46,8 +46,8 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     await db.disconnect();
     return res.status(200).json(orders as any);
   } catch (error) {
+    console.log({ error });
     await db.disconnect();
-
     return res.status(400).json({ message: "Ha ocurrido un error..." });
   }
 };

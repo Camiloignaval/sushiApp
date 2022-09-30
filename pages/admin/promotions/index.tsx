@@ -1,4 +1,9 @@
-import { AddOutlined, CategoryOutlined, Delete } from "@mui/icons-material";
+import {
+  AddOutlined,
+  CategoryOutlined,
+  Delete,
+  TextFields,
+} from "@mui/icons-material";
 import {
   Box,
   Button,
@@ -7,11 +12,13 @@ import {
   IconButton,
   Link,
   Switch,
+  TextField,
 } from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import NextLink from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { AdminLayout } from "../../../components/layouts";
+import { InputImportanceTable } from "../../../components/promotions";
 import { FullScreenLoading } from "../../../components/ui";
 import { useDeletePromotion } from "../../../hooks";
 import { IPromotion } from "../../../interfaces";
@@ -31,6 +38,7 @@ const ProductsPage = () => {
   const { data: dataPromotions } = useGetAllPromotionsQuery(null);
   const [updateProduct] = useUpdateProductByPropertyMutation();
   const { onDeletePromotion, deletePromotionStatus } = useDeletePromotion();
+  const [numberImportance, setNumberImportance] = useState(0);
 
   const columns: GridColDef[] = [
     {
@@ -62,7 +70,15 @@ const ProductsPage = () => {
       },
     },
     { field: "type", headerName: "Categoría", flex: 1, minWidth: 100 },
-    { field: "importance", headerName: "N°", flex: 1, minWidth: 50 },
+    // {
+    //   field: "importanceNumber",
+    //   headerName: "N°",
+    //   flex: 1,
+    //   minWidth: 65,
+    //   renderCell: ({ row }: GridValueGetterParams) => (
+    //     <InputImportanceTable num={row.importanceNumber} id={row.id} />
+    //   ),
+    // },
     {
       field: "inStock",
       flex: 1,
@@ -124,7 +140,9 @@ const ProductsPage = () => {
     type: product.category.name,
     inStock: product.inStock,
     price: product.price,
+    importanceNumber: product?.importanceNumber,
   }));
+  console.log({ rows });
 
   return (
     <AdminLayout

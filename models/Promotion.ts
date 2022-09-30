@@ -15,6 +15,7 @@ const promotionSchema = new Schema(
     category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     quantity: { type: Number },
     unit: { type: String },
+    importanceNumber: { type: Number, required: true },
   },
   {
     timestamps: true,

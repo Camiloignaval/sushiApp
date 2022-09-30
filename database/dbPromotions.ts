@@ -27,7 +27,10 @@ interface ProductSlugs {
 export const getAllPromotions = async (): Promise<IProduct[]> => {
   try {
     await db.connect();
-    const products = await Promotion.find({}).populate("category").lean();
+    const products = await Promotion.find({})
+      .sort("-importanceNumber")
+      .populate("category")
+      .lean();
     await db.disconnect();
 
     return JSON.parse(JSON.stringify(products));

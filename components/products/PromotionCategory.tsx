@@ -14,7 +14,10 @@ interface Props {
 
 export const PromotionCategory: FC<Props> = ({ promotions }) => {
   return (
-    <div id={promotions[0]}>
+    <Box
+      sx={{ position: "relative", top: { xs: -50, sm: 0 } }}
+      id={promotions[0]}
+    >
       <Typography
         variant="h1"
         sx={{ marginBottom: 3, marginTop: 5, letterSpacing: 4 }}
@@ -22,6 +25,6 @@ export const PromotionCategory: FC<Props> = ({ promotions }) => {
         <BiCategory style={{ position: "relative", top: 4 }} /> {promotions[0]}
       </Typography>
       <PromotionsList promotions={promotions[1]} />
-    </div>
+    </Box>
   );
 };

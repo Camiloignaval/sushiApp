@@ -11,6 +11,8 @@ export interface IPromotion {
   category: ICategory;
   quantity: number;
   unit: string;
+  importanceNumber: string;
+
   _id?: string;
 }
 

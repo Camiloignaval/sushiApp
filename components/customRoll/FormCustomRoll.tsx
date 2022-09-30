@@ -104,11 +104,10 @@ export const FormCustomRoll: FC<Props> = ({
   const sauseProduct = productData?.filter(
     (product) =>
       product?.type === "sauce" &&
-      product.name
-        .split(" ")
-        .filter((p) =>
-          ["soja", "soya", "teriyaki", "agridulce"].includes(p.toLowerCase())
-        )
+      (product.name.toLowerCase().includes("soja") ||
+        product.name.toLowerCase().includes("agridulce") ||
+        product.name.toLowerCase().includes("soya") ||
+        product.name.toLowerCase().includes("teriyaki"))
   );
 
   if (!productData || !settingsData || isLoadingProducts || isLoadingSettings) {

@@ -41,7 +41,6 @@ interface Props {
 const SettingsPage: FC<Props> = ({ settings }) => {
   const [updateSettings] = useUpdateConfigMutation();
   const { data, isLoading } = useGetSettingsStoreQuery();
-
   const {
     register,
     handleSubmit,

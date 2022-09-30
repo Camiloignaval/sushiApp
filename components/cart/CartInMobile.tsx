@@ -19,7 +19,7 @@ export const CartInMobile: FC<Props> = ({ positionOfMobileCart }) => {
       <Link>
         <Box
           sx={{
-            mt: 4,
+            mt: 8,
             display: { xs: "flex", sm: "none" },
             position: "sticky",
             height: "10px",

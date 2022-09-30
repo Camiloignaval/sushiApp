@@ -20,7 +20,7 @@ const CardInfo: FC<Props> = ({ promotion }) => {
   return (
     // <Box sx={{ px: 1 }}>
     <Grid container item>
-      <CardContent>
+      <CardContent sx={{ mb: 3 }}>
         <Grid item xs={12}>
           <Typography
             display={"flex"}

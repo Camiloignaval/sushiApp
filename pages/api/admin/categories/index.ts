@@ -35,26 +35,47 @@ const getCategories = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) => {
-  await db.connect();
-  const categories = await Category.find(/* condition */)
-    .select("-createdAt -updatedAt")
-    .lean();
-  await db.disconnect();
+  try {
+    await db.connect();
+    const categories = await Category.find(/* condition */)
+      .select("-createdAt -updatedAt")
+      .lean();
+    await db.disconnect();
 
-  res.status(200).json(categories);
+    res.status(200).json(categories);
+  } catch (error) {
+    console.log({ errorincategories0: error });
+    await db.disconnect();
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
 };
 
 const changeName = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { id, name } = req.body;
-  await db.connect();
-  const categories = await Category.findByIdAndUpdate(id, { name });
-  if (!categories) {
-    return res.status(400).json({ message: "Id de categoria no existe" });
+  try {
+    const { id, name } = req.body;
+    await db.connect();
+    const categories = await Category.findByIdAndUpdate(id, { name });
+    if (!categories) {
+      return res.status(400).json({ message: "Id de categoria no existe" });
+    }
+
+    await db.disconnect();
+
+    res.status(200).json({ message: "Actualizado con éxito" });
+  } catch (error) {
+    console.log({ errorincategories1: error });
+
+    await db.disconnect();
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
   }
-
-  await db.disconnect();
-
-  res.status(200).json({ message: "Actualizado con éxito" });
 };
 const newCategory = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
@@ -73,7 +94,7 @@ const newCategory = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
     await db.disconnect();
-
+    console.log({ errorincategories2: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -99,7 +120,7 @@ const deleteCategory = async (
     if (!category) throw new Error("Id solicitado no existe");
     res.status(200).json({ message: "Eliminada con éxito" });
   } catch (error) {
-    console.log({ errorincategories: error });
+    console.log({ errorincategories3: error });
     if (error instanceof Error) {
       await db.disconnect();
 

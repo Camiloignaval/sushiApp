@@ -32,7 +32,7 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     await db.disconnect();
     return res.status(200).json(users);
   } catch (error) {
-    console.log({ errorinuser: error });
+    console.log({ errorinuser1: error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }
@@ -65,7 +65,7 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     await db.disconnect();
     res.status(200).json({ message: "Usuario actualizado" });
   } catch (error) {
-    console.log({ errorinuser: error });
+    console.log({ errorinuser2: error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }

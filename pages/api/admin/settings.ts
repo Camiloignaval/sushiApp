@@ -36,7 +36,7 @@ const updateSettings = async (
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
     await db.disconnect();
-    console.log({ errorinsettings: error });
+    console.log({ errorinsettings1: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -53,7 +53,7 @@ const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(200).json(settings!);
   } catch (error) {
     await db.disconnect();
-    console.log({ errorinsettings: error });
+    console.log({ errorinsettings2: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

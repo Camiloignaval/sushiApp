@@ -31,12 +31,22 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 }
 
 const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  await db.connect();
-  const products = await Product.find().lean();
-  await db.disconnect();
+  try {
+    await db.connect();
+    const products = await Product.find().lean();
+    await db.disconnect();
 
-  // TODO  must update images
-  return res.status(200).json(products);
+    // TODO  must update images
+    return res.status(200).json(products);
+  } catch (error) {
+    console.log({ errorinpromotions0: error });
+
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
 };
 
 const updatePromotion = async (
@@ -69,6 +79,8 @@ const updatePromotion = async (
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
+    console.log({ errorinpromotions1: error });
+
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -105,7 +117,7 @@ const createPromotion = async (
 
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
-    console.log({ errorinpromotions: error });
+    console.log({ errorinpromotions2: error });
 
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
@@ -131,7 +143,7 @@ const deletePromotion = async (
 
     res.status(200).json({ message: "Promoción eliminada con éxito" });
   } catch (error) {
-    console.log({ errorinpromotions: error });
+    console.log({ errorinpromotions3: error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }

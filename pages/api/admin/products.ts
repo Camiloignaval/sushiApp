@@ -39,7 +39,7 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(200).json(products);
   } catch (error) {
     await db.disconnect();
-    console.log({ errorinproducts: error });
+    console.log({ errorinproducts1: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -71,7 +71,7 @@ const updateProduct = async (
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
-    console.log({ errorinproducts: error });
+    console.log({ errorinproducts2: error });
     await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
@@ -100,7 +100,7 @@ const createProduct = async (
     await db.disconnect();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
-    console.log({ errorinproducts: error });
+    console.log({ errorinproducts3: error });
 
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
@@ -123,7 +123,7 @@ const deleteProduct = async (
     await db.disconnect();
     res.status(200).json({ message: "Producto eliminado con éxito" });
   } catch (error) {
-    console.log({ errorinproducts: error });
+    console.log({ errorinproducts4: error });
     await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }

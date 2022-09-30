@@ -29,7 +29,7 @@ const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(200).json(settings!);
   } catch (error) {
     await db.disconnect();
-    console.log({ errorsettings: error });
+    console.log({ errorsettingsclient: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

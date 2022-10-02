@@ -18,16 +18,16 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname.startsWith("/cart")
   ) {
     try {
-      console.log({ analise: "analise" });
-      const settings = req?.cookies?.get("settings")
-        ? JSON.parse(req.cookies.get("settings")!)
-        : undefined;
-      console.log({ settings });
+      // console.log({ analise: "analise" });
+      // const settings = req?.cookies?.get("settings")
+      //   ? JSON.parse(req.cookies.get("settings")!)
+      //   : undefined;
+      // console.log({ settings });
       // if (!settings) {
       //   return NextResponse.redirect(`${protocol}/${host}/`);
       // }
-      const isOpen = analizeIfStoreIsOpen(settings);
-      console.log({ isOpen });
+      // const isOpen = analizeIfStoreIsOpen(settings);
+      // console.log({ isOpen });
       // if (!isOpen) {
       //   return NextResponse.redirect(`${protocol}/${host}/`);
       // }

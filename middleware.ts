@@ -27,7 +27,7 @@ export async function middleware(req: NextRequest) {
       //   return NextResponse.redirect(`${protocol}/${host}/`);
       // }
       const isOpen = analizeIfStoreIsOpen(settings);
-      // console.log({ isOpen });
+      console.log({ isOpen });
       // if (!isOpen) {
       //   return NextResponse.redirect(`${protocol}/${host}/`);
       // }

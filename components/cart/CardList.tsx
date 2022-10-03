@@ -130,7 +130,7 @@ export const CardList: FC<Props> = ({
                                   <VscDebugBreakpointLog
                                     style={{ position: "relative", top: 2 }}
                                   />
-                                  {env.qty! > 1 ? env.qty : ""} {env.name}
+                                  {env.qty! ?? 1} {env.name}
                                 </Typography>
                               </Grid>
                             ))}
@@ -152,7 +152,7 @@ export const CardList: FC<Props> = ({
                                   <VscDebugBreakpointLog
                                     style={{ position: "relative", top: 2 }}
                                   />
-                                  {env.qty! > 1 ? env.qty : ""} {env.name}
+                                  {env.qty! ?? 1} {env.name}
                                 </Typography>
                               </Grid>
                             ))}
@@ -176,7 +176,7 @@ export const CardList: FC<Props> = ({
                                       <VscDebugBreakpointLog
                                         style={{ position: "relative", top: 2 }}
                                       />{" "}
-                                      {env.qty! > 1 ? env.qty : ""} {env.name}
+                                      {env.qty! ?? 1} {env.name}
                                     </Typography>
                                   </Grid>
                                 ))}
@@ -212,7 +212,7 @@ export const CardList: FC<Props> = ({
                                           marginRight: 2,
                                         }}
                                       />
-                                      {s.qty! > 1 ? s.qty : ""} {s.name}
+                                      {s.qty! ?? 1} {s.name}
                                     </>
                                   </Typography>
                                 </Grid>

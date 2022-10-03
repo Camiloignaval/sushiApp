@@ -1,5 +1,5 @@
 import { FormControlLabel, Checkbox, Grid, Chip, Box } from "@mui/material";
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { ICartProduct, IProduct } from "../../interfaces";
 import product from "../../pages/api/admin/product";
 import { SushiFilled } from "../../public/Icons/SushiFilled";
@@ -13,6 +13,7 @@ interface Props {
   addOrRemoveProduct: (name: string) => void;
   promoToSendCart: ICartProduct[];
   setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
+  maxQty: number;
 }
 
 const dictCategory: any = {
@@ -30,7 +31,9 @@ export const ProductWithCounter: FC<Props> = ({
   addOrRemoveProduct,
   promoToSendCart,
   setPromoToSendCart,
+  maxQty,
 }) => {
+  const [selectedQty, setSelectedQty] = useState(0);
   const updatedQuantity = (qty: number) => {
     const copySendCart: any = { ...promoToSendCart };
     const newCategory = copySendCart[dictCategory[label]].map(
@@ -41,48 +44,25 @@ export const ProductWithCounter: FC<Props> = ({
         return p;
       }
     );
-    console.log({
-      prueba: ((promoToSendCart[dictCategory[label]] as any) ?? [])?.find(
-        (p: ICartProduct) => p._id === product._id
-      ),
-    });
-    copySendCart[dictCategory[label]] = newCategory;
-    console.log({ copySendCart });
 
+    copySendCart[dictCategory[label]] = newCategory;
     setPromoToSendCart((prev) => copySendCart);
   };
 
   //   eliminar de productandqty si lo desmarca
   useEffect(() => {
-    //   if (
-    //     !((promoToSendCart[dictCategory[label]] as any) ?? []).find(
-    //       (p: ICartProduct) => p._id === product._id
-    //     )
-    //   ) {
-    //     setproductAndQty((prev) => {
-    //       const newValues = prev[dictCategory[label] as keyof object] as object;
-    //       console.log({ newValues });
-    //       // delete newValues[product?.name as keyof object];
-    //       return {
-    //         ...prev,
-    //         [dictCategory[label]]: newValues,
-    //       };
-    //     });
-    //   }
-  }, [promoToSendCart]);
+    const qtySelected = (
+      (promoToSendCart[dictCategory[label]] as any) ?? []
+    ).reduce((acc: number, curr: IProduct) => acc + (curr?.qty! ?? 0), 0);
+    // console.log({ [label]: qtySelected });
+    setSelectedQty(qtySelected);
+  }, [promoToSendCart[dictCategory[label]]]);
 
   const handleChange = ({
     target: { name },
   }: React.ChangeEvent<HTMLInputElement>) => {
     addOrRemoveProduct(name);
   };
-
-  //   useEffect(() => {
-  //     if (isVeggie && label === "Proteinas") {
-  //       addOrRemoveProduct(product.name);
-  //       // deseleccionar todas las proteinas
-  //     }
-  //   }, [isVeggie]);
 
   return (
     <>
@@ -109,18 +89,7 @@ export const ProductWithCounter: FC<Props> = ({
                 <SushiOutlined color={"#E0E0E0"} />
               )
             }
-            checkedIcon={
-              //   product.inStock &&
-              //   !(
-              //     isVeggie === true &&
-              //     product.type === "filling" &&
-              //     product.fillingType === "protein"
-              //   ) ? (
-              <SushiFilled />
-              //   ) : (
-              //     <SushiOutlined color={"#E0E0E0"} />
-              //   )
-            }
+            checkedIcon={<SushiFilled />}
           />
         }
         label={
@@ -191,6 +160,7 @@ export const ProductWithCounter: FC<Props> = ({
           ) && (
             <Box display={"flex"} justifyContent="start">
               <ItemCounter
+                blockButtonPlus={selectedQty >= maxQty}
                 updatedQuantity={updatedQuantity}
                 currentValue={
                   ((promoToSendCart[dictCategory[label]] as any) ?? [])?.find(

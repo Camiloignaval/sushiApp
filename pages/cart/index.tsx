@@ -80,7 +80,9 @@ const CartPage = () => {
                   }
                   onClick={onSubmitOrder}
                 >
-                  Confirmar datos
+                  {cart.shippingAddress && !isModificable
+                    ? "Confirmar datos"
+                    : "Favor guardar dirección"}
                 </Button>
               </Box>
             </CardContent>

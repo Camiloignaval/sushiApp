@@ -45,6 +45,7 @@ export const FormControlByCategory: FC<Props> = ({
   // setproductAndQty,
 }) => {
   const [error, setError] = useState(false);
+  // const [qtySauces, setqtySauces] = useState(maxQty)
 
   useEffect(() => {
     let isLessThanMax = false;
@@ -88,6 +89,7 @@ export const FormControlByCategory: FC<Props> = ({
         {!isVeggie || label !== "Proteinas" ? "máx.)" : ""}
       </FormLabel>
       <CustomRollCategoryOption
+        maxQty={maxQty}
         promoToSendCart={promoToSendCart}
         isVeggie={isVeggie}
         listProducts={productList!}

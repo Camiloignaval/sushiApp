@@ -51,6 +51,11 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
     quantity: 1,
     extraProduct: [],
   });
+  const [qtySauceInTotal, setQtySauceInTotal] = useState(promotion.qtySauces);
+
+  useEffect(() => {
+    setQtySauceInTotal(promoToSendCart.quantity * promotion.qtySauces);
+  }, [promoToSendCart.quantity]);
 
   //TODO avisar que guarde cambios antes de cerrar modal
 
@@ -67,9 +72,15 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
       }));
       setSaucesChoose(
         (promoFindInCart.sauces as IProduct[])
-          ? (promoFindInCart.sauces as IProduct[])
+          ? promotion.includesSauces.map((sauce) => {
+              const qtyFound =
+                promoFindInCart?.sauces?.find((s: any) => s._id === sauce._id)
+                  ?.qty ?? 0;
+              return { ...sauce, qty: qtyFound };
+            })
           : []
       );
+      setQtySauceInTotal(promoFindInCart.quantity * promotion.qtySauces);
       setisInCart(true);
     } else {
       setisInCart(false);
@@ -86,17 +97,41 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
 
   useEffect(() => {
     // if (Object.values(saucesChoose).length > 0) {
-    (((saucesChoose as IProduct[]) ?? [])?.reduce(
-      (acc: Number, curr: IProduct) => Number(acc) + Number(curr.qty ?? 0),
-      0
-    ) as number) >= promotion.qtySauces
-      ? setBlockPlusButton(true)
-      : setBlockPlusButton(false);
+    if (
+      (((saucesChoose as IProduct[]) ?? [])?.reduce(
+        (acc: Number, curr: IProduct) => Number(acc) + Number(curr.qty ?? 0),
+        0
+      ) as number) === qtySauceInTotal
+    ) {
+      setBlockPlusButton(true);
+      setError(false);
+
+      return;
+    } else if (
+      (((saucesChoose as IProduct[]) ?? [])?.reduce(
+        (acc: Number, curr: IProduct) => Number(acc) + Number(curr.qty ?? 0),
+        0
+      ) as number) > qtySauceInTotal
+    ) {
+      setBlockPlusButton(true);
+      setError(true);
+      return;
+    } else {
+      setError(false);
+      setBlockPlusButton(false);
+      return;
+    }
     // }
-  }, [saucesChoose]);
+  }, [saucesChoose, qtySauceInTotal]);
+
+  // ver si bajo la cantidad de promos, y tiene mas salsas
+  // useEffect(() => {
+  //   if()
+  // }, [qtySauceInTotal])
 
   const onConfirm = () => {
     const saucesChooseFiler = [...saucesChoose].filter((s) => s.qty! > 0);
+
     // Buscar siesque ya existe en el carro para actualizarlo y no sobreescribirlo si esque esta
     const cloneCart = [...cart];
     const isInCart = cloneCart.some((promo) => promo._id === promotion._id);
@@ -182,7 +217,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
           {promotion.qtySauces > 0 && (
             <>
               <Typography variant="subtitle2">
-                Escoje {promotion.qtySauces} salsas (incluidas)
+                Escoje {qtySauceInTotal} salsas (incluidas)
               </Typography>
 
               <Typography
@@ -248,6 +283,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
 
         <CardActions sx={{ margin: "0 20px" }}>
           <Button
+            disabled={error}
             onClick={onConfirm}
             fullWidth
             color="primary"

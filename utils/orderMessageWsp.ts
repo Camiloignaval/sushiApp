@@ -26,9 +26,7 @@ export const orderMessageWsp = (order: IOrder) => {
 
           .map((i) => {
             console.log({ i });
-            return ` ${i.qty! > 1 ? i.qty : ""}${i.qty! > 1 ? " " : ""}${
-              i.name
-            }`;
+            return ` ${i.qty!} ${i.name}`;
           })
           .join(" -");
         message.push(`${stringRelleno}\n`);
@@ -37,10 +35,7 @@ export const orderMessageWsp = (order: IOrder) => {
       if (item?.extraProduct) {
         message.push(" -Extras: ");
         const stringExtras = item.extraProduct
-          .map(
-            (i) =>
-              ` ${i.qty! > 1 ? i.qty : ""}${i.qty! > 1 ? " " : ""}${i.name}`
-          )
+          .map((i) => ` ${i.qty!} ${i.name}`)
           .join(" -");
         message.push(`${stringExtras}\n`);
       }
@@ -49,12 +44,7 @@ export const orderMessageWsp = (order: IOrder) => {
       // todo arreglar
       if (item.sauces) {
         const stringRelleno = item.sauces
-          .map(
-            (i) =>
-              ` ${i.qty! > 1 ? i.qty : ""}${i.qty! > 1 ? " " : ""}${
-                i.name
-              }` /* (i?.name ? i.name.replace("Salsa de", "") : "") */
-          )
+          .map((i) => ` ${i.qty!} ${i.name}`)
           .join(" -");
         message.push(`${stringRelleno}\n`);
       }
@@ -64,12 +54,7 @@ export const orderMessageWsp = (order: IOrder) => {
         // todo arreglar
         if (item.sauces) {
           const stringSauces = item.sauces
-            .map(
-              (i) =>
-                ` ${i.qty! > 1 ? i.qty : ""}${i.qty! > 1 ? " " : ""}${
-                  i.name
-                }` /* (i?.name ? i.name.replace("Salsa de", "") : "") */
-            )
+            .map((i) => ` ${i.qty!} ${i.name}`)
             .join(" -");
           message.push(`${stringSauces}\n`);
         }

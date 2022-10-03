@@ -21,6 +21,7 @@ interface Props {
   label: Label;
   isVeggie?: boolean;
   promoToSendCart: ICartProduct[];
+  maxQty: number;
 }
 
 type Label =
@@ -45,6 +46,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
   setPromoToSendCart,
   label,
   promoToSendCart,
+  maxQty,
 }) => {
   const addOrRemoveProduct = (name: string) => {
     setPromoToSendCart((prev) => {
@@ -81,6 +83,7 @@ export const CustomRollCategoryOption: FC<Props> = ({
         {listProducts?.map((product, i) => (
           <Grid key={i} item xs={6} sm={4} lg={3} sx={{ position: "relative" }}>
             <ProductWithCounter
+              maxQty={maxQty}
               setPromoToSendCart={setPromoToSendCart}
               promoToSendCart={promoToSendCart}
               product={product}

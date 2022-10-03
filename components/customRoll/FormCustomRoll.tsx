@@ -52,6 +52,14 @@ export const FormCustomRoll: FC<Props> = ({
     }
   }, [settingsData]);
 
+  // actualizar cantidadmax de salsas dependiendo de qty de rolls
+  useEffect(() => {
+    setMaxQty((prev) => ({
+      ...prev,
+      sauces: settingsData?.customRoll!.sauces! * promoToSendCart.quantity,
+    }));
+  }, [promoToSendCart.quantity]);
+
   // limpiar proteinas si hubiese alguna y selecciona soy vegetariano
   useEffect(() => {
     if (isVeggie) {

@@ -126,9 +126,16 @@ export const OrdenSummary: FC<Props> = ({
       {editable ? (
         !cart?.coupon ? (
           <Grid item xs={6} mt={2} display="flex" justifyContent="end">
-            <Grid container>
+            <Grid spacing={1} container>
               {/* <Typography>{currency.format(infoToShow.tax)}</Typography> */}
-              <Grid item xs display="flex" justifyContent="end">
+              <Grid
+                item
+                xs={6}
+                md={8}
+                lg={9}
+                display="flex"
+                justifyContent="end"
+              >
                 <TextField
                   label="Ingrese"
                   variant="standard"
@@ -144,14 +151,16 @@ export const OrdenSummary: FC<Props> = ({
                   }}
                 />
               </Grid>{" "}
-              <Grid item xs={1}>
-                <IconButton
+              <Grid item xs={6} md={4} lg={3}>
+                <Button
                   disabled={inputCoupon === ""}
                   onClick={onQueryCoupon}
                   size="small"
+                  color="primary"
                 >
-                  <HiOutlineTicket fontSize="inherit" />
-                </IconButton>
+                  {/* <HiOutlineTicket fontSize="inherit" /> */}
+                  Canjear
+                </Button>
               </Grid>
             </Grid>
           </Grid>

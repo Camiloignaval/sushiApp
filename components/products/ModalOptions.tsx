@@ -96,17 +96,19 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
   }, [saucesChoose]);
 
   const onConfirm = () => {
+    const saucesChooseFiler = [...saucesChoose].filter((s) => s.qty! > 0);
     // Buscar siesque ya existe en el carro para actualizarlo y no sobreescribirlo si esque esta
     const cloneCart = [...cart];
     const isInCart = cloneCart.some((promo) => promo._id === promotion._id);
     const newCart = cloneCart.map((promo) => {
       if (promo._id === promotion._id) {
-        return { ...promoToSendCart, sauces: saucesChoose };
+        return { ...promoToSendCart, sauces: saucesChooseFiler };
       }
       return promo;
     });
     // Si no estaba, se le agrega al carrito
-    !isInCart && newCart.push({ ...promoToSendCart, sauces: saucesChoose });
+    !isInCart &&
+      newCart.push({ ...promoToSendCart, sauces: saucesChooseFiler });
     console.log({ newCart });
     dispatch(addOrUpdateCart(newCart));
     setOpen(false);
@@ -177,19 +179,24 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
           </Typography>
           <Divider sx={{ mb: 5 }} />
           {/* salsas incluidas */}
-          <Typography variant="subtitle2">
-            Escoje {promotion.qtySauces} salsas (incluidas)
-          </Typography>
-          <Typography
-            mb={2}
-            variant="caption"
-            color="grey"
-            sx={{ fontStyle: "italic" }}
-            display="flex"
-            justifyContent={"start"}
-          >
-            Salsas extra podrán ser agregadas en el carrito*
-          </Typography>
+          {promotion.qtySauces > 0 && (
+            <>
+              <Typography variant="subtitle2">
+                Escoje {promotion.qtySauces} salsas (incluidas)
+              </Typography>
+
+              <Typography
+                mb={2}
+                variant="caption"
+                color="grey"
+                sx={{ fontStyle: "italic" }}
+                display="flex"
+                justifyContent={"start"}
+              >
+                Salsas extra podrán ser agregadas en el carrito*
+              </Typography>
+            </>
+          )}
           <SeleccionableSauces
             blockPlusButton={blockPlusButton}
             sauces={promotion.includesSauces ?? []}

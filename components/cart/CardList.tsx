@@ -54,7 +54,6 @@ export const CardList: FC<Props> = ({
   const [noteOpen, setNoteOpen] = useState(false);
   const { isLoggedIn } = useSelector((state: RootState) => state.auth);
 
-  console.log({ orderProduct });
   const handleDelete = (product: ICartProduct) => {
     dispatch(removeFromCart(product._id ?? ""));
   };

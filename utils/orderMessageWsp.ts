@@ -23,25 +23,57 @@ export const orderMessageWsp = (order: IOrder) => {
           ...(item.proteins ?? []),
           ...(item.vegetables ?? []),
         ]
-          .map((i) => i.name)
-          .join("-");
+
+          .map((i) => {
+            console.log({ i });
+            return ` ${i.qty! > 1 ? i.qty : ""}${i.qty! > 1 ? " " : ""}${
+              i.name
+            }`;
+          })
+          .join(" -");
         message.push(`${stringRelleno}\n`);
       }
       // extras
       if (item?.extraProduct) {
         message.push(" -Extras: ");
-        const stringExtras = item.extraProduct.map((i) => i.name).join("-");
+        const stringExtras = item.extraProduct
+          .map(
+            (i) =>
+              ` ${i.qty! > 1 ? i.qty : ""}${i.qty! > 1 ? " " : ""}${i.name}`
+          )
+          .join(" -");
         message.push(`${stringExtras}\n`);
       }
       // Salsas
       message.push(" -Salsas: ");
       // todo arreglar
-      // if (item.sauces) {
-      //   const stringRelleno = item.sauces
-      //     .map((i) => (i?.name ? i.name.replace("Salsa de", "") : ""))
-      //     .join("-");
-      //   message.push(`${stringRelleno}\n`);
-      // }
+      if (item.sauces) {
+        const stringRelleno = item.sauces
+          .map(
+            (i) =>
+              ` ${i.qty! > 1 ? i.qty : ""}${i.qty! > 1 ? " " : ""}${
+                i.name
+              }` /* (i?.name ? i.name.replace("Salsa de", "") : "") */
+          )
+          .join(" -");
+        message.push(`${stringRelleno}\n`);
+      }
+    } else {
+      if ((item.sauces?.length ?? []) > 0) {
+        message.push(" -Salsas: ");
+        // todo arreglar
+        if (item.sauces) {
+          const stringSauces = item.sauces
+            .map(
+              (i) =>
+                ` ${i.qty! > 1 ? i.qty : ""}${i.qty! > 1 ? " " : ""}${
+                  i.name
+                }` /* (i?.name ? i.name.replace("Salsa de", "") : "") */
+            )
+            .join(" -");
+          message.push(`${stringSauces}\n`);
+        }
+      }
     }
     if (item?.note) {
       // notas
@@ -60,5 +92,6 @@ export const orderMessageWsp = (order: IOrder) => {
   message.push(
     `\nPuedes ver el estado de tu pedido en el siguiente link: ${process.env.HOST_NAME}/order/${order._id}`
   );
+  console.log({ msg: message.join("") });
   return message.join("");
 };

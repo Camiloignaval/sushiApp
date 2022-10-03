@@ -11,7 +11,7 @@ import {
 } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import React, { useState, FC, useEffect } from "react";
-import { ICartProduct } from "../../interfaces";
+import { ICartProduct, IProduct } from "../../interfaces";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { useGetSettingsStoreQuery } from "../../store/RTKQuery/settings";
 import { FullScreenLoading } from "../ui";
@@ -23,14 +23,6 @@ interface Props {
   promoToSendCart: ICartProduct;
   setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
 }
-
-const maxQty = {
-  proteins: 1,
-  vegetables: 2,
-  envelopes: 1,
-  sauces: 1,
-  extraProduct: 2,
-};
 
 export const FormCustomRoll: FC<Props> = ({
   setisError,
@@ -60,15 +52,27 @@ export const FormCustomRoll: FC<Props> = ({
     }
   }, [settingsData]);
 
+  // limpiar proteinas si hubiese alguna y selecciona soy vegetariano
+  useEffect(() => {
+    if (isVeggie) {
+      setPromoToSendCart((prev) => ({ ...prev, proteins: [] }));
+    }
+  }, [isVeggie]);
+
   useEffect(() => {
     const { extraProduct, proteins, vegetables, envelopes, sauces } =
       promoToSendCart;
 
     if (isVeggie) {
       if (
-        extraProduct!.length > maxQty.extraProduct ||
-        vegetables!.length > qtyProteiMoreVeg ||
-        sauces!.length > maxQty.sauces ||
+        extraProduct!.reduce((acc, curr) => +acc + +(curr?.qty ?? 0), 0) >
+          maxQty.extraProduct ||
+        vegetables!.reduce((acc, curr) => +acc + +(curr?.qty ?? 0), 0) >
+          qtyProteiMoreVeg ||
+        (sauces as IProduct[])?.reduce(
+          (acc, curr) => +acc + +(curr?.qty ?? 0),
+          0
+        ) > maxQty.sauces ||
         envelopes!.length > maxQty.envelopes
       ) {
         setisError(true);
@@ -77,10 +81,16 @@ export const FormCustomRoll: FC<Props> = ({
       }
     } else {
       if (
-        extraProduct!.length > maxQty.extraProduct ||
-        proteins!.length > maxQty.proteins ||
-        vegetables!.length > maxQty.vegetables ||
-        sauces!.length > maxQty.sauces ||
+        extraProduct!.reduce((acc, curr) => +acc + +(curr?.qty ?? 0), 0) >
+          maxQty.extraProduct ||
+        proteins!.reduce((acc, curr) => +acc + +(curr?.qty ?? 0), 0) >
+          maxQty.proteins ||
+        vegetables!.reduce((acc, curr) => +acc + +(curr?.qty ?? 0), 0) >
+          maxQty.vegetables ||
+        (sauces as IProduct[])!.reduce(
+          (acc, curr) => +acc + +(curr?.qty ?? 0),
+          0
+        ) > maxQty.sauces ||
         envelopes!.length > maxQty.envelopes
       ) {
         setisError(true);
@@ -154,6 +164,8 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Proteinas */}
       <Grid container>
         <FormControlByCategory
+          // productAndQty={productAndQty}
+          // setproductAndQty={setproductAndQty}
           isVeggie={isVeggie}
           promoToSendCart={promoToSendCart}
           setPromoToSendCart={setPromoToSendCart}
@@ -165,6 +177,8 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Vegetales */}
       <Grid container>
         <FormControlByCategory
+          // productAndQty={productAndQty}
+          // setproductAndQty={setproductAndQty}
           qtyProteiMoreVeg={qtyProteiMoreVeg}
           isVeggie={isVeggie}
           promoToSendCart={promoToSendCart}
@@ -178,6 +192,8 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Salsas */}
       <Grid container>
         <FormControlByCategory
+          // productAndQty={productAndQty}
+          // setproductAndQty={setproductAndQty}
           promoToSendCart={promoToSendCart}
           setPromoToSendCart={setPromoToSendCart}
           label={"Salsas"}
@@ -189,6 +205,8 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Extras */}
       <Grid container>
         <FormControlByCategory
+          // productAndQty={productAndQty}
+          // setproductAndQty={setproductAndQty}
           promoToSendCart={promoToSendCart}
           setPromoToSendCart={setPromoToSendCart}
           label={"Extras"}

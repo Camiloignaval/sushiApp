@@ -44,26 +44,37 @@ const createNewOrder = async (
     if (customRolls?.length > 0) {
       await Promise.all(
         customRolls.map(async (p) => {
+          console.log({ p: JSON.stringify(p) });
           const idsToSearch = [
             ...(p.envelopes ?? []),
             ...(p?.extraProduct ?? []),
           ].map((e) => e._id);
+          const prodQtyId = [
+            ...(p.envelopes ?? []),
+            ...(p?.extraProduct ?? []),
+          ].map((e) => ({ id: e._id, qty: e.qty, name: e.name }));
           const prod = await Product.find({ _id: { $in: idsToSearch } }).select(
-            "price"
+            "price name"
           );
           if (prod) {
             priceFinalOfRollsPersonalized +=
-              prod.reduce((acc, curr) => acc + curr.price, 0) * +p.quantity;
+              prod.reduce((acc, curr) => {
+                return (
+                  acc +
+                  curr.price *
+                    (prodQtyId.find((p) => p.name === curr.name)?.qty ?? 1)
+                );
+              }, 0) * +p.quantity;
           }
         })
       );
     }
+    console.log({ priceFinalOfRollsPersonalized });
     // calculo de promociones
     let priceTotalPromos = 0;
     const promos = body.orderItems.filter(
       (item) => item.name !== "Roll personalizado"
     );
-
     if (promos?.length > 0) {
       await Promise.all(
         promos.map(async (promo) => {
@@ -98,6 +109,7 @@ const createNewOrder = async (
 
     // TODO falta sumar despacho
     if (subTotal !== body.subTotal) {
+      console.log({ subTotal, body: body.subTotal });
       throw new Error("Ha ocurrido un error, valores han sido alterados");
     }
 

@@ -5,6 +5,7 @@ export interface IProduct {
   inStock: boolean;
   price: number;
   type: IType;
+  qty?: number;
   fillingType?: IFillingType;
   createdAt?: string;
   updatedAt?: string;

@@ -21,13 +21,6 @@ interface Props {
   qtyProteiMoreVeg?: number;
 }
 
-// type Labels =
-//   | "proteins"
-//   | "envelopes"
-//   | "sauces"
-//   | "vegetables"
-//   | "extraProduct";
-
 const dictCategory: indexType = {
   Proteinas: "proteins",
   Envolturas: "envelopes",
@@ -48,16 +41,28 @@ export const FormControlByCategory: FC<Props> = ({
   promoToSendCart,
   isVeggie,
   qtyProteiMoreVeg,
+  // productAndQty,
+  // setproductAndQty,
 }) => {
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let isLessThanMax = false;
-    if (!isVeggie || label !== "Vegetales") {
-      isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty;
+    if (label === "Envolturas") {
+      console.log("entre aqui");
+      isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty!;
+    } else if (!isVeggie || label !== "Vegetales") {
+      isLessThanMax =
+        promoToSendCart[dictCategory[label]].reduce(
+          (acc: number, curr: IProduct) => +acc + +(curr?.qty ?? 0),
+          0
+        ) > maxQty;
     } else {
       isLessThanMax =
-        promoToSendCart[dictCategory[label]].length > qtyProteiMoreVeg!;
+        promoToSendCart[dictCategory[label]].reduce(
+          (acc: number, curr: IProduct) => +acc + +(curr?.qty ?? 0),
+          0
+        ) > qtyProteiMoreVeg!;
     }
     setError(isLessThanMax);
   }, [
@@ -83,15 +88,13 @@ export const FormControlByCategory: FC<Props> = ({
         {!isVeggie || label !== "Proteinas" ? "máx.)" : ""}
       </FormLabel>
       <CustomRollCategoryOption
+        promoToSendCart={promoToSendCart}
         isVeggie={isVeggie}
         listProducts={productList!}
         setPromoToSendCart={setPromoToSendCart}
         label={label}
       />
-      <FormHelperText
-        // sx={{ display: "flex", justifyContent: "end" }}
-        id="my-helper-text"
-      >
+      <FormHelperText id="my-helper-text">
         {(!isVeggie || label !== "Proteinas") &&
           `Favor seleccione máximo ${isVeggie ? qtyProteiMoreVeg : maxQty}`}
         {label == "Salsas" && "incluida(s) en roll"}

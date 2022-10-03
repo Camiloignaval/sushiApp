@@ -43,8 +43,6 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   },
 }));
 
-const isAdmin = true;
-
 export const CardList: FC<Props> = ({
   editable = false,
   orderProduct = false,
@@ -52,6 +50,7 @@ export const CardList: FC<Props> = ({
   const dispatch = useDispatch();
   const { cart } = useSelector((state: RootState) => state.cart);
   const [noteOpen, setNoteOpen] = useState(false);
+  const { isLoggedIn } = useSelector((state: RootState) => state.auth);
 
   const onNewCartQty = (product: ICartProduct, newQty: number) => {
     // const productClone = { ...product };
@@ -107,7 +106,10 @@ export const CardList: FC<Props> = ({
                                 style={{ margin: "0 30px 0 0" }}
                               >
                                 <Typography variant="caption">
-                                  <VscDebugBreakpointLog /> {env.name}
+                                  <VscDebugBreakpointLog
+                                    style={{ position: "relative", top: 2 }}
+                                  />{" "}
+                                  {env.name}
                                 </Typography>
                               </Grid>
                             ))}
@@ -129,7 +131,32 @@ export const CardList: FC<Props> = ({
                                 style={{ margin: "0 30px 0 0" }}
                               >
                                 <Typography variant="caption">
-                                  <VscDebugBreakpointLog /> {env.name}
+                                  <VscDebugBreakpointLog
+                                    style={{ position: "relative", top: 2 }}
+                                  />
+                                  {env.qty! > 1 ? env.qty : ""} {env.name}
+                                </Typography>
+                              </Grid>
+                            ))}
+                          </Grid>
+                          <Typography variant="subtitle2" marginBottom={-1}>
+                            Salsas
+                          </Typography>
+                          <Grid
+                            container
+                            style={{ margin: "0", display: "flex" }}
+                          >
+                            {(product.sauces! as IProduct[]).map((env, i) => (
+                              <Grid
+                                key={i}
+                                item
+                                style={{ margin: "0 30px 0 0" }}
+                              >
+                                <Typography variant="caption">
+                                  <VscDebugBreakpointLog
+                                    style={{ position: "relative", top: 2 }}
+                                  />
+                                  {env.qty! > 1 ? env.qty : ""} {env.name}
                                 </Typography>
                               </Grid>
                             ))}
@@ -150,7 +177,10 @@ export const CardList: FC<Props> = ({
                                     style={{ margin: "0 30px 0 0" }}
                                   >
                                     <Typography variant="caption">
-                                      <VscDebugBreakpointLog /> {env.name}
+                                      <VscDebugBreakpointLog
+                                        style={{ position: "relative", top: 2 }}
+                                      />{" "}
+                                      {env.qty! > 1 ? env.qty : ""} {env.name}
                                     </Typography>
                                   </Grid>
                                 ))}
@@ -159,6 +189,39 @@ export const CardList: FC<Props> = ({
                           )}
                         </Box>
                       )}
+                    </Typography>
+                    <Typography variant="body1">
+                      {product.name !== "Roll personalizado" &&
+                        (Object.values(product?.sauces!) ?? []).length > 0 && (
+                          <Box>
+                            <Typography variant="subtitle2" marginBottom={-1}>
+                              Salsas
+                            </Typography>
+                            <Grid
+                              container
+                              style={{ margin: "0", display: "flex" }}
+                            >
+                              {Object.entries(product?.sauces!)!.map((s, i) => (
+                                <Grid
+                                  key={i}
+                                  item
+                                  style={{ margin: "0 30px 0 0" }}
+                                >
+                                  <Typography variant="caption">
+                                    <VscDebugBreakpointLog
+                                      style={{
+                                        position: "relative",
+                                        top: 2,
+                                        marginRight: 2,
+                                      }}
+                                    />
+                                    {s[1]} {s[0]}
+                                  </Typography>
+                                </Grid>
+                              ))}
+                            </Grid>
+                          </Box>
+                        )}
                     </Typography>
                   </Box>
                 </Grid>
@@ -173,45 +236,42 @@ export const CardList: FC<Props> = ({
                     {currency.format(+product.price)} <small>c/u</small>
                   </Typography>
 
-                  {editable ||
-                    (isAdmin && (
-                      <>
-                        {!isAdmin && (
-                          <Button
-                            onClick={() =>
-                              handleDelete(product as ICartProduct)
+                  {(editable || isLoggedIn) && (
+                    <>
+                      {!isLoggedIn && (
+                        <Button
+                          onClick={() => handleDelete(product as ICartProduct)}
+                          variant="text"
+                          color="secondary"
+                        >
+                          Eliminar
+                        </Button>
+                      )}
+                      {/* notas especiales */}
+                      {product.note && (
+                        <>
+                          <HtmlTooltip
+                            title={
+                              <>
+                                <Typography color="inherit">
+                                  Notas especiales
+                                </Typography>
+                                {product.note}
+                              </>
                             }
-                            variant="text"
-                            color="secondary"
+                            placement="left-start"
                           >
-                            Eliminar
-                          </Button>
-                        )}
-                        {/* notas especiales */}
-                        {product.note && (
-                          <>
-                            <HtmlTooltip
-                              title={
-                                <>
-                                  <Typography color="inherit">
-                                    Notas especiales
-                                  </Typography>
-                                  {product.note}
-                                </>
-                              }
-                              placement="left-start"
+                            <IconButton
+                              onClick={() => setNoteOpen(true)}
+                              aria-label="delete"
                             >
-                              <IconButton
-                                onClick={() => setNoteOpen(true)}
-                                aria-label="delete"
-                              >
-                                <TextSnippetOutlined />
-                              </IconButton>
-                            </HtmlTooltip>
-                          </>
-                        )}
-                      </>
-                    ))}
+                              <TextSnippetOutlined />
+                            </IconButton>
+                          </HtmlTooltip>
+                        </>
+                      )}
+                    </>
+                  )}
                 </Grid>
               </Grid>
             </Box>

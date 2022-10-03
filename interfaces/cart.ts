@@ -8,7 +8,7 @@ export interface ICartProduct {
   extraProduct?: IProduct[];
   proteins?: IProduct[];
   vegetables?: IProduct[];
-  sauces?: IProduct[];
+  sauces?: IProduct[] | object;
   envelopes?: IProduct[];
   note?: string;
   type?: string;

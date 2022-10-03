@@ -421,7 +421,7 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories, sauces }) => {
                       </Box>
                     )}
                     label="Salsas seleccionables"
-                    value={getValues("includesSauces")}
+                    value={getValues("includesSauces") ?? []}
                     onChange={({ target: { value } }) =>
                       setValue("includesSauces", value as any, {
                         shouldValidate: true,

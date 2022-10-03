@@ -62,6 +62,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
         extraProduct: promoFindInCart.extraProduct,
         note: promoFindInCart.note ? promoFindInCart.note : undefined,
       }));
+      setSaucesChoose(promoFindInCart.sauces ? promoFindInCart.sauces : {});
       setisInCart(true);
     } else {
       setisInCart(false);
@@ -97,17 +98,17 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
     const isInCart = cloneCart.some((promo) => promo._id === promotion._id);
     const newCart = cloneCart.map((promo) => {
       if (promo._id === promotion._id) {
-        return promoToSendCart;
+        return { ...promoToSendCart, sauces: saucesChoose };
       }
       return promo;
     });
     // Si no estaba, se le agrega al carrito
-    !isInCart && newCart.push(promoToSendCart);
+    !isInCart && newCart.push({ ...promoToSendCart, sauces: saucesChoose });
 
-    // dispatch(addOrUpdateCart(newCart));
-    // setOpen(false);
-    // setisInCart(true);
-    // toast.success(`${promotion.name} agregada con éxito`, { duration: 3000 });
+    dispatch(addOrUpdateCart(newCart));
+    setOpen(false);
+    setisInCart(true);
+    toast.success(`${promotion.name} agregada con éxito`, { duration: 3000 });
   };
 
   const updatedQuantity = (num: number) => {
@@ -172,34 +173,20 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             </Tooltip>
           </Typography>
           <Divider sx={{ mb: 5 }} />
-          <Box display={"flex"} paddingX={3.3}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Cantidad
-            </Typography>
-
-            <Box sx={{ flexGrow: 1 }} />
-
-            <ItemCounter
-              updatedQuantity={updatedQuantity}
-              currentValue={+promoToSendCart.quantity}
-            />
-          </Box>
-
-          <Box justifyContent={"end"} display="flex" marginX={4}>
-            <Typography variant="h6">
-              {promotion.inOffer
-                ? currency.format(
-                    +promotion!.offerPrice! * +promoToSendCart.quantity
-                  )
-                : currency.format(+promotion.price * +promoToSendCart.quantity)}
-            </Typography>
-          </Box>
-
           {/* salsas incluidas */}
-          <Typography>
-            {promotion.qtySauces} Salsas incluidas a elección
+          <Typography variant="subtitle2">
+            Escoje {promotion.qtySauces} salsas (incluidas)
           </Typography>
-
+          <Typography
+            mb={2}
+            variant="caption"
+            color="grey"
+            sx={{ fontStyle: "italic" }}
+            display="flex"
+            justifyContent={"start"}
+          >
+            Salsas extra podrán ser agregadas en el carrito*
+          </Typography>
           <SeleccionableSauces
             blockPlusButton={blockPlusButton}
             sauces={promotion.includesSauces ?? []}
@@ -212,6 +199,18 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             </Typography>
           )}
 
+          <Box display={"flex"} paddingX={3.3} mt={5}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              Cantidad
+            </Typography>
+
+            <Box sx={{ flexGrow: 1 }} />
+
+            <ItemCounter
+              updatedQuantity={updatedQuantity}
+              currentValue={+promoToSendCart.quantity}
+            />
+          </Box>
           <TextField
             id="outlined-multiline-flexible"
             label="Notas extras"
@@ -223,16 +222,20 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             onChange={(e) => setNote(e.target.value)}
             onBlur={() => setPromoToSendCart((prev) => ({ ...prev, note }))}
           />
-          <Typography
-            variant="caption"
-            color="grey"
-            sx={{ fontStyle: "italic", mt: 2 }}
-            display="flex"
-            justifyContent={"end"}
-          >
-            Salsas extra podrán ser agregadas en el carrito*
-          </Typography>
         </CardContent>
+        <Divider sx={{ mb: 5 }} />
+
+        <Box justifyContent={"end"} display="flex" marginX={4}>
+          <Typography variant="h6">
+            Total
+            {promotion.inOffer
+              ? currency.format(
+                  +promotion!.offerPrice! * +promoToSendCart.quantity
+                )
+              : currency.format(+promotion.price * +promoToSendCart.quantity)}
+          </Typography>
+        </Box>
+
         <CardActions sx={{ margin: "0 20px" }}>
           <Button
             onClick={onConfirm}
@@ -243,12 +246,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
             {isInCart ? "Actualizar" : "Agregar"}
           </Button>
         </CardActions>
-        {/* <img
-          width={"100%"}
-          alt="Logo"
-          src="/logos/logo-sushi-panko.png"
-          style={{ opacity: 0.5, marginTop: 20 }}
-        /> */}
+
         <Image
           width={"100%"}
           height={"100%"}

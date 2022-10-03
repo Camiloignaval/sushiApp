@@ -4,12 +4,15 @@ import {
   FormControlLabel,
   Checkbox,
   Chip,
+  Box,
 } from "@mui/material";
 import Image from "next/image";
 import React, { FC } from "react";
 import { ICartProduct, IProduct } from "../../interfaces";
 import { SushiFilled } from "../../public/Icons/SushiFilled";
 import { SushiOutlined } from "../../public/Icons/SushiOutlined";
+import { ItemCounter } from "../ui";
+import { ProductWithCounter } from "./ProductWithCounter";
 
 interface Props {
   listProducts: IProduct[];
@@ -17,6 +20,7 @@ interface Props {
   setPromoToSendCart: React.Dispatch<React.SetStateAction<ICartProduct>>;
   label: Label;
   isVeggie?: boolean;
+  promoToSendCart: ICartProduct[];
 }
 
 type Label =
@@ -40,20 +44,14 @@ export const CustomRollCategoryOption: FC<Props> = ({
   isVeggie,
   setPromoToSendCart,
   label,
+  promoToSendCart,
 }) => {
-  const handleChange = ({
-    target: { name },
-  }: React.ChangeEvent<HTMLInputElement>) => {
-    addOrRemoveProduct(name);
-  };
-
   const addOrRemoveProduct = (name: string) => {
     setPromoToSendCart((prev) => {
-      const toSearch: IProduct[] | undefined =
-        prev[dictCategory[label] as Label];
-      const isInOrder = toSearch?.find((order) => order._id === name);
+      const toSearch: any = prev[dictCategory[label] as Label];
+      const isInOrder = toSearch?.find((order: any) => order._id === name);
       const newArrayToSend = isInOrder
-        ? toSearch!.filter((order) => order._id !== name)
+        ? toSearch!.filter((order: any) => order._id !== name)
         : [...toSearch!, ...listProducts.filter((prod) => prod._id === name)];
       return {
         ...prev,
@@ -82,89 +80,13 @@ export const CustomRollCategoryOption: FC<Props> = ({
       >
         {listProducts?.map((product, i) => (
           <Grid key={i} item xs={6} sm={4} lg={3} sx={{ position: "relative" }}>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  onChange={handleChange}
-                  disabled={
-                    !product.inStock ||
-                    (isVeggie === true &&
-                      product.type === "filling" &&
-                      product.fillingType === "protein")
-                  }
-                  name={product._id}
-                  icon={
-                    product.inStock &&
-                    !(
-                      isVeggie === true &&
-                      product.type === "filling" &&
-                      product.fillingType === "protein"
-                    ) ? (
-                      <SushiOutlined />
-                    ) : (
-                      <SushiOutlined color={"#E0E0E0"} />
-                    )
-                  }
-                  checkedIcon={<SushiFilled />}
-                />
-              }
-              label={
-                <Grid container>
-                  <Grid item xs={12}>
-                    <img
-                      src={product.image}
-                      key={product._id}
-                      width="60px"
-                      height="60px"
-                      style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        opacity:
-                          product.inStock &&
-                          !(
-                            isVeggie === true &&
-                            product.type === "filling" &&
-                            product.fillingType === "protein"
-                          )
-                            ? 1
-                            : 0.3,
-                      }}
-                      // layout="fixed"
-                      // loading="lazy"
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    sx={{
-                      marginTop: "-20px",
-                      textAlign: "center",
-                      width: "0px",
-                      fontSize: ".9rem",
-                      backdropFilter: "blur(5.8px)",
-                      fontWeight: 800,
-                      userSelect: "none",
-                      textShadow: "0px 5px 6px #FFFFFF",
-                    }}
-                    xs={12}
-                  >
-                    {product.name}
-                  </Grid>
-                  {dictCategory[label] === "extraProduct" && (
-                    <Chip
-                      label={`$${product.price}`}
-                      variant="outlined"
-                      size="small"
-                      sx={{
-                        position: "absolute",
-                        marginLeft: "40px",
-
-                        fontWeight: "500",
-                        backdropFilter: "blur(5.8px)",
-                      }}
-                    />
-                  )}
-                </Grid>
-              }
+            <ProductWithCounter
+              setPromoToSendCart={setPromoToSendCart}
+              promoToSendCart={promoToSendCart}
+              product={product}
+              isVeggie={isVeggie}
+              label={label}
+              addOrRemoveProduct={addOrRemoveProduct}
             />
           </Grid>
         ))}

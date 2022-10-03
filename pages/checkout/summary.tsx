@@ -19,7 +19,7 @@ import { countries } from "../../utils";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import { useCreateOrderMutation } from "../../store/RTKQuery/ordersApi";
-import { IOrder } from "../../interfaces";
+import { IOrder, IProduct } from "../../interfaces";
 import toast from "react-hot-toast";
 import { cleanCart } from "../../store/Slices/CartSlice";
 import { Extras } from "../../components/cart/Extras";
@@ -67,27 +67,27 @@ const SummaryPage = () => {
       discount,
       isPaid: false,
       orderItems: cart.map((item) => {
-        if (item.name !== "Roll personalizado") return item;
+        if (item.name !== "Roll personalizado")
+          return {
+            ...item,
+            sauces: Object.entries(item.sauces as object).map((s) => ({
+              [s[0]]: s[1],
+            })),
+          };
         const itemClone = { ...item };
         itemClone.proteins = itemClone?.proteins
           ? (itemClone.proteins?.map((p) => ({
-              name: p.name,
-              price: p.price,
-              _id: p._id,
+              [p.name]: p.qty,
             })) as any)
           : undefined;
         itemClone.vegetables = itemClone?.vegetables
           ? (itemClone.vegetables?.map((p) => ({
-              name: p.name,
-              price: p.price,
-              _id: p._id,
+              [p.name]: p.qty,
             })) as any)
           : undefined;
         itemClone.sauces = itemClone?.sauces
-          ? (itemClone.sauces?.map((p) => ({
-              name: p.name,
-              price: p.price,
-              _id: p._id,
+          ? ((itemClone.sauces as IProduct[])?.map((p) => ({
+              [p.name]: p.qty,
             })) as any)
           : undefined;
         itemClone.extraProduct = itemClone?.sauces
@@ -95,6 +95,7 @@ const SummaryPage = () => {
               name: p.name,
               price: p.price,
               _id: p._id,
+              qty: p.qty,
             })) as any)
           : undefined;
         itemClone.envelopes = itemClone?.envelopes
@@ -121,6 +122,7 @@ const SummaryPage = () => {
     };
 
     try {
+      console.log({ orderToSend });
       await createNewOrder(orderToSend).unwrap();
       dispatch(cleanCart());
       Cookies.remove("address");

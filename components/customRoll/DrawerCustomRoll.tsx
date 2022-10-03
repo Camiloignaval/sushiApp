@@ -61,15 +61,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
   const onConfirm = () => {
     const cloneCart = [...cart];
     const newCart = [...cloneCart, promoToSendCart];
-    // const isInCart = cloneCart.some((promo) => promo._id === promotion._id);
-    // const newCart = cloneCart.map((promo) => {
-    //   if (promo._id === promotion._id) {
-    //     return promoToSendCart;
-    //   }
-    //   return promo;
-    // });
-    // // Si no estaba, se le agrega al carrito
-    // !isInCart && newCart.push(promoToSendCart);
+
     dispatch(addOrUpdateCart(newCart));
     setOpen(false);
     setPromoToSendCart({
@@ -92,7 +84,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
   useEffect(() => {
     if (promoToSendCart.envelopes!?.length > 0 && !isError) {
       const priceExtras = promoToSendCart.extraProduct!.reduce(
-        (acc, curr) => acc + curr.price,
+        (acc, curr) => acc + curr.price * curr.qty!,
         0
       );
 

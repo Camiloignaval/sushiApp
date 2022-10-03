@@ -220,7 +220,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
             right={10}
             height={50}
           >
-            <Typography position="relative" top={15} variant="h6">
+            <Typography position="relative" top={15} variant="h5">
               Total{" "}
               {currency.format(
                 +promoToSendCart.price * +promoToSendCart.quantity

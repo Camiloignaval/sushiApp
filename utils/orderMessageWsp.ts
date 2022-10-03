@@ -35,12 +35,13 @@ export const orderMessageWsp = (order: IOrder) => {
       }
       // Salsas
       message.push(" -Salsas: ");
-      if (item.sauces) {
-        const stringRelleno = item.sauces
-          .map((i) => (i?.name ? i.name.replace("Salsa de", "") : ""))
-          .join("-");
-        message.push(`${stringRelleno}\n`);
-      }
+      // todo arreglar
+      // if (item.sauces) {
+      //   const stringRelleno = item.sauces
+      //     .map((i) => (i?.name ? i.name.replace("Salsa de", "") : ""))
+      //     .join("-");
+      //   message.push(`${stringRelleno}\n`);
+      // }
     }
     if (item?.note) {
       // notas

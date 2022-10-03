@@ -429,7 +429,9 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories, sauces }) => {
                     }
                   >
                     {sauces.map((s) => (
-                      <MenuItem value={s._id}>{s.name}</MenuItem>
+                      <MenuItem key={s._id} value={s._id}>
+                        {s.name}
+                      </MenuItem>
                     ))}
                   </Select>
                 </FormControl>

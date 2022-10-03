@@ -96,15 +96,16 @@ export const printOrder = async (order: IOrder) => {
         conector.establecerEnfatizado(0).textoConAcentos(`${stringExtras}\n`);
       }
       // Salsas
-      conector.establecerEnfatizado(1).textoConAcentos(" -Salsas: ");
-      if (item.sauces) {
-        const stringRelleno = item.sauces
-          .map((i: IProductCustomRoll) =>
-            i?.name ? i.name.replace("Salsa de", "") : ""
-          )
-          .join("-");
-        conector.establecerEnfatizado(0).textoConAcentos(`${stringRelleno}\n`);
-      }
+      // TODO ARREGLAR
+      // conector.establecerEnfatizado(1).textoConAcentos(" -Salsas: ");
+      // if (item.sauces) {
+      //   const stringRelleno = item.sauces
+      //     .map((i: IProductCustomRoll) =>
+      //       i?.name ? i.name.replace("Salsa de", "") : ""
+      //     )
+      //     .join("-");
+      //   conector.establecerEnfatizado(0).textoConAcentos(`${stringRelleno}\n`);
+      // }
     }
     if (item?.note) {
       // notas

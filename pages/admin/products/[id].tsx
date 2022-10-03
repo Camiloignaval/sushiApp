@@ -300,7 +300,7 @@ const ProductInfoPage: FC<Props> = ({ product }) => {
           onClick={() =>
             onDeleteProduct({
               id: product._id!,
-              img: product.image,
+              img: product.image!,
               name: product.name,
             })
           }

@@ -61,7 +61,7 @@ const updateProduct = async (
     }
     if (prod?.image !== body.image) {
       const [fileId, extension] = (prod!.image as string)
-        .substring(prod!.image.lastIndexOf("/") + 1)
+        .substring(prod!.image!.lastIndexOf("/") + 1)
         .split(".");
       await cloudinary.uploader.destroy(fileId);
       await cloudinary.api.delete_resources_by_prefix(`SushiApp/${fileId}`);

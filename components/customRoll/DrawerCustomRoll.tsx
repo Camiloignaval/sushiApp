@@ -54,7 +54,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
     if (promoToSendCart.envelopes!.length > 0) {
       setPromoToSendCart((prev) => ({
         ...prev,
-        image: promoToSendCart.envelopes![0].image,
+        image: promoToSendCart.envelopes![0].image!,
       }));
     }
   }, [promoToSendCart.envelopes]);

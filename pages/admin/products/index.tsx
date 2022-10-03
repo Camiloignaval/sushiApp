@@ -117,7 +117,7 @@ const ProductsPage = () => {
     id: product._id,
     name: product.name,
     img: product.image,
-    type: dictType[product.type],
+    type: dictType[product.type!],
     inStock: product.inStock,
     price: product.price,
   }));

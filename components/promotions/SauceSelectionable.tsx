@@ -38,7 +38,7 @@ export const SauceSelectionable: FC<Props> = ({
     <Grid item xs={6} md={4} lg={3}>
       <Box position={"relative"} display={"flex"} justifyContent={"center"}>
         <img
-          src={sauce!.image.toString()}
+          src={sauce.image!.toString() ?? ""}
           alt="Producto Extra"
           width="60px"
           height="60px"

@@ -72,7 +72,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
       }));
       setSaucesChoose(
         (promoFindInCart.sauces as IProduct[])
-          ? promotion.includesSauces.map((sauce) => {
+          ? promotion?.includesSauces?.map((sauce) => {
               const qtyFound =
                 promoFindInCart?.sauces?.find((s: any) => s._id === sauce._id)
                   ?.qty ?? 0;

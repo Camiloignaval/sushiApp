@@ -54,10 +54,10 @@ export const authApi = createApi({
         });
       },
     }),
-    checkToken: builder.query<IResponse, void>({
+    checkToken: builder.mutation<IResponse, void>({
       query: (body) => ({
         url: `/user/validate-token`,
-        method: "get",
+        method: "post",
         body,
       }),
       onQueryStarted(_, { queryFulfilled, dispatch }) {
@@ -74,5 +74,5 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLogInMutation, useRegisterMutation, useCheckTokenQuery } =
+export const { useLogInMutation, useRegisterMutation, useCheckTokenMutation } =
   authApi;

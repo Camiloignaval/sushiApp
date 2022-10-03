@@ -1,14 +1,10 @@
-import { format, isAfter, isBefore } from "date-fns";
 import Cookie from "js-cookie";
 import React, { FC, useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { ISettingsStore, IUser } from "../../interfaces";
 import { RootState } from "../../store";
-import { useCheckTokenQuery } from "../../store/RTKQuery/authApi";
+import { useCheckTokenMutation } from "../../store/RTKQuery/authApi";
 import { useGetSettingsStoreQuery } from "../../store/RTKQuery/settings";
-import { LogIn } from "../../store/Slices/AuthSlice";
-import esLocale from "date-fns/locale/es";
 
 import {
   addCoupon,
@@ -32,7 +28,7 @@ interface Props {
 export const PersonalProvider: FC<Props> = ({ children }) => {
   const { data: settingsData } = useGetSettingsStoreQuery();
   const [firstRender, setFirstRender] = useState(true);
-  const { data } = useCheckTokenQuery();
+  const [checkToken] = useCheckTokenMutation();
   const dispatch = useDispatch();
   const {
     cart,
@@ -200,12 +196,17 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   }, [dispatch]);
 
   // auth
-  try {
-    Cookie.get("token");
-    useCheckTokenQuery();
-  } catch (error) {
-    console.log(error);
-  }
+
+  useEffect(() => {
+    if (firstRender) {
+      try {
+        // Cookie.get("token");
+        checkToken();
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  }, [firstRender]);
 
   return <>{children}</>;
 };

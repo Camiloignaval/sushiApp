@@ -19,7 +19,7 @@ export default function handler(
   res: NextApiResponse<Data>
 ) {
   switch (req.method) {
-    case "GET":
+    case "POST":
       return checkJWT(req, res);
     default:
       return res.status(400).json({ message: "Bad request" });

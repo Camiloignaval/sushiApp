@@ -7,7 +7,7 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import parse from "autosuggest-highlight/parse";
 import throttle from "lodash/throttle";
-import { Dispatch, SetStateAction, useEffect, useRef } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-hot-toast";
 import { SearchOutlined } from "@mui/icons-material";
@@ -95,6 +95,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
   const [options, setOptions] = React.useState<readonly PlaceType[]>(
     /* <readonly PlaceType[]> */ []
   );
+  const [isError, setIsError] = useState(false);
   const { shippingAddress } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
   const [coords, setCoords] = React.useState({});
@@ -233,6 +234,17 @@ export const AutoCompletePlace: React.FC<Props> = ({
 
   const buscarDireccion = () => {
     let active = true;
+    console.log({ input: inputValue.trim().split(" ") });
+    if (
+      inputValue
+        .trim()
+        .split(" ")
+        .every((s) => isNaN(Number(s)))
+    ) {
+      toast.error("Favor ingresar numeración");
+      return;
+    }
+    setIsError(false);
 
     if (!autocompleteService.current && (window as any).google) {
       autocompleteService.current = new (
@@ -357,7 +369,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
               validate: {
                 required: () => {
                   if (!isSameInputWithCart())
-                    return "Si modifica dirección, presionar lupa, y seleccionar opción deseada";
+                    return "Para agregar dirección (o modificar), presionar lupa, y seleccionar opción deseada de lista desplegable";
                 },
               },
             })}

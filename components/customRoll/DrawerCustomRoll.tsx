@@ -179,6 +179,14 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
               // maxValue={5}
             />
           </Box>
+          <Typography
+            display={"flex"}
+            justifyContent="end"
+            id="modal-modal-title"
+            variant="caption"
+          >
+            Si modifica cantidad, favor revisar salsas*
+          </Typography>
           <TextField
             id="outlined-multiline-flexible"
             label="Notas extras"

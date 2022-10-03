@@ -256,6 +256,14 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
               currentValue={+promoToSendCart.quantity}
             />
           </Box>
+          <Typography
+            display={"flex"}
+            justifyContent="end"
+            id="modal-modal-title"
+            variant="caption"
+          >
+            Si modifica cantidad, favor revisar salsas*
+          </Typography>
           <TextField
             id="outlined-multiline-flexible"
             label="Notas extras"
@@ -272,7 +280,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
 
         <Box justifyContent={"end"} display="flex" marginX={4}>
           <Typography variant="h6">
-            Total
+            Total{" "}
             {promotion.inOffer
               ? currency.format(
                   +promotion!.offerPrice! * +promoToSendCart.quantity

@@ -29,10 +29,9 @@ export const getAllPromotions = async (): Promise<IProduct[]> => {
     await db.connect();
     const products = await Promotion.find({})
       .sort("-importanceNumber")
-      .populate("category")
+      .populate("category includesSauces")
       .lean();
     await db.disconnect();
-
     return JSON.parse(JSON.stringify(products));
   } catch (error) {
     await db.disconnect();

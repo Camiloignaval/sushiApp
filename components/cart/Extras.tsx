@@ -32,7 +32,7 @@ export const Extras: FC<Props> = ({
       )}
       {/* salsas extras */}
       <ExtraProducts
-        editable={editable}
+        editable
         products={
           editable || isAdmin
             ? productData!?.filter((prod) => prod.type === "sauce")

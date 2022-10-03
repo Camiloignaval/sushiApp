@@ -34,3 +34,18 @@ export const getAllProducts = async (): Promise<IProduct[]> => {
     return [];
   }
 };
+export const getSauces = async (): Promise<IProduct[]> => {
+  try {
+    await db.connect();
+    const products = await Product.find({ type: "sauce" })
+      .select("image name")
+      .lean();
+    await db.disconnect();
+
+    return JSON.parse(JSON.stringify(products));
+  } catch (error) {
+    await db.disconnect();
+    console.log({ errordbproducts: error });
+    return [];
+  }
+};

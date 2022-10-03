@@ -5,20 +5,9 @@ const link = "https://api.cloudinary.com/v1_1/dc6vako2z/image/upload";
 
 import { AdminLayout, ShopLayout } from "../../../components/layouts";
 import { dbCategories, dbProducts, dbPromotions } from "../../../database";
-import {
-  ICategory,
-  IFillingType,
-  IProduct,
-  IPromotion,
-  IType,
-} from "../../../interfaces";
-import { useForm } from "react-hook-form";
-import {
-  Category,
-  Delete,
-  SaveOutlined,
-  UploadOutlined,
-} from "@mui/icons-material";
+import { ICategory, IProduct, IPromotion } from "../../../interfaces";
+import { Controller, useForm } from "react-hook-form";
+import { Delete, SaveOutlined, UploadOutlined } from "@mui/icons-material";
 import EditIcon from "@mui/icons-material/Edit";
 
 import {
@@ -43,34 +32,21 @@ import {
   Typography,
   InputLabel,
   IconButton,
+  Autocomplete,
 } from "@mui/material";
-import { useUpdateProductMutation } from "../../../store/RTKQuery/productsApi";
 import toast from "react-hot-toast";
-import { useUploadFilesMutation } from "../../../store/RTKQuery/uploadApi";
 import axios from "axios";
 import { useRouter } from "next/router";
-import { TextareaAutosize } from "@mui/base";
 import { useUpdatePromotionMutation } from "../../../store/RTKQuery/promotionApi";
 import { useDeletePromotion } from "../../../hooks";
-import product from "../../api/admin/product";
 
 interface Props {
   promotion: IPromotion;
   categories: ICategory[];
+  sauces: IProduct[];
 }
 
 const units = ["Piezas", "Porciones", "Rolls"];
-
-const validTypes = [
-  { code: "envelope", friendly: "envoltura" },
-  { code: "filling", friendly: "relleno" },
-  { code: "sauce", friendly: "salsa" },
-  { code: "other", friendly: "otros" },
-];
-const validFillingTypes = [
-  { code: "protein", friendly: "proteina" },
-  { code: "vegetable", friendly: "vegetal" },
-];
 
 interface FormData {
   promotionItems: string[];
@@ -84,10 +60,12 @@ interface FormData {
   category: ICategory;
   quantity: number;
   unit: string;
+  includesSauces: IProduct[];
+  qtySauces: number;
   _id?: string;
 }
 
-const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
+const PromotionInfoPage: FC<Props> = ({ promotion, categories, sauces }) => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newItemValue, setNewItemValue] = useState("");
@@ -100,10 +78,19 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
     formState: { errors },
     getValues,
     setValue,
-    watch,
+    control,
   } = useForm<FormData>({
     defaultValues: promotion,
   });
+
+  // console.log({ sauces });
+  // useEffect(() => {
+  //   const salsasInBdd = sauces.filter((s) =>
+  //     ["632de03363d307a2565621e2", "63365fe640807a37067429ff"].includes(s._id!)
+  //   );
+  //   console.log({ salsasInBdd });
+  //   setValue("includesSauces", salsasInBdd as any, { shouldValidate: true });
+  // }, []);
 
   const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (!target.files || target.files.length === 0) return;
@@ -167,13 +154,13 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
   useEffect(() => {}, [getValues("promotionItems")]);
 
   const onSubmit = (formData: FormData) => {
+    console.log({ formData });
     if (getValues("inOffer")) {
       if (getValues("offerPrice")! > getValues("price")) {
         toast.error("El valor oferta es mayor al actual, favor verifique");
         return;
       }
     }
-
     updatePromotion(formData)
       .unwrap()
       .then(() => {
@@ -391,6 +378,63 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories }) => {
                 </Grid>
               )}
             </Grid>
+            <Grid xs item container mt={2}>
+              <Grid mb={2} xs={12} lg={3}>
+                <FormControl fullWidth sx={{ pr: { xs: 0, lg: 2 } }}>
+                  <TextField
+                    label="Salsas incluidas"
+                    type="number"
+                    variant="filled"
+                    fullWidth
+                    sx={{ minWidth: "100%" }}
+                    {...register("qtySauces", {
+                      required: "Ingresar cantidad",
+                    })}
+                    error={!!errors.qtySauces}
+                    helperText={errors.qtySauces?.message}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid xs={12} lg={9}>
+                <FormControl fullWidth>
+                  <InputLabel>Categoría</InputLabel>
+                  <Select
+                    {...register("includesSauces", {
+                      required: "Unidad es requerida",
+                    })}
+                    multiple
+                    renderValue={(selected) => (
+                      <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
+                        {selected.map((value, i) => {
+                          console.log({ value });
+                          return (
+                            <Chip
+                              key={i}
+                              label={
+                                sauces.find(
+                                  (s) => (s!._id as any) === (value as any)
+                                )?.name
+                              }
+                            />
+                          );
+                        })}
+                      </Box>
+                    )}
+                    label="Salsas seleccionables"
+                    value={getValues("includesSauces")}
+                    onChange={({ target: { value } }) =>
+                      setValue("includesSauces", value as any, {
+                        shouldValidate: true,
+                      })
+                    }
+                  >
+                    {sauces.map((s) => (
+                      <MenuItem value={s._id}>{s.name}</MenuItem>
+                    ))}
+                  </Select>
+                </FormControl>
+              </Grid>
+            </Grid>
             <Divider sx={{ my: 2, display: { xs: "flex", sm: "none" } }} />
           </Grid>
           {/* contenido */}
@@ -506,6 +550,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
 
   const promotion = await dbPromotions.getPromotionById(id.toString());
   const categories = await dbCategories.getCategories();
+  const sauces = await dbProducts.getSauces();
 
   if (!promotion) {
     return {
@@ -516,7 +561,7 @@ export const getServerSideProps: GetServerSideProps = async ({ query }) => {
     };
   }
   return {
-    props: { promotion, categories },
+    props: { promotion, categories, sauces },
   };
 };
 

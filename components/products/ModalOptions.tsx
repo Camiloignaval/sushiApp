@@ -22,6 +22,8 @@ import { addOrUpdateCart } from "../../store/Slices/CartSlice";
 import { currency } from "../../utils";
 import { FullScreenLoading, ItemCounter } from "../ui";
 import { HelpOutline } from "@mui/icons-material";
+import { ExtraProducts } from "../customRoll";
+import { SeleccionableSauces } from "../promotions";
 
 interface Props {
   open: boolean;
@@ -30,11 +32,15 @@ interface Props {
 }
 
 export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
+  console.log({ promotion });
   const dispatch = useDispatch();
   const [note, setNote] = useState("");
   const { data: productData } = useGetProductsQuery(null);
   const { cart } = useSelector((state: RootState) => state.cart);
   const [isInCart, setisInCart] = useState(false);
+  const [error, setError] = useState(false);
+  const [saucesChoose, setSaucesChoose] = useState({});
+  const [blockPlusButton, setBlockPlusButton] = useState(false);
   const [promoToSendCart, setPromoToSendCart] = useState<ICartProduct>({
     _id: promotion?._id!,
     image: promotion.images[0]!,
@@ -70,8 +76,23 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
     }
   }, [cart, promotion]);
 
+  useEffect(() => {
+    if (Object.values(saucesChoose).length > 0) {
+      (Object.values(saucesChoose).reduce(
+        (acc, curr) => Number(acc) + Number(curr),
+        0
+      ) as number) >= promotion.qtySauces
+        ? setBlockPlusButton(true)
+        : setBlockPlusButton(false);
+    }
+  }, [saucesChoose]);
+
   const onConfirm = () => {
     // Buscar siesque ya existe en el carro para actualizarlo y no sobreescribirlo si esque esta
+
+    console.log({ promoToSendCart });
+    console.log({ saucesChoose });
+
     const cloneCart = [...cart];
     const isInCart = cloneCart.some((promo) => promo._id === promotion._id);
     const newCart = cloneCart.map((promo) => {
@@ -83,10 +104,10 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
     // Si no estaba, se le agrega al carrito
     !isInCart && newCart.push(promoToSendCart);
 
-    dispatch(addOrUpdateCart(newCart));
-    setOpen(false);
-    setisInCart(true);
-    toast.success(`${promotion.name} agregada con éxito`, { duration: 3000 });
+    // dispatch(addOrUpdateCart(newCart));
+    // setOpen(false);
+    // setisInCart(true);
+    // toast.success(`${promotion.name} agregada con éxito`, { duration: 3000 });
   };
 
   const updatedQuantity = (num: number) => {
@@ -173,6 +194,23 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
                 : currency.format(+promotion.price * +promoToSendCart.quantity)}
             </Typography>
           </Box>
+
+          {/* salsas incluidas */}
+          <Typography>
+            {promotion.qtySauces} Salsas incluidas a elección
+          </Typography>
+
+          <SeleccionableSauces
+            blockPlusButton={blockPlusButton}
+            sauces={promotion.includesSauces ?? []}
+            saucesChoose={saucesChoose}
+            setSaucesChoose={setSaucesChoose}
+          />
+          {error && (
+            <Typography variant="caption" color="error">
+              Favor seleccionar máximo {promotion.qtySauces} salsas en total
+            </Typography>
+          )}
 
           <TextField
             id="outlined-multiline-flexible"

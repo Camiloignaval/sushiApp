@@ -43,6 +43,8 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
       : promotion.images[0];
   }, [isHovered, promotion.images, promotion.inStock]);
 
+  console.log({ promotion });
+
   const onDelete = () => {
     Swal.fire({
       title: `Eliminaras de la orden ${promotion.name}`,

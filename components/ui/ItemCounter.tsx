@@ -8,6 +8,7 @@ interface Props {
   maxValue?: number;
   updatedQuantity: (quantity: number) => void;
   isPossibleZero?: boolean;
+  blockButtonPlus?: boolean;
 }
 
 export const ItemCounter: FC<Props> = ({
@@ -15,6 +16,7 @@ export const ItemCounter: FC<Props> = ({
   maxValue = undefined,
   updatedQuantity,
   isPossibleZero = false,
+  blockButtonPlus = false,
 }) => {
   const [quantity, setQuantity] = useState(currentValue ?? 0);
 
@@ -34,7 +36,9 @@ export const ItemCounter: FC<Props> = ({
         {currentValue}
       </Typography>
       <IconButton
-        disabled={maxValue ? maxValue === quantity : false}
+        disabled={
+          blockButtonPlus ? true : maxValue ? maxValue === quantity : false
+        }
         onClick={() => setQuantity((prev) => prev + 1)}
       >
         <AddCircleOutline />

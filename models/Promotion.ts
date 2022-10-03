@@ -15,7 +15,12 @@ const promotionSchema = new Schema(
     category: { type: Schema.Types.ObjectId, ref: "Category", required: true },
     quantity: { type: Number },
     unit: { type: String },
-    importanceNumber: { type: Number, required: true },
+    importanceNumber: { type: Number /* , required: true */ },
+    includesSauces: {
+      type: [Schema.Types.ObjectId],
+      ref: "Product",
+    },
+    qtySauces: { type: Number, required: true, default: 0 },
   },
   {
     timestamps: true,

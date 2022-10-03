@@ -12,7 +12,7 @@ import {
   IPromotion,
   IType,
 } from "../../../interfaces";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Category, SaveOutlined, UploadOutlined } from "@mui/icons-material";
 import {
   Box,
@@ -35,6 +35,7 @@ import {
   Select,
   Typography,
   InputLabel,
+  Autocomplete,
 } from "@mui/material";
 import { useUpdateProductMutation } from "../../../store/RTKQuery/productsApi";
 import toast from "react-hot-toast";
@@ -47,6 +48,7 @@ import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 
 interface Props {
   categories: ICategory[];
+  sauces: IProduct[];
 }
 
 const units = ["Piezas", "Porciones", "Rolls"];
@@ -74,10 +76,12 @@ interface FormData {
   category: ICategory;
   quantity: number;
   unit: string;
+  includesSauces: IProduct[];
+  qtySauces: number;
   _id?: string;
 }
 
-const NewPromotionPage: FC<Props> = ({ categories }) => {
+const NewPromotionPage: FC<Props> = ({ categories, sauces }) => {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [newItemValue, setNewItemValue] = useState("");
@@ -86,6 +90,7 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
   const {
     register,
     handleSubmit,
+    control,
     formState: { errors },
     getValues,
     setValue,
@@ -384,6 +389,60 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
                 </Grid>
               )}
             </Grid>
+            <Grid xs item container mt={2}>
+              <Grid mb={2} xs={12} lg={3}>
+                <FormControl fullWidth sx={{ pr: { xs: 0, lg: 2 } }}>
+                  <TextField
+                    label="Salsas incluidas"
+                    type="number"
+                    variant="filled"
+                    fullWidth
+                    sx={{ minWidth: "100%" }}
+                    {...register("qtySauces", {
+                      required: "Ingresar cantidad",
+                    })}
+                    error={!!errors.qtySauces}
+                    helperText={errors.qtySauces?.message}
+                  />
+                </FormControl>
+              </Grid>
+              <Grid xs={12} lg={9}>
+                {" "}
+                <Controller
+                  name="includesSauces"
+                  control={control}
+                  render={({ field: { onChange, value } }) => (
+                    <Autocomplete
+                      multiple
+                      options={sauces}
+                      getOptionLabel={(option) => option?.name}
+                      // defaultValue={[
+                      //   {
+                      //     image:
+                      //       "https://res.cloudinary.com/dc6vako2z/image/upload/v1662527168/SushiApp/Soy_sauce_2_lnawfh.jpg",
+                      //     name: "Salsa de soja",
+                      //     _id: "632de03363d307a2565621e2",
+                      //   },
+                      // ]}
+                      onChange={(event, item) => {
+                        onChange(/* item.map((e) => e._id) */ item);
+                      }}
+                      value={
+                        /* value as any */ getValues("includesSauces") as any
+                      }
+                      renderInput={(params) => (
+                        <TextField
+                          {...params}
+                          variant="standard"
+                          label="Salsas para seleccionar"
+                          placeholder="Seleccione"
+                        />
+                      )}
+                    />
+                  )}
+                />
+              </Grid>
+            </Grid>
             <Divider sx={{ my: 2, display: { xs: "flex", sm: "none" } }} />
           </Grid>
           {/* contenido */}
@@ -479,9 +538,10 @@ const NewPromotionPage: FC<Props> = ({ categories }) => {
 };
 export const getServerSideProps: GetServerSideProps = async () => {
   const categories = await dbCategories.getCategories();
+  const sauces = await dbProducts.getSauces();
 
   return {
-    props: { categories },
+    props: { categories, sauces },
   };
 };
 

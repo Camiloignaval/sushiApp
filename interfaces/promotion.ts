@@ -1,4 +1,5 @@
 import { ICategory } from "./category";
+import { IProduct } from "./products";
 export interface IPromotion {
   promotionItems: string[];
   price: number;
@@ -12,6 +13,8 @@ export interface IPromotion {
   quantity: number;
   unit: string;
   importanceNumber: string;
+  includesSauces: IProduct[];
+  qtySauces: number;
 
   _id?: string;
 }

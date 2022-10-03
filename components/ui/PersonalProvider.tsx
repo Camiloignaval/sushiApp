@@ -202,6 +202,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   // auth
   try {
     Cookie.get("token");
+    useCheckTokenQuery();
   } catch (error) {
     console.log(error);
   }

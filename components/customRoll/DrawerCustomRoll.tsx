@@ -201,13 +201,27 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
           </Typography>
           {/* {!isError && ( */}
           <Box
-            sx={{ visibility: isError ? "hidden" : undefined }}
+            // sx={{ visibility: isError ? "hidden" : undefined }}
+            // className="fadeIn"
+            // justifyContent={"end"}
+            // display="flex"
+            // marginX={4}
+            sx={{
+              visibility: isError ? "hidden" : undefined,
+              background:
+                "linear-gradient(270deg, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 27%, rgba(255,255,255,1) 40%, rgba(255,255,255,1) 53%, rgba(255,255,255,1) 67%, rgba(255,255,255,1) 81%, rgba(255,255,255,0) 100%)",
+            }}
             className="fadeIn"
-            justifyContent={"end"}
+            justifyContent={"center"}
             display="flex"
             marginX={4}
+            position="sticky"
+            bottom={0}
+            right={10}
+            height={50}
           >
-            <Typography variant="h6">
+            <Typography position="relative" top={15} variant="h6">
+              Total{" "}
               {currency.format(
                 +promoToSendCart.price * +promoToSendCart.quantity
               )}

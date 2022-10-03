@@ -30,6 +30,7 @@ import { TextSnippetOutlined } from "@mui/icons-material";
 interface Props {
   editable?: boolean;
   orderProduct?: IOrderItem[] | boolean;
+  id?: string;
 }
 const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -46,18 +47,14 @@ const HtmlTooltip = styled(({ className, ...props }: TooltipProps) => (
 export const CardList: FC<Props> = ({
   editable = false,
   orderProduct = false,
+  id = undefined,
 }) => {
   const dispatch = useDispatch();
   const { cart } = useSelector((state: RootState) => state.cart);
   const [noteOpen, setNoteOpen] = useState(false);
   const { isLoggedIn } = useSelector((state: RootState) => state.auth);
 
-  const onNewCartQty = (product: ICartProduct, newQty: number) => {
-    // const productClone = { ...product };
-    // productClone.quantity = newQty;
-    // dispatch(udpateCartQuantity(productClone));
-  };
-
+  console.log({ orderProduct });
   const handleDelete = (product: ICartProduct) => {
     dispatch(removeFromCart(product._id ?? ""));
   };
@@ -192,7 +189,7 @@ export const CardList: FC<Props> = ({
                     </Typography>
                     <Typography variant="body1">
                       {product.name !== "Roll personalizado" &&
-                        (Object.values(product?.sauces!) ?? []).length > 0 && (
+                        (product?.sauces! ?? []).length > 0 && (
                           <Box>
                             <Typography variant="subtitle2" marginBottom={-1}>
                               Salsas
@@ -201,21 +198,23 @@ export const CardList: FC<Props> = ({
                               container
                               style={{ margin: "0", display: "flex" }}
                             >
-                              {Object.entries(product?.sauces!)!.map((s, i) => (
+                              {product?.sauces!!.map((s, i) => (
                                 <Grid
                                   key={i}
                                   item
                                   style={{ margin: "0 30px 0 0" }}
                                 >
                                   <Typography variant="caption">
-                                    <VscDebugBreakpointLog
-                                      style={{
-                                        position: "relative",
-                                        top: 2,
-                                        marginRight: 2,
-                                      }}
-                                    />
-                                    {s[1]} {s[0]}
+                                    <>
+                                      <VscDebugBreakpointLog
+                                        style={{
+                                          position: "relative",
+                                          top: 2,
+                                          marginRight: 2,
+                                        }}
+                                      />
+                                      {s.qty! > 1 ? s.qty : ""} {s.name}
+                                    </>
                                   </Typography>
                                 </Grid>
                               ))}

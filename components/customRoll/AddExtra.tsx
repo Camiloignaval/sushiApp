@@ -19,10 +19,9 @@ interface Props {
   editable?: boolean;
 }
 
-const isAdmin = true;
-
 export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
   const { extraProduct } = useSelector((state: RootState) => state.cart);
+  const { isLoggedIn: isAdmin } = useSelector((state: RootState) => state.auth);
   const [extraToSendCart, setExtraToSendCart] = useState<ICartProduct>({
     _id: prod?._id!,
     image: prod.image!,

@@ -8,17 +8,17 @@ import { ExtraProducts } from "../customRoll";
 interface Props {
   productData: IProduct[];
   editable?: boolean;
-  isAdmin?: boolean;
+  id?: string;
 }
-
-const isAdmin = true;
 
 export const Extras: FC<Props> = ({
   productData,
   editable = false,
-  isAdmin = false,
+  id = undefined,
 }) => {
   const { extraProduct } = useSelector((state: RootState) => state.cart);
+  const { isLoggedIn: isAdmin } = useSelector((state: RootState) => state.auth);
+  console.log({ productData });
   return (
     <FormControl
       sx={{ m: 3, width: "100%" }}
@@ -32,9 +32,9 @@ export const Extras: FC<Props> = ({
       )}
       {/* salsas extras */}
       <ExtraProducts
-        editable
+        editable={editable}
         products={
-          editable || isAdmin
+          editable || id
             ? productData!?.filter((prod) => prod.type === "sauce")
             : extraProduct!?.filter(
                 (prod) => prod.type === "sauce" && prod.quantity > 0
@@ -50,7 +50,7 @@ export const Extras: FC<Props> = ({
       <ExtraProducts
         editable={editable}
         products={
-          editable || isAdmin
+          editable || id
             ? productData!?.filter((prod) => prod.type === "other")
             : extraProduct!?.filter(
                 (prod) => prod.type === "other" && prod.quantity > 0

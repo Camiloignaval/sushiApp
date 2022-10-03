@@ -65,8 +65,11 @@ const OrderPage: FC<Props> = ({ order: orderFromServer }) => {
             {order.numberOfItems === 1 ? "producto" : "productos"})
           </Typography>
           {/* card list */}
-          <CardList orderProduct={order.orderItems} />
-          <Extras productData={order.orderExtraItems as IProduct[]} isAdmin />
+          <CardList orderProduct={order.orderItems} id={order._id} />
+          <Extras
+            productData={order.orderExtraItems as IProduct[]}
+            id={order._id}
+          />
         </Grid>
         <Grid item xs={12} sm={5}>
           {/* cart */}
@@ -129,6 +132,7 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
+  console.log({ order });
   return {
     props: {
       order,

@@ -164,8 +164,6 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Proteinas */}
       <Grid container>
         <FormControlByCategory
-          // productAndQty={productAndQty}
-          // setproductAndQty={setproductAndQty}
           isVeggie={isVeggie}
           promoToSendCart={promoToSendCart}
           setPromoToSendCart={setPromoToSendCart}
@@ -177,8 +175,6 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Vegetales */}
       <Grid container>
         <FormControlByCategory
-          // productAndQty={productAndQty}
-          // setproductAndQty={setproductAndQty}
           qtyProteiMoreVeg={qtyProteiMoreVeg}
           isVeggie={isVeggie}
           promoToSendCart={promoToSendCart}
@@ -192,8 +188,6 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Salsas */}
       <Grid container>
         <FormControlByCategory
-          // productAndQty={productAndQty}
-          // setproductAndQty={setproductAndQty}
           promoToSendCart={promoToSendCart}
           setPromoToSendCart={setPromoToSendCart}
           label={"Salsas"}
@@ -205,8 +199,6 @@ export const FormCustomRoll: FC<Props> = ({
       {/* Extras */}
       <Grid container>
         <FormControlByCategory
-          // productAndQty={productAndQty}
-          // setproductAndQty={setproductAndQty}
           promoToSendCart={promoToSendCart}
           setPromoToSendCart={setPromoToSendCart}
           label={"Extras"}

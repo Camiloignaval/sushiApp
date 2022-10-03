@@ -15,7 +15,7 @@ import Image from "next/image";
 import React, { FC, useState, useEffect } from "react";
 import { toast } from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { ICartProduct, IPromotion } from "../../interfaces";
+import { ICartProduct, IProduct, IPromotion } from "../../interfaces";
 import { RootState } from "../../store";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import { addOrUpdateCart } from "../../store/Slices/CartSlice";
@@ -39,7 +39,9 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
   const { cart } = useSelector((state: RootState) => state.cart);
   const [isInCart, setisInCart] = useState(false);
   const [error, setError] = useState(false);
-  const [saucesChoose, setSaucesChoose] = useState({});
+  const [saucesChoose, setSaucesChoose] = useState<IProduct[] | []>(
+    promotion.includesSauces ?? []
+  );
   const [blockPlusButton, setBlockPlusButton] = useState(false);
   const [promoToSendCart, setPromoToSendCart] = useState<ICartProduct>({
     _id: promotion?._id!,
@@ -55,6 +57,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
   // revisar si esta en carrito
   useEffect(() => {
     const promoFindInCart = cart.find((promo) => promo?._id === promotion._id);
+    console.log({ promoFindInCart });
     if (promoFindInCart) {
       setPromoToSendCart((prev) => ({
         ...prev,
@@ -62,7 +65,11 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
         extraProduct: promoFindInCart.extraProduct,
         note: promoFindInCart.note ? promoFindInCart.note : undefined,
       }));
-      setSaucesChoose(promoFindInCart.sauces ? promoFindInCart.sauces : {});
+      setSaucesChoose(
+        (promoFindInCart.sauces as IProduct[])
+          ? (promoFindInCart.sauces as IProduct[])
+          : []
+      );
       setisInCart(true);
     } else {
       setisInCart(false);
@@ -78,22 +85,18 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
   }, [cart, promotion]);
 
   useEffect(() => {
-    if (Object.values(saucesChoose).length > 0) {
-      (Object.values(saucesChoose).reduce(
-        (acc, curr) => Number(acc) + Number(curr),
-        0
-      ) as number) >= promotion.qtySauces
-        ? setBlockPlusButton(true)
-        : setBlockPlusButton(false);
-    }
+    // if (Object.values(saucesChoose).length > 0) {
+    (((saucesChoose as IProduct[]) ?? [])?.reduce(
+      (acc: Number, curr: IProduct) => Number(acc) + Number(curr.qty ?? 0),
+      0
+    ) as number) >= promotion.qtySauces
+      ? setBlockPlusButton(true)
+      : setBlockPlusButton(false);
+    // }
   }, [saucesChoose]);
 
   const onConfirm = () => {
     // Buscar siesque ya existe en el carro para actualizarlo y no sobreescribirlo si esque esta
-
-    console.log({ promoToSendCart });
-    console.log({ saucesChoose });
-
     const cloneCart = [...cart];
     const isInCart = cloneCart.some((promo) => promo._id === promotion._id);
     const newCart = cloneCart.map((promo) => {
@@ -104,7 +107,7 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
     });
     // Si no estaba, se le agrega al carrito
     !isInCart && newCart.push({ ...promoToSendCart, sauces: saucesChoose });
-
+    console.log({ newCart });
     dispatch(addOrUpdateCart(newCart));
     setOpen(false);
     setisInCart(true);
@@ -251,11 +254,9 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
           width={"100%"}
           height={"100%"}
           alt="Logo"
-          // src="/logos/logo-sushi-panko.jpf"
           src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko_qtifjs.webp"
           style={{ opacity: 0.5, marginTop: 20 }}
           layout="responsive"
-          // loading="eager"
           priority
         ></Image>
       </Box>

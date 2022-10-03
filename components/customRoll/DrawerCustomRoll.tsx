@@ -23,6 +23,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { addOrUpdateCart } from "../../store/Slices/CartSlice";
+import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 
 interface Props {
   open: boolean;

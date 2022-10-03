@@ -1,10 +1,10 @@
 export interface IProduct {
   _id?: string;
-  image: string;
+  image?: string;
   name: string;
-  inStock: boolean;
+  inStock?: boolean;
   price: number;
-  type: IType;
+  type?: IType;
   qty?: number;
   fillingType?: IFillingType;
   createdAt?: string;

@@ -5,8 +5,8 @@ import { ItemCounter } from "../ui";
 
 interface Props {
   sauce: IProduct;
-  saucesChoose: object;
-  setSaucesChoose: React.Dispatch<React.SetStateAction<{}>>;
+  saucesChoose: IProduct[];
+  setSaucesChoose: React.Dispatch<React.SetStateAction<IProduct[]>>;
   blockPlusButton: boolean;
 }
 
@@ -23,8 +23,16 @@ export const SauceSelectionable: FC<Props> = ({
   console.log({ sauce });
 
   const updatedQuantity = (qty: number) => {
-    console.log({ [sauce.name]: qty });
-    setSaucesChoose((prev) => ({ ...prev, [sauce.name]: qty }));
+    setSaucesChoose((prev) =>
+      prev.map((p) => {
+        if (p.name !== sauce.name) {
+          return p;
+        }
+        const copySauce = { ...p };
+        copySauce.qty = qty;
+        return copySauce;
+      })
+    );
   };
   return (
     <Grid item xs={6} md={4} lg={3}>
@@ -58,7 +66,9 @@ export const SauceSelectionable: FC<Props> = ({
         <Box display={"flex"} justifyContent="center">
           <ItemCounter
             updatedQuantity={updatedQuantity}
-            currentValue={saucesChoose[sauce.name as keyof object] ?? 0}
+            currentValue={
+              saucesChoose.find((s) => s.name === sauce.name)?.qty ?? 0
+            }
             isPossibleZero
             blockButtonPlus={blockPlusButton}
           />

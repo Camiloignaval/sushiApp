@@ -70,24 +70,36 @@ const SummaryPage = () => {
         if (item.name !== "Roll personalizado")
           return {
             ...item,
-            sauces: Object.entries(item.sauces as object).map((s) => ({
-              [s[0]]: s[1],
+            sauces: (item.sauces ?? []).map((p) => ({
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+              qty: p.qty,
             })),
           };
         const itemClone = { ...item };
         itemClone.proteins = itemClone?.proteins
           ? (itemClone.proteins?.map((p) => ({
-              [p.name]: p.qty,
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+              qty: p.qty,
             })) as any)
           : undefined;
         itemClone.vegetables = itemClone?.vegetables
           ? (itemClone.vegetables?.map((p) => ({
-              [p.name]: p.qty,
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+              qty: p.qty,
             })) as any)
           : undefined;
         itemClone.sauces = itemClone?.sauces
           ? ((itemClone.sauces as IProduct[])?.map((p) => ({
-              [p.name]: p.qty,
+              name: p.name,
+              price: p.price,
+              _id: p._id,
+              qty: p.qty,
             })) as any)
           : undefined;
         itemClone.extraProduct = itemClone?.sauces
@@ -103,6 +115,7 @@ const SummaryPage = () => {
               name: p.name,
               price: p.price,
               _id: p._id,
+              qty: 1,
             })) as any)
           : undefined;
         return itemClone;

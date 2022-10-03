@@ -7,8 +7,8 @@ import { SauceSelectionable } from "./SauceSelectionable";
 
 interface Props {
   sauces: IProduct[];
-  setSaucesChoose: React.Dispatch<React.SetStateAction<{}>>;
-  saucesChoose: object;
+  setSaucesChoose: React.Dispatch<React.SetStateAction<IProduct[]>>;
+  saucesChoose: IProduct[];
   blockPlusButton: boolean;
 }
 

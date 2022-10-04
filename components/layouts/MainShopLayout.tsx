@@ -15,13 +15,17 @@ interface Props {
   imageFullUrl?: string;
 }
 
+const storeIsCloseImg =
+  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664867224/SushiApp/cerrados_ztitt7.webp";
+const openSoonImg =
+  "https://res.cloudinary.com/dc6vako2z/image/upload/v1664865542/SushiApp/abrimos-pronto_lnnqr4.webp";
 export const MainShopLayout: FC<Props> = ({
   children,
   pageDescription,
   imageFullUrl,
   title,
 }) => {
-  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
+  const { store } = useSelector((state: RootState) => state.ui);
 
   return (
     <>
@@ -70,7 +74,7 @@ export const MainShopLayout: FC<Props> = ({
         />
       </Box>
       {/* CARTEL CERRADO */}
-      {!storeIsOpen && (
+      {!store.isOpen && (
         <Box
           sx={{
             position: "absolute",
@@ -91,7 +95,7 @@ export const MainShopLayout: FC<Props> = ({
             // objectFit="cover"
             // quality={100}
             alt="Imagen cerrado"
-            src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664437330/SushiApp/lo-siento-estamos-cartel-cerrado_wed11n.webp"
+            src={store.type === "soon" ? openSoonImg : storeIsCloseImg}
             // loading="eager"
           />
         </Box>

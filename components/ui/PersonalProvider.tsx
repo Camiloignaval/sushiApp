@@ -16,7 +16,7 @@ import {
   updateSummary,
 } from "../../store/Slices/CartSlice";
 import { currency } from "../../utils";
-import { closeStore, openStore } from "../../store/Slices/UISlice";
+import { storeState } from "../../store/Slices/UISlice";
 import { analizeIfStoreIsOpen } from "../../utils/analizeIfStoreIsOpen";
 
 interface Props {
@@ -40,14 +40,13 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     valuedPlaceId,
     shippingAddress,
   } = useSelector((state: RootState) => state.cart);
-  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
+  const { store } = useSelector((state: RootState) => state.ui);
 
   // analizar si esta abierta la tienda o no
   useEffect(() => {
     if (settingsData) {
-      const isOpen = analizeIfStoreIsOpen(settingsData);
-      console.log({ isOpen });
-      isOpen ? dispatch(openStore()) : dispatch(closeStore());
+      const status = analizeIfStoreIsOpen(settingsData);
+      dispatch(storeState(status as any));
 
       Cookie.set("settings", JSON.stringify(settingsData));
     }

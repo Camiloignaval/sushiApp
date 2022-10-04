@@ -1,16 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 
+export type storeOpen = "close" | "soon" | "open";
+
 export interface UIState {
   sideBarIsOpen: boolean;
   scrollIsDown: boolean;
-  storeIsOpen: boolean;
+  store: {
+    isOpen: boolean;
+    type: storeOpen;
+  };
 }
 
 const initialState: UIState = {
   sideBarIsOpen: false,
   scrollIsDown: false,
-  storeIsOpen: true,
+  store: {
+    isOpen: true,
+    type: "open",
+  },
 };
 
 export const UISlice = createSlice({
@@ -26,22 +34,29 @@ export const UISlice = createSlice({
     desactiveScrollDown: (state) => {
       state.scrollIsDown = false;
     },
-    openStore: (state) => {
-      state.storeIsOpen = true;
+    storeState: (
+      state,
+      action: PayloadAction<{ type: storeOpen; isOpen: boolean }>
+    ) => {
+      state.store = action.payload;
     },
-    closeStore: (state) => {
-      state.storeIsOpen = false;
-    },
+    // closeStore: (state) => {
+    //   state.store = {
+    //     isOpen: false,
+    //     type: "close",
+    //   };
+    // },
+    // openSoon: (state) => {
+    //   state.store = {
+    //     isOpen: false,
+    //     type: "soon",
+    //   };
+    // },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const {
-  toggleMenu,
-  activeScrollDown,
-  desactiveScrollDown,
-  openStore,
-  closeStore,
-} = UISlice.actions;
+export const { toggleMenu, activeScrollDown, desactiveScrollDown, storeState } =
+  UISlice.actions;
 
 export default UISlice.reducer;

@@ -13,7 +13,7 @@ export const ExtraProducts: FC<Props> = ({ products, editable = false }) => {
   return (
     <>
       <Grid container width={"100%"}>
-        {products!.map((prod, i) => (
+        {(products! ?? []).map((prod, i) => (
           <AddExtra editable={editable} key={i} prod={prod} />
         ))}
       </Grid>

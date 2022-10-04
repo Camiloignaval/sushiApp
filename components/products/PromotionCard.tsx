@@ -34,7 +34,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
   const [open, setOpen] = React.useState(false);
   const [isHovered, setisHovered] = useState(false);
   const [isInCart, setIsInCart] = useState(false);
-  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
+  const { store } = useSelector((state: RootState) => state.ui);
 
   const dispatch = useDispatch();
   const productImage = useMemo(() => {
@@ -136,7 +136,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                   </>
                 ) : !isInCart ? (
                   <Button
-                    disabled={!storeIsOpen}
+                    disabled={!store.isOpen && store.type === "close"}
                     onClick={() => setOpen((prev) => !prev)}
                     variant="contained"
                     color="success"
@@ -152,7 +152,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                 ) : (
                   <>
                     <Button
-                      disabled={!storeIsOpen}
+                      disabled={!store.isOpen && store.type === "close"}
                       onClick={onDelete}
                       color="error"
                       className={style["roundedButtonDelete"]}
@@ -167,7 +167,7 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                       <DeleteIcon color="info" />
                     </Button>
                     <Button
-                      disabled={!storeIsOpen}
+                      disabled={!store.isOpen && store.type === "close"}
                       onClick={() => setOpen((prev) => !prev)}
                       className={style["roundedButtonEdit"]}
                       color="warning"

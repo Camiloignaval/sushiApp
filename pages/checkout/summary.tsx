@@ -24,6 +24,7 @@ import toast from "react-hot-toast";
 import { cleanCart } from "../../store/Slices/CartSlice";
 import { Extras } from "../../components/cart/Extras";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
+import Swal from "sweetalert2";
 
 const SummaryPage = () => {
   const router = useRouter();
@@ -43,6 +44,7 @@ const SummaryPage = () => {
   const [createNewOrder, createNewOrderState] = useCreateOrderMutation();
   const { data: productData, isLoading } = useGetProductsQuery(null);
   const [disabledSubmit, setDisabledSubmit] = useState(false);
+  const { store } = useSelector((state: RootState) => state.ui);
 
   useEffect(() => {
     if (!Cookies.get("address")) {
@@ -55,6 +57,10 @@ const SummaryPage = () => {
   }
 
   const createOrder = async () => {
+    // let confirm = true;
+
+    // if (!confirm) return;
+
     if (!shippingAddress) {
       toast.error("No hay dirección de entrega");
       return;
@@ -135,13 +141,35 @@ const SummaryPage = () => {
     };
 
     try {
-      console.log({ orderToSend });
-      await createNewOrder(orderToSend).unwrap();
-      dispatch(cleanCart());
-      Cookies.remove("address");
-      // // TODO hacer lo que se necesite como enviar whatsap o en backend
-      router.replace("/");
-      setDisabledSubmit(true);
+      if (!store.isOpen && store.type === "soon") {
+        Swal.fire({
+          title: "Recuerda!",
+          text: "Aún no abrimos, tu pedido sera tomado apenas abramos!",
+          icon: "info",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          confirmButtonText: "Si, enviar",
+          cancelButtonText: "Cancelar",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            await createNewOrder(orderToSend).unwrap();
+            dispatch(cleanCart());
+            Cookies.remove("address");
+            router.replace("/");
+            setDisabledSubmit(true);
+          } else {
+            return;
+          }
+        });
+      } else {
+        await createNewOrder(orderToSend).unwrap();
+        dispatch(cleanCart());
+        Cookies.remove("address");
+        // // TODO hacer lo que se necesite como enviar whatsap o en backend
+        router.replace("/");
+        setDisabledSubmit(true);
+      }
     } catch (error) {
       console.log({ error });
     }

@@ -12,8 +12,9 @@ export async function middleware(req: NextRequest) {
   const { protocol, host, pathname } = req.nextUrl;
 
   if (
-    req.nextUrl.pathname.startsWith("/checkout") ||
-    req.nextUrl.pathname.startsWith("/cart")
+    req.nextUrl.pathname.startsWith("/checkout")
+    // ||
+    // req.nextUrl.pathname.startsWith("/cart")
   ) {
     try {
       // console.log({ analise: "analise" });
@@ -59,5 +60,9 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/checkout/:path*", "/admin/:path*", "/api/admin/:path*", "/cart"],
+  matcher: [
+    "/checkout/:path*",
+    "/admin/:path*",
+    "/api/admin/:path*" /* , "/cart" */,
+  ],
 };

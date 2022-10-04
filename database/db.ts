@@ -24,7 +24,7 @@ export const connect = async () => {
       return;
     }
 
-    // await mongoose.disconnect();
+    await mongoose.disconnect();
   }
   await mongoose.connect(
     process.env.MONGO_URL || "" /* , { maxPoolSize: 10 } */
@@ -34,7 +34,7 @@ export const connect = async () => {
 };
 
 export const disconnect = async () => {
-  // if (process.env.NODE_ENV === "development") return;
+  if (process.env.NODE_ENV === "development") return;
 
   if (mongoConnection.isConnected === 0) return;
 
@@ -43,7 +43,3 @@ export const disconnect = async () => {
 
   console.log("Desconectado de MongoDB");
 };
-
-// export const close = async () => {
-//   await mongoose.connection.close();
-// };

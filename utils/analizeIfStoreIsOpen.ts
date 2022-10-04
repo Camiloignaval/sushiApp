@@ -1,6 +1,7 @@
 import { ISettingsStore } from "./../interfaces/settings";
 import { format, isAfter, isBefore } from "date-fns";
 import esLocale from "date-fns/locale/es";
+import { storeOpen } from "../store/Slices/UISlice";
 
 export const analizeIfStoreIsOpen = (settingsData: ISettingsStore) => {
   const today = format(new Date(), "EEEE", { locale: esLocale });
@@ -23,17 +24,17 @@ export const analizeIfStoreIsOpen = (settingsData: ISettingsStore) => {
     new Date(`2022-06-06 ${horaCierre}`)
   );
   if (settingsData.forceOpen === true) {
-    return true;
+    return { type: "open", isOpen: true };
   }
-  if (settingsData.forceClose === true) {
-    return false;
+  if (settingsData.forceClose === true || !(settingsData as any)[today].open) {
+    return { type: "close", isOpen: false };
   }
 
   if ((settingsData as any)[today].open) {
     if (isAfterOfOpen && isBeforeOfOpen) {
-      return true;
+      return { type: "open", isOpen: true };
     }
   }
 
-  return false;
+  return { type: "soon", isOpen: false };
 };

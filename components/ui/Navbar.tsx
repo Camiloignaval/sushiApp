@@ -40,7 +40,7 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
   const { numberOfItems, total } = useSelector(
     (state: RootState) => state.cart
   );
-  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
+  const { store } = useSelector((state: RootState) => state.ui);
 
   const onSearchTerm = () => {
     if (searchTerm.trim().length === 0) return;
@@ -136,9 +136,9 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
               >
                 {currency.format(total)}
               </Typography>
-              <NextLink href={!storeIsOpen ? "/" : "/cart"} passHref>
+              <NextLink href={store.type === "close" ? "/" : "/cart"} passHref>
                 <Link>
-                  <IconButton disabled={!storeIsOpen}>
+                  <IconButton disabled={store.type === "close"}>
                     <Badge
                       badgeContent={numberOfItems > 9 ? "+9" : numberOfItems}
                       color="secondary"

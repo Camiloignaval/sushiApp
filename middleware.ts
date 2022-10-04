@@ -31,6 +31,7 @@ export async function middleware(req: NextRequest) {
       // if (!isOpen) {
       //   return NextResponse.redirect(`${protocol}/${host}/`);
       // }
+      return NextResponse.next();
     } catch (error) {
       console.log({ errorinmiddlewarecart: error });
       return NextResponse.redirect(`${protocol}/${host}/`);

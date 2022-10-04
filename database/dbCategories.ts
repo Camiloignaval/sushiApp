@@ -10,6 +10,9 @@ export const getCategories = async (): Promise<ICategory[] | null> => {
 
     return JSON.parse(JSON.stringify(categories));
   } catch (error) {
+    console.log({ errordbcategories: error });
+
+    await db.disconnect();
     return JSON.parse(JSON.stringify([]));
   }
 };

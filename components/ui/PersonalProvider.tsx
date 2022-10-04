@@ -200,8 +200,10 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   useEffect(() => {
     if (firstRender) {
       try {
-        // Cookie.get("token");
-        checkToken();
+        const token = Cookie.get("token");
+        if (token) {
+          checkToken();
+        }
       } catch (error) {
         console.log(error);
       }

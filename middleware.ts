@@ -39,17 +39,17 @@ export async function middleware(req: NextRequest) {
 
   if (
     req.nextUrl.pathname.startsWith("/admin") ||
+    // TODO arreglar no deja cargar pagina
     req.nextUrl.pathname.startsWith("/api/admin")
   ) {
     try {
       if (!token) {
         return NextResponse.redirect(`${protocol}/${host}/`);
       }
-      const respToken = await jose.jwtVerify(
+      await jose.jwtVerify(
         token || "",
         new TextEncoder().encode(process.env.JWT_SECRET_SEED || "")
       );
-
       return NextResponse.next();
     } catch (error) {
       return NextResponse.redirect(`${protocol}/${host}/`);

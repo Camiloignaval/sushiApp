@@ -24,15 +24,17 @@ export const connect = async () => {
       return;
     }
 
-    await mongoose.disconnect();
+    // await mongoose.disconnect();
   }
-  await mongoose.connect(process.env.MONGO_URL || "");
+  await mongoose.connect(
+    process.env.MONGO_URL || "" /* , { maxPoolSize: 10 } */
+  );
   mongoConnection.isConnected = 1;
   console.log("Conectado a MongoDB:", process.env.MONGO_URL);
 };
 
 export const disconnect = async () => {
-  if (process.env.NODE_ENV === "development") return;
+  // if (process.env.NODE_ENV === "development") return;
 
   if (mongoConnection.isConnected === 0) return;
 

@@ -3,8 +3,6 @@ import type { NextRequest } from "next/server";
 import * as jose from "jose";
 import { analizeIfStoreIsOpen } from "./utils/analizeIfStoreIsOpen";
 import { useState } from "react";
-import { useSelector } from "react-redux";
-import { RootState } from "./store";
 
 export async function middleware(req: NextRequest) {
   console.log({ entre: "entre a middleware" });

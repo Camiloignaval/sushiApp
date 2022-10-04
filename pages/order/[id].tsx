@@ -166,11 +166,11 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
         <Grid item xs={11}>
           <Typography variant="subtitle1">
             <PersonOutlineOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {(order as IOrder).shippingAddress.username}
+            {(order as IOrder).shippingAddress?.username}
           </Typography>{" "}
           <Typography variant="subtitle1">
             <HomeOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {(order as IOrder).shippingAddress.address}
+            {(order as IOrder).shippingAddress?.address}
           </Typography>
         </Grid>
       </Grid>

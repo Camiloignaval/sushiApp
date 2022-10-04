@@ -34,7 +34,7 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
   const [isError, setisError] = useState(false);
   const dispatch = useDispatch();
   const { cart } = useSelector((state: RootState) => state.cart);
-  const { storeIsOpen } = useSelector((state: RootState) => state.ui);
+  const { store } = useSelector((state: RootState) => state.ui);
 
   const [promoToSendCart, setPromoToSendCart] = useState<ICartProduct>({
     _id: uuidv4(),
@@ -241,7 +241,9 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
         <CardActions sx={{ margin: "0 20px" }}>
           <Button
             disabled={
-              isError || promoToSendCart.envelopes?.length === 0 || !storeIsOpen
+              isError ||
+              promoToSendCart.envelopes?.length === 0 ||
+              (!store.isOpen && store.type === "close")
             }
             onClick={onConfirm}
             fullWidth

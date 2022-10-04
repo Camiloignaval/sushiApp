@@ -216,7 +216,6 @@ export const AutoCompletePlace: React.FC<Props> = ({
 
   // ocultar opciones
   useEffect(() => {
-    console.log({ options });
     if (options.length === 0) {
       document
         .querySelector(".MuiAutocomplete-popper")
@@ -234,7 +233,6 @@ export const AutoCompletePlace: React.FC<Props> = ({
 
   const buscarDireccion = () => {
     let active = true;
-    console.log({ input: inputValue.trim().split(" ") });
     if (
       inputValue
         .trim()
@@ -369,7 +367,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
               validate: {
                 required: () => {
                   if (!isSameInputWithCart())
-                    return "Para agregar dirección (o modificar), presionar lupa, y seleccionar opción deseada de lista desplegable";
+                    return "Para agregar dirección (o modificar), presionar botón 'Buscar', y seleccionar opción deseada de lista desplegable, de lo contrario no podrá continuar";
                 },
               },
             })}
@@ -417,7 +415,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
           );
         }}
       />
-      <IconButton
+      {/* <IconButton
         disabled={disableInput}
         size="large"
         type="button"
@@ -425,7 +423,16 @@ export const AutoCompletePlace: React.FC<Props> = ({
         color="primary"
       >
         <SearchOutlined />
-      </IconButton>
+      </IconButton> */}
+      <Button
+        disabled={disableInput}
+        size="small"
+        type="button"
+        onClick={buscarDireccion}
+        color="primary"
+      >
+        Buscar
+      </Button>
     </Box>
   );
 };

@@ -18,6 +18,7 @@ import { useValidateCouponMutation } from "../../store/RTKQuery/couponApi";
 import { addCoupon, removeCoupon } from "../../store/Slices/CartSlice";
 import { useRouter } from "next/router";
 import { IOrder } from "../../interfaces";
+import { toast } from "react-hot-toast";
 
 interface Props {
   editable?: boolean;
@@ -51,9 +52,13 @@ export const OrdenSummary: FC<Props> = ({
 
   const onQueryCoupon = async () => {
     try {
+      if (!cart?.shippingAddress) {
+        return toast.error("Favor primero ingresar datos de dirección");
+      }
       await validateCoupon({
         code: inputCoupon,
         amount: cart.subTotal,
+        phone: cart?.shippingAddress!.phone!,
       }).unwrap();
     } catch (error) {
       console.log({ error });

@@ -3,6 +3,7 @@ import { currency } from ".";
 import { ICoupon } from "./../interfaces/cupon";
 export const validateCoupon = (cupon: ICoupon, subTotal: number) => {
   // si tiene fecha de expiracion
+
   if (cupon.expire) {
     const fechaExp = new Date(cupon.expireIn!);
     const isCaducated = isAfter(new Date(), fechaExp);

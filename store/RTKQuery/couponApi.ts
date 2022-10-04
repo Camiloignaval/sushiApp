@@ -20,10 +20,10 @@ export const couponApi = createApi({
   endpoints: (builder) => ({
     validateCoupon: builder.mutation<
       IResponse,
-      { code: string; amount: number }
+      { code: string; amount: number; phone: string }
     >({
       query: (data) => ({
-        url: `/coupon?c=${data.code}&a=${data.amount}`,
+        url: `/coupon?c=${data.code}&a=${data.amount}&p=${data.phone}`,
         method: "post",
       }),
       onQueryStarted(data, { queryFulfilled, dispatch }) {

@@ -45,6 +45,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   // analizar si esta abierta la tienda o no
   useEffect(() => {
     if (settingsData) {
+      console.log({ settingsData });
       const status = analizeIfStoreIsOpen(settingsData);
       dispatch(storeState(status as any));
 

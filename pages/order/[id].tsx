@@ -197,7 +197,7 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
           width={"300px"}
           height={"300px"}
           src={
-            (order as IOrder).status === "ingested"
+            (orderToShow as IOrder).status === "ingested"
               ? ingestedGif
               : (order as IOrder).status === "inprocess"
               ? inprocessGif

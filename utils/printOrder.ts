@@ -23,7 +23,7 @@ interface IProductCustomRoll {
 export const printOrder = async (order: IOrder) => {
   const nombreImpresora = "ImpresoraTermica"; // Puede ser obtenida de la lista de impresoras o puedes escribirlo si lo conoces
 
-  const conector = new ConectorPluginV3("https://dashboard.heroku.com/");
+  const conector = new ConectorPluginV3(process.env.HOST_NAME);
   const respuesta = await conector
     .Iniciar()
     .EstablecerTamañoFuente(2, 2)

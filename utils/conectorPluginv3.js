@@ -1,3 +1,5 @@
+import axios from "axios";
+
 export const ConectorPluginV3 = (() => {
   /**
    * Una clase para interactuar con el plugin v3
@@ -367,13 +369,9 @@ export const ConectorPluginV3 = (() => {
       //   // headers: 'Access-Control-Allow-Origin'
       // });
       // return await response.json();
-      const response = await fetch(
+      const response = await axios.post(
         ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
-        {
-          method: "POST",
-          body: JSON.stringify(payload),
-          headers: "Access-Control-Allow-Origin",
-        }
+        JSON.stringify(payload)
       );
       return await response.json();
       // return await data;

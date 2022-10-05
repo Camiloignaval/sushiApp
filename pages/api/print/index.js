@@ -6,6 +6,7 @@ const print = nc(/* { req, res } */)
   .use(cors())
   .post(async (req, res) => {
     const body = req.body;
+    console.log({ bodyyyyy: body });
     const { data } = await axios.post("http://localhost:8000/imprimir", body);
     res.json(data);
   });

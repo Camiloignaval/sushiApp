@@ -361,12 +361,22 @@ export const ConectorPluginV3 = (() => {
       };
       // const { data } = await axios.post("/api/print", JSON.stringify(payload));
 
-      const response = await fetch("/api/print", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
+      // const response = await fetch("/api/print", {
+      //   method: "POST",
+      //   body: JSON.stringify(payload),
+      //   // headers: 'Access-Control-Allow-Origin'
+      // });
+      // return await response.json();
+      const response = await fetch(
+        ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
+        {
+          method: "POST",
+          body: JSON.stringify(payload),
+          headers: "Access-Control-Allow-Origin",
+        }
+      );
       return await response.json();
-      return await data;
+      // return await data;
     }
   }
   return ConectorPlugin;

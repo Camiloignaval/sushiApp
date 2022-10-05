@@ -236,6 +236,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
     if (
       inputValue
         .trim()
+        .replaceAll(",", "")
         .split(" ")
         .every((s) => isNaN(Number(s)))
     ) {

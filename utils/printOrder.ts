@@ -76,7 +76,7 @@ export const printOrder = async (order: IOrder) => {
           ...(item.proteins ?? []),
           ...(item.vegetables ?? []),
         ]
-          .map((i) => i.name)
+          .map((i) => `${i.qty} ${i.name}`)
           .join("-");
         conector
           .EstablecerEnfatizado(false)
@@ -88,25 +88,22 @@ export const printOrder = async (order: IOrder) => {
           .EstablecerEnfatizado(true)
           .TextoSegunPaginaDeCodigos(2, "cp850", " -Extras: ");
         const stringExtras = item.extraProduct
-          .map((i: IProductCustomRoll) => i.name)
+          .map((i: IProductCustomRoll) => `${(i as any).qty} ${i.name}`)
           .join("-");
         conector
           .EstablecerEnfatizado(false)
           .TextoSegunPaginaDeCodigos(2, "cp850", `${stringExtras}\n`);
       }
-      // Salsas
-      // TODO ARREGLAR
-      conector.EstablecerEnfatizado(true).EscribirTexto(" -Salsas: ");
-      if (item.sauces) {
-        const stringRelleno = item.sauces
-          .map((i: IProductCustomRoll) =>
-            i?.name ? i.name.replace("Salsa de", "") : ""
-          )
-          .join("-");
-        conector
-          .EstablecerEnfatizado(false)
-          .TextoSegunPaginaDeCodigos(2, "cp850", `${stringRelleno}\n`);
-      }
+    }
+    // Salsas
+    conector.EstablecerEnfatizado(true).EscribirTexto(" -Salsas: ");
+    if (item.sauces) {
+      const stringRelleno = item.sauces
+        .map((i: IProductCustomRoll) => `${(i as any).qty} ${i?.name}`)
+        .join("-");
+      conector
+        .EstablecerEnfatizado(false)
+        .TextoSegunPaginaDeCodigos(2, "cp850", `${stringRelleno}\n`);
     }
     if (item.note) {
       // notas

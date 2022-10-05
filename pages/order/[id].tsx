@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import { dbOrders } from "../../database";
 import { IOrder } from "../../interfaces";
@@ -22,6 +22,7 @@ import Image from "next/image";
 import { useSearchOrderByIdQuery } from "../../store/RTKQuery/ordersApi";
 import { FullScreenLoading } from "../../components/ui";
 import confetti from "canvas-confetti";
+import { first, orderBy } from "lodash";
 
 interface Props {
   order: IOrder;
@@ -40,10 +41,16 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
   const { data: order, isLoading } = useSearchOrderByIdQuery(
     orderByServer._id!,
     {
-      // poolingInterval: 3000,
-      pollingInterval: 60000, // 1 minuto,
+      pollingInterval: 30000, // 1 minuto,
     }
   );
+  const [orderToShow, setOrderToShow] = useState<IOrder>(orderByServer);
+
+  useEffect(() => {
+    if ((order as IOrder)?._id) {
+      setOrderToShow(order as IOrder);
+    }
+  }, [order]);
 
   useEffect(() => {
     var colors = ["#bb0000", "#ffffff"];
@@ -151,7 +158,7 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
       <Stepper
         alternativeLabel
         activeStep={stepinBd.findIndex(
-          (step) => step === (order as IOrder).status
+          (step) => step === (orderToShow as IOrder).status
         )}
         connector={<ColorlibConnector />}
       >
@@ -166,11 +173,11 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
         <Grid item xs={11}>
           <Typography variant="subtitle1">
             <PersonOutlineOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {(order as IOrder).shippingAddress?.username}
+            {(orderToShow as IOrder).shippingAddress?.username}
           </Typography>{" "}
           <Typography variant="subtitle1">
             <HomeOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {(order as IOrder).shippingAddress?.address}
+            {(orderToShow as IOrder).shippingAddress?.address}
           </Typography>
         </Grid>
       </Grid>

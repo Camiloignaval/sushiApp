@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../database";
-import { IProduct, ISettingsStore } from "../../interfaces";
-import Settings from "../../models/Settings";
+import { ISettingsStore } from "../../interfaces";
+import { Settings } from "../../models";
 
 type Data =
   | {
@@ -24,9 +24,9 @@ const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const body = req.body;
   try {
     await db.connect();
-    const settings = await Settings.findOne({});
+    const settings = await Settings.find();
     await db.disconnect();
-    return res.status(200).json(settings!);
+    return res.status(200).json(settings[0]!);
   } catch (error) {
     await db.disconnect();
     console.log({ errorsettingsclient: error });

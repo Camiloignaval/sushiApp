@@ -19,7 +19,6 @@ interface IProductCustomRoll {
 //     .Feed(1)
 //     .imprimirEn(nombreImpresora);
 // };
-const URLPlugin = window.document.location.origin;
 
 export const printOrder = async (order: IOrder) => {
   const nombreImpresora = "ImpresoraTermica"; // Puede ser obtenida de la lista de impresoras o puedes escribirlo si lo conoces

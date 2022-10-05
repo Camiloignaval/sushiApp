@@ -25,9 +25,9 @@ import confetti from "canvas-confetti";
 import { first, orderBy } from "lodash";
 import { useRouter } from "next/router";
 
-interface Props {
-  order: IOrder;
-}
+// interface Props {
+//   order: IOrder;
+// }
 
 const ingestedGif =
   "https://res.cloudinary.com/dc6vako2z/image/upload/v1663116833/SushiApp/tumblr_o1ligs21271uswgqqo1_400_wtaavy.webp";
@@ -38,17 +38,27 @@ const deliveryGif =
 const dispatchedGif =
   "https://res.cloudinary.com/dc6vako2z/image/upload/v1664416497/SushiApp/pig-piglet_hpp7m2.gif";
 
-const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
+const OrderInfoPage /* : FC<Props> */ = (/* { order: orderByServer } */) => {
   const router = useRouter();
-  const { id } = router.query;
+  const [id, setId] = useState<string | null>();
+  // const { id } = router.query.id;
   const { data: order, isLoading } = useSearchOrderByIdQuery(
-    orderByServer._id!,
-    // id as string,
+    // orderByServer._id!,
+    router.query.id as string,
     {
       pollingInterval: 30000, // 1 minuto,
     }
   );
-  const [orderToShow, setOrderToShow] = useState<IOrder>(orderByServer);
+  useEffect(() => {
+    const { id } = router.query;
+    if (id) {
+      setId(id as string);
+    }
+  }, [router.query]);
+
+  console.log({ id: router.query.id });
+  const [orderToShow, setOrderToShow] =
+    useState<IOrder | null>(/* orderByServer */);
   console.log({ order });
   useEffect(() => {
     if ((order as IOrder)?._id) {
@@ -128,7 +138,7 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
     }),
   }));
 
-  if (!order || isLoading) return <FullScreenLoading />;
+  if (!order || isLoading || !id) return <FullScreenLoading />;
 
   function ColorlibStepIcon(props: StepIconProps) {
     const { active, completed, className } = props;
@@ -224,21 +234,21 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { id = "" } = query;
-  const order = await dbOrders.getOrderById(id.toString());
+// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+//   const { id = "" } = query;
+//   const order = await dbOrders.getOrderById(id.toString());
 
-  if (!order) {
-    return {
-      redirect: {
-        destination: `/`,
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { order },
-  };
-};
+//   if (!order) {
+//     return {
+//       redirect: {
+//         destination: `/`,
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { order },
+//   };
+// };
 
 export default OrderInfoPage;

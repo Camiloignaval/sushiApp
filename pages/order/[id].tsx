@@ -23,6 +23,7 @@ import { useSearchOrderByIdQuery } from "../../store/RTKQuery/ordersApi";
 import { FullScreenLoading } from "../../components/ui";
 import confetti from "canvas-confetti";
 import { first, orderBy } from "lodash";
+import { useRouter } from "next/router";
 
 interface Props {
   order: IOrder;
@@ -37,26 +38,29 @@ const deliveryGif =
 const dispatchedGif =
   "https://res.cloudinary.com/dc6vako2z/image/upload/v1664416497/SushiApp/pig-piglet_hpp7m2.gif";
 
-const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
+const OrderInfoPage: FC<Props> = (/* { order: orderByServer } */) => {
+  const router = useRouter();
+  const { id } = router.query;
   const { data: order, isLoading } = useSearchOrderByIdQuery(
-    orderByServer._id!,
+    // orderByServer._id!,
+    id as string,
     {
       pollingInterval: 30000, // 1 minuto,
     }
   );
-  const [orderToShow, setOrderToShow] = useState<IOrder>(orderByServer);
-
-  useEffect(() => {
-    if ((order as IOrder)?._id) {
-      setOrderToShow(order as IOrder);
-    }
-  }, [order]);
+  // const [orderToShow, setOrderToShow] = useState<IOrder>(order);
+  // console.log({ order });
+  // useEffect(() => {
+  //   if ((order as IOrder)?._id) {
+  //     setOrderToShow(order as IOrder);
+  //   }
+  // }, [order]);
 
   useEffect(() => {
     var colors = ["#bb0000", "#ffffff"];
 
     if (order && !isLoading) {
-      if ((order as IOrder).status === "delivered") {
+      if ((order as IOrder)?.status === "delivered") {
         confetti({
           particleCount: 400,
           angle: 60,
@@ -155,78 +159,86 @@ const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
       pageDescription="Página para ver estado de pedido"
       imageFullUrl="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko_qtifjs.webp"
     >
-      <Stepper
-        alternativeLabel
-        activeStep={stepinBd.findIndex(
-          (step) => step === (orderToShow as IOrder).status
-        )}
-        connector={<ColorlibConnector />}
-      >
-        {steps.map((label) => (
-          <Step key={label}>
-            <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
-          </Step>
-        ))}
-      </Stepper>
-      <Grid container mt={4}>
-        <Grid item xs={1}></Grid>
-        <Grid item xs={11}>
-          <Typography variant="subtitle1">
-            <PersonOutlineOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {(orderToShow as IOrder).shippingAddress?.username}
-          </Typography>{" "}
-          <Typography variant="subtitle1">
-            <HomeOutlined sx={{ position: "relative", top: 5 }} />{" "}
-            {(orderToShow as IOrder).shippingAddress?.address}
-          </Typography>
-        </Grid>
-      </Grid>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          mt: 4,
-        }}
-      >
-        <Image
-          style={{
-            borderRadius: "15px",
-            borderImage: "revert",
-          }}
-          layout="fixed"
-          width={"300px"}
-          height={"300px"}
-          src={
-            (orderToShow as IOrder).status === "ingested"
-              ? ingestedGif
-              : (order as IOrder).status === "inprocess"
-              ? inprocessGif
-              : (order as IOrder).status === "dispatched"
-              ? deliveryGif
-              : dispatchedGif
-          }
-          alt=""
-        />
-      </Box>
+      {!order || isLoading ? (
+        <FullScreenLoading />
+      ) : (
+        <>
+          <Stepper
+            alternativeLabel
+            activeStep={stepinBd.findIndex(
+              (step) => step === (order as IOrder)?.status
+            )}
+            connector={<ColorlibConnector />}
+          >
+            {steps.map((label) => (
+              <Step key={label}>
+                <StepLabel StepIconComponent={ColorlibStepIcon}>
+                  {label}
+                </StepLabel>
+              </Step>
+            ))}
+          </Stepper>
+          <Grid container mt={4}>
+            <Grid item xs={1}></Grid>
+            <Grid item xs={11}>
+              <Typography variant="subtitle1">
+                <PersonOutlineOutlined sx={{ position: "relative", top: 5 }} />{" "}
+                {(order as IOrder)?.shippingAddress?.username}
+              </Typography>{" "}
+              <Typography variant="subtitle1">
+                <HomeOutlined sx={{ position: "relative", top: 5 }} />{" "}
+                {(order as IOrder)?.shippingAddress?.address}
+              </Typography>
+            </Grid>
+          </Grid>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              mt: 4,
+            }}
+          >
+            <Image
+              style={{
+                borderRadius: "15px",
+                borderImage: "revert",
+              }}
+              layout="fixed"
+              width={"300px"}
+              height={"300px"}
+              src={
+                (order as IOrder)?.status === "ingested"
+                  ? ingestedGif
+                  : (order as IOrder)?.status === "inprocess"
+                  ? inprocessGif
+                  : (order as IOrder)?.status === "dispatched"
+                  ? deliveryGif
+                  : dispatchedGif
+              }
+              alt=""
+            />
+          </Box>
+        </>
+      )}
     </ShopLayout>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-  const { id = "" } = query;
-  const order = await dbOrders.getOrderById(id.toString());
+// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+//   const { id = "" } = query;
+//   const order = await dbOrders.getOrderById(id.toString());
 
-  if (!order) {
-    return {
-      redirect: {
-        destination: `/`,
-        permanent: false,
-      },
-    };
-  }
-  return {
-    props: { order },
-  };
-};
+//   if (!order) {
+//     return {
+//       redirect: {
+//         destination: `/`,
+//         permanent: false,
+//       },
+//     };
+//   }
+//   return {
+//     props: { order },
+//   };
+// };
 
 export default OrderInfoPage;

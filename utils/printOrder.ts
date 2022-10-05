@@ -23,7 +23,7 @@ interface IProductCustomRoll {
 export const printOrder = async (order: IOrder) => {
   const nombreImpresora = "ImpresoraTermica"; // Puede ser obtenida de la lista de impresoras o puedes escribirlo si lo conoces
 
-  const conector = new ConectorPluginV3();
+  const conector = new ConectorPluginV3("https://dashboard.heroku.com/");
   const respuesta = await conector
     .Iniciar()
     .EstablecerTamañoFuente(2, 2)
@@ -111,7 +111,7 @@ export const printOrder = async (order: IOrder) => {
     if (item.note) {
       // notas
       conector
-        .EstablecerEnfatizado(1)
+        .EstablecerEnfatizado(true)
         .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
         .TextoSegunPaginaDeCodigos(2, "cp850", `*${item?.note}*\n`);
     }
@@ -147,11 +147,11 @@ export const printOrder = async (order: IOrder) => {
     .EstablecerEnfatizado(false)
     .EstablecerAlineacion(ConectorPluginV3.ALINEACION_DERECHA)
     .TextoSegunPaginaDeCodigos(2, "cp850", `N° ${order._id!.slice(-10)}`)
-    .Feed(1);
-  // .Corte()
-  // .CorteParcial()
-  // .Pulso(48, 60, 120)
-  // .imprimirEn(nombreImpresora);
+    .Feed(1)
+    // .Corte()
+    // .CorteParcial()
+    // .Pulso(120)
+    .imprimirEn(nombreImpresora);
   if (respuesta) {
     console.log("Impreso correctamente", JSON.stringify(respuesta));
   } else {

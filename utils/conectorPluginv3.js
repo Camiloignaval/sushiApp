@@ -359,11 +359,14 @@ export const ConectorPluginV3 = (() => {
         operaciones: this.operaciones,
         nombreImpresora,
       };
-      const response = await fetch(this.ruta + "/imprimir", {
-        method: "POST",
-        body: JSON.stringify(payload),
-      });
-      return await response.json();
+      const { data } = await axios.post("/api/print", JSON.stringify(payload));
+
+      // const response = await fetch(this.ruta + "/imprimir", {
+      //   method: "POST",
+      //   body: JSON.stringify(payload),
+      // });
+      // return await response.json();
+      return await data;
     }
   }
   return ConectorPlugin;

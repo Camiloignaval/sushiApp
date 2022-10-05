@@ -38,23 +38,23 @@ const deliveryGif =
 const dispatchedGif =
   "https://res.cloudinary.com/dc6vako2z/image/upload/v1664416497/SushiApp/pig-piglet_hpp7m2.gif";
 
-const OrderInfoPage: FC<Props> = (/* { order: orderByServer } */) => {
+const OrderInfoPage: FC<Props> = ({ order: orderByServer }) => {
   const router = useRouter();
   const { id } = router.query;
   const { data: order, isLoading } = useSearchOrderByIdQuery(
-    // orderByServer._id!,
-    id as string,
+    orderByServer._id!,
+    // id as string,
     {
       pollingInterval: 30000, // 1 minuto,
     }
   );
-  // const [orderToShow, setOrderToShow] = useState<IOrder>(order);
-  // console.log({ order });
-  // useEffect(() => {
-  //   if ((order as IOrder)?._id) {
-  //     setOrderToShow(order as IOrder);
-  //   }
-  // }, [order]);
+  const [orderToShow, setOrderToShow] = useState<IOrder>(orderByServer);
+  console.log({ order });
+  useEffect(() => {
+    if ((order as IOrder)?._id) {
+      setOrderToShow(order as IOrder);
+    }
+  }, [order]);
 
   useEffect(() => {
     var colors = ["#bb0000", "#ffffff"];
@@ -166,7 +166,7 @@ const OrderInfoPage: FC<Props> = (/* { order: orderByServer } */) => {
           <Stepper
             alternativeLabel
             activeStep={stepinBd.findIndex(
-              (step) => step === (order as IOrder)?.status
+              (step) => step === (orderToShow as IOrder)?.status
             )}
             connector={<ColorlibConnector />}
           >
@@ -183,11 +183,11 @@ const OrderInfoPage: FC<Props> = (/* { order: orderByServer } */) => {
             <Grid item xs={11}>
               <Typography variant="subtitle1">
                 <PersonOutlineOutlined sx={{ position: "relative", top: 5 }} />{" "}
-                {(order as IOrder)?.shippingAddress?.username}
+                {(orderToShow as IOrder)?.shippingAddress?.username}
               </Typography>{" "}
               <Typography variant="subtitle1">
                 <HomeOutlined sx={{ position: "relative", top: 5 }} />{" "}
-                {(order as IOrder)?.shippingAddress?.address}
+                {(orderToShow as IOrder)?.shippingAddress?.address}
               </Typography>
             </Grid>
           </Grid>
@@ -207,7 +207,7 @@ const OrderInfoPage: FC<Props> = (/* { order: orderByServer } */) => {
               width={"300px"}
               height={"300px"}
               src={
-                (order as IOrder)?.status === "ingested"
+                (orderToShow as IOrder)?.status === "ingested"
                   ? ingestedGif
                   : (order as IOrder)?.status === "inprocess"
                   ? inprocessGif
@@ -224,21 +224,21 @@ const OrderInfoPage: FC<Props> = (/* { order: orderByServer } */) => {
   );
 };
 
-// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-//   const { id = "" } = query;
-//   const order = await dbOrders.getOrderById(id.toString());
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { id = "" } = query;
+  const order = await dbOrders.getOrderById(id.toString());
 
-//   if (!order) {
-//     return {
-//       redirect: {
-//         destination: `/`,
-//         permanent: false,
-//       },
-//     };
-//   }
-//   return {
-//     props: { order },
-//   };
-// };
+  if (!order) {
+    return {
+      redirect: {
+        destination: `/`,
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: { order },
+  };
+};
 
 export default OrderInfoPage;

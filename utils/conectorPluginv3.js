@@ -363,7 +363,8 @@ export const ConectorPluginV3 = (() => {
       };
       const { data } = await axios.post(
         "/api/print/print",
-        JSON.stringify(payload)
+        // JSON.stringify(payload)
+        payload
       );
 
       // const response = await fetch("/api/print", {

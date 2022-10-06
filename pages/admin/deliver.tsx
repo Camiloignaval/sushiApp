@@ -41,7 +41,7 @@ const DeliverPage = () => {
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(20);
   const { data: dataOrders, isLoading } = useGetAllOrdersQuery(
-    `status=dispatched&page=${page + 1}&limit=${pageSize}`
+    `status=["dispatched"]&page=${page + 1}&limit=${pageSize}`
   );
   const [rowCountState, setRowCountState] = React.useState(
     dataOrders?.totalDocs || 0

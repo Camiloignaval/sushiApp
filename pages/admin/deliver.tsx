@@ -77,8 +77,8 @@ const DeliverPage = () => {
             };
           }
         );
-        // objetoToSet.splice(objetoToSet.length - 1);
-        // setRouteOptimized(objetoToSet);
+        objetoToSet.splice(objetoToSet.length - 1);
+        setRouteOptimized(objetoToSet);
       }
     }
   };

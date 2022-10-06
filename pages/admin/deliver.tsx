@@ -92,8 +92,9 @@ const DeliverPage = () => {
       const arrWithOutAdress = routeOptimized?.filter(
         (r) => r.end_address !== street
       );
+      console.log({ arrWithOutAdress });
       setRouteOptimized(
-        (arrWithOutAdress ?? []).length > 0 ? (arrWithOutAdress as any) : null
+        (arrWithOutAdress ?? []).length > 0 ? (arrWithOutAdress as any) : []
       );
       // console.log({ aSetear });
     } catch (error) {
@@ -123,16 +124,23 @@ const DeliverPage = () => {
       minWidth: 150,
       flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
-        console.log(
-          `https://waze.com/ul?q=${row.address
-            .replaceAll(" ", "%20")
-            .split(",", 2)
-            // /* .replaceAll(",", "")
-            .join("%20")}`
-        );
+        const comuna = row.address
+          ?.trim()
+          // .replaceAll(" ", "%20")
+          ?.split(",", 2)[1]
+          .trim();
+        const direction = row.address
+          ?.trim()
+          // .replaceAll(" ", "%20")
+          ?.split(",", 1)[0]
+          ?.split(" ");
+        /* .join("%20") */
+        const numeration = direction?.pop();
+        direction.unshift(numeration);
+        direction.push(comuna);
         return (
           <a
-            href={`https://waze.com/ul?q=${row.address.split(",", 2)}`}
+            href={`https://waze.com/ul?q=${direction}`}
             target="_blank"
             rel="noreferrer"
           >

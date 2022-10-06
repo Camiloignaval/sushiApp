@@ -26,6 +26,7 @@ import { useGetCategoriesQuery } from "../store/RTKQuery/categoriesApi";
 import { dbCategories, dbPromotions } from "../database";
 import { useState, useEffect } from "react";
 import { CartInMobile } from "../components/cart/CartInMobile";
+import { optimizeRoute } from "../utils/optimizeRoute";
 
 interface Props {
   promotions: IPromotion[];

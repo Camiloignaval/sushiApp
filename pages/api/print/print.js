@@ -7,7 +7,10 @@ const print = nc(/* { req, res } */)
   .post(async (req, res) => {
     const body = req.body;
     console.log("mensaje desde nc:", body);
-    const { data } = await axios.post("http://localhost:8000/imprimir", body);
+    const { data } = await axios.post(
+      "http://localhost:8000/imprimir",
+      JSON.stringify(body)
+    );
     res.json(data);
   });
 

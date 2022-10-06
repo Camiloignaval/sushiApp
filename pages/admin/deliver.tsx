@@ -66,7 +66,7 @@ const DeliverPage = () => {
         const objetoToSet = orderAddress.map(
           ({ distance, duration, end_address, end_location }) => {
             console.log({
-              end_location: `${end_location.lat()}%20${end_location.lng()}`,
+              end_location: `${end_location.lat()},${end_location.lng()}`,
             });
             return {
               distance,

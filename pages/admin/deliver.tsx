@@ -72,7 +72,7 @@ const DeliverPage = () => {
               distance,
               duration,
               end_address,
-              ll: `${end_location.lat()}%20${end_location.lng()}`,
+              ll: `${end_location.lat()},${end_location.lng()}`,
             };
           }
         );

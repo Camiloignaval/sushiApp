@@ -6,7 +6,11 @@ import {
   CreditCardOffOutlined,
   CreditCardOutlined,
   DashboardOutlined,
+  DeliveryDiningOutlined,
+  DoneAllOutlined,
   GroupOutlined,
+  HourglassBottomOutlined,
+  OutdoorGrillOutlined,
   ProductionQuantityLimitsOutlined,
 } from "@mui/icons-material";
 import { Grid, Typography } from "@mui/material";
@@ -32,14 +36,6 @@ const DashBoardPage = () => {
     return () => clearInterval(interval);
   }, []);
 
-  // if (!isError && !data) {
-  //   return <></>;
-  // }
-
-  // if (isError) {
-  //   return <Typography>Error al cargar los datos</Typography>;
-  // }
-
   return (
     <AdminLayout
       icon={<DashboardOutlined />}
@@ -48,19 +44,36 @@ const DashBoardPage = () => {
     >
       <Grid container spacing={2}>
         <SummaryTitle
+          link='/admin/orders?status=["ingested","inprocess","dispatched","delivered"]'
           title={data?.numberOfOrders.toString()!}
           subTitle={"Ordenes totales"}
           icon={<CreditCardOutlined color="secondary" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
-          title={data?.paidOrders.toString()!}
-          subTitle={"Ordenes pagadas"}
-          icon={<AttachMoneyOutlined color="success" sx={{ fontSize: 40 }} />}
+          link='/admin/orders?status=["ingested"]'
+          title={data?.numberOfOrdersIngresadas.toString()!}
+          subTitle={"Ordenes en espera"}
+          icon={<HourglassBottomOutlined color="error" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
-          title={data?.notPaidOrders.toString()!}
-          subTitle={"Ordenes pendientes"}
-          icon={<CreditCardOffOutlined color="error" sx={{ fontSize: 40 }} />}
+          link='/admin/orders?status=["inprocess"]'
+          title={data?.numberOfOrdersEnProceso.toString()!}
+          subTitle={"Ordenes en proceso"}
+          icon={<OutdoorGrillOutlined color="warning" sx={{ fontSize: 40 }} />}
+        />
+        <SummaryTitle
+          link='/admin/orders?status=["dispatched"]'
+          title={data?.numberOfOrdersDespachadas.toString()!}
+          subTitle={"Ordenes despachadas"}
+          icon={
+            <DeliveryDiningOutlined color="secondary" sx={{ fontSize: 40 }} />
+          }
+        />
+        <SummaryTitle
+          link='/admin/orders?status=["delivered"]'
+          title={data?.numberOfOrdersEntregadas.toString()!}
+          subTitle={"Ordenes entregadas"}
+          icon={<DoneAllOutlined color="success" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
           title={data?.numberOfClients.toString()!}
@@ -68,6 +81,7 @@ const DashBoardPage = () => {
           icon={<GroupOutlined color="primary" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          link="/admin/products"
           title={data?.numberOfProducts.toString()!}
           subTitle={"Productos"}
           icon={<CategoryOutlined color="warning" sx={{ fontSize: 40 }} />}
@@ -80,13 +94,16 @@ const DashBoardPage = () => {
           }
         />
         <SummaryTitle
-          title={data?.lowInventory.toString()!}
-          subTitle={"Bajo inventario"}
+          link="/admin/promotions"
+          title={data?.numberOfPromotions.toString()!}
+          subTitle={"Promociones"}
+          icon={<CategoryOutlined color="warning" sx={{ fontSize: 40 }} />}
+        />
+        <SummaryTitle
+          title={data?.promotionsWithNoInventory.toString()!}
+          subTitle={"Promociones sin stock"}
           icon={
-            <ProductionQuantityLimitsOutlined
-              color="warning"
-              sx={{ fontSize: 40 }}
-            />
+            <CancelPresentationOutlined color="error" sx={{ fontSize: 40 }} />
           }
         />
         <SummaryTitle

@@ -34,12 +34,13 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     let {
       page = 1,
       limit = 20,
-      status = ["ingested", "inprocess", "dispatched"],
+      status = '["ingested", "inprocess", "dispatched"]',
     } = queryParams;
+
     await db.connect();
     //TODO agregar filtros
     const orders = await Order.paginate(
-      { status: { $in: status } },
+      { status: { $in: JSON.parse(status as string) } },
       { page, limit, sort: { createdAt: "asc" } }
     );
 

@@ -21,7 +21,7 @@ const LoginPage = () => {
   } = useForm<FormData>();
 
   const destination = useMemo(
-    () => router.query?.p?.toString() || "/",
+    () => router.query?.p?.toString() || "/admin",
     [router]
   );
 

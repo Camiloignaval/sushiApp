@@ -14,7 +14,8 @@ import {
   GridToolbar,
 } from "@mui/x-data-grid";
 import { format } from "date-fns";
-import React, { useState } from "react";
+import { useRouter } from "next/router";
+import React, { useEffect, useState } from "react";
 import { AdminLayout } from "../../../components/layouts";
 import { MessageModal, OrdersActions } from "../../../components/orders";
 import { FullScreenLoading } from "../../../components/ui";
@@ -27,23 +28,33 @@ import { currency } from "../../../utils";
 import { printOrder } from "../../../utils/printOrder";
 
 const OrdersPage = () => {
+  const router = useRouter();
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [retryConfirmQuery, retryConfirmStatus] =
     useRetryConfirmOrderMutation();
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(20);
   const [open, setOpen] = useState(false);
+  const [statusQuery, setStatusQuery] = useState<string | undefined>(undefined);
   const [userActiveToWsp, setuserActiveToWsp] = useState({
     phone: "",
     name: "",
   });
 
   const { data: dataOrders, isLoading } = useGetAllOrdersQuery(
-    `page=${page + 1}&limit=${pageSize}`,
+    `page=${page + 1}&limit=${pageSize}${
+      statusQuery && `&status=${statusQuery}`
+    }`,
     {
       pollingInterval: 60000, // 1 minuto,
     }
   );
+
+  useEffect(() => {
+    if (router?.query?.status) {
+      setStatusQuery(router?.query?.status as string);
+    }
+  }, [router?.query]);
 
   const retryConfirmOrder = (id: string, phone: string) => {
     retryConfirmQuery({ orderId: id, phone });

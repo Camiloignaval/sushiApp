@@ -1,9 +1,12 @@
 export interface IDashboard {
   numberOfOrders: Number;
-  paidOrders: Number;
-  numberOfClients: Number;
+  numberOfOrdersIngresadas: Number;
+  numberOfOrdersEnProceso: Number;
+  numberOfOrdersDespachadas: Number;
+  numberOfOrdersEntregadas: Number;
+  numberOfClients: Number; // role:client
   numberOfProducts: Number;
-  productsWithNoInventory: Number;
-  lowInventory: Number;
-  notPaidOrders: Number;
+  numberOfPromotions: Number;
+  productsWithNoInventory: Number; // 0
+  promotionsWithNoInventory: Number;
 }

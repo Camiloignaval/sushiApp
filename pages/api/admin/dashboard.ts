@@ -1,16 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
-import { Order, User, Product } from "../../../models";
+import { Order, User, Product, Promotion } from "../../../models";
 
 type Data =
   | {
       numberOfOrders: number;
-      paidOrders: number; //is paid true
-      notPaidOrders: number;
+      numberOfOrdersIngresadas: number;
+      numberOfOrdersEnProceso: number;
+      numberOfOrdersDespachadas: number;
+      numberOfOrdersEntregadas: number;
       numberOfClients: number; // role:client
       numberOfProducts: number;
+      numberOfPromotions: number;
       productsWithNoInventory: number; // 0
-      lowInventory: number; // productos con 10 o menos
+      promotionsWithNoInventory: number;
     }
   | {
       message: string;
@@ -29,34 +32,37 @@ export default async function handler(
       numberOfOrdersEnProceso,
       numberOfOrdersDespachadas,
       numberOfOrdersEntregadas,
-      paidOrders,
       numberOfClients,
       numberOfProducts,
+      numberOfPromotions,
       productsWithNoInventory,
-      lowInventory,
+      promotionsWithNoInventory,
     ] = await Promise.all([
       Order.count(),
-      Order.find({ state: "ingested" }),
-      Order.find({ state: "inprocess" }),
-      Order.find({ state: "dispatched" }),
-      Order.find({ state: "delivered" }),
-      Order.find({ isPaid: true }).count(),
+      Order.find({ status: "ingested" }).count(),
+      Order.find({ status: "inprocess" }).count(),
+      Order.find({ status: "dispatched" }).count(),
+      Order.find({ status: "delivered" }).count(),
       User.find({ role: "client" }).count(),
       Product.count(),
-      Product.find({ inStock: 0 }).count(),
-      Product.find({ inStock: { $lte: 10 } }).count(),
+      Promotion.count(),
+      Product.find({ inStock: false }).count(),
+      Promotion.find({ inStock: false }).count(),
     ]);
 
     await db.disconnect();
 
     res.status(200).json({
       numberOfOrders,
-      paidOrders,
+      numberOfOrdersIngresadas,
+      numberOfOrdersEnProceso,
+      numberOfOrdersDespachadas,
+      numberOfOrdersEntregadas,
       numberOfClients,
       numberOfProducts,
+      numberOfPromotions,
       productsWithNoInventory,
-      lowInventory,
-      notPaidOrders: numberOfOrders - paidOrders,
+      promotionsWithNoInventory,
     });
   } catch (error) {
     console.log({ errorindashboard: error });

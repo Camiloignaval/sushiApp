@@ -62,8 +62,12 @@ const DeliverPage = () => {
       const orderAddress =
         placeIds?.length > 0 ? await optimizeRoute(placeIds as string[]) : null;
       if (orderAddress) {
+        console.log({ orderAddress });
         const objetoToSet = orderAddress.map(
           ({ distance, duration, end_address, end_location }) => {
+            console.log({
+              end_location: `${end_location.lat()}%20${end_location.lng()}`,
+            });
             return {
               distance,
               duration,

@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { currency } from "../../utils";
 import { Navbar, SideMenu } from "../ui";
+import "@animxyz/core";
 
 interface Props {
   children: React.ReactNode;
@@ -76,6 +77,7 @@ export const MainShopLayout: FC<Props> = ({
       {/* CARTEL CERRADO */}
       {!store.isOpen && (
         <Box
+          className="item-group"
           sx={{
             position: "absolute",
             top: 25,
@@ -88,6 +90,8 @@ export const MainShopLayout: FC<Props> = ({
           }}
         >
           <Image
+            // className="square xyz-in"
+            className="swingimage"
             priority
             // width={"20vw"}
             // height={"500px"}

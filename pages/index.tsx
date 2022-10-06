@@ -174,6 +174,9 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
         <CartInMobile positionOfMobileCart={positionOfMobileCart} />
       )}
 
+      {store.type === "close" && (
+        <Box height={store.type === "close" ? "60px" : ""}></Box>
+      )}
       {Object.values(promosByCategory).length > 0
         ? Object.entries(promosByCategory)?.map((promotion, i) => (
             <PromotionCategory key={i} promotions={promotion} />

@@ -158,7 +158,10 @@ export const SideMenu = () => {
             <ListItem
               button
               onClick={() =>
-                window.open("https://whatsapp-api-cv.herokuapp.com/", "_blank")
+                window.open(
+                  "https://whatsapp-api-cv.herokuapp.com/connect",
+                  "_blank"
+                )
               }
             >
               <ListItemIcon>

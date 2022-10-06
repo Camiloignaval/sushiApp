@@ -200,7 +200,7 @@ const OrderInfoPage /* : FC<Props> */ = (/* { order: orderByServer } */) => {
           </Stepper>
           <Box
             sx={{
-              height: { xs: "calc(100vh - 280px)", md: "" },
+              height: { xs: "calc(100vh - 290px)", md: "" },
               display: "flex",
               justifyContent: "center",
               mt: 4,

@@ -15,7 +15,7 @@ import axios from "axios";
 import Cookies from "js-cookie";
 import Link from "next/link";
 import React, { useEffect, useRef, useState } from "react";
-import { toast } from "react-hot-toast";
+import { toast, ToastIcon } from "react-hot-toast";
 import Swal from "sweetalert2";
 import { AdminLayout } from "../../components/layouts";
 import { FullScreenLoading } from "../../components/ui";
@@ -223,8 +223,9 @@ const DeliverPage = () => {
 
   useEffect(() => {
     if (routeOptimized && dataOrders) {
-      setRowsInDelivery(
-        routeOptimized.map((ad) => ({
+      try {
+        console.log({ holaa: "hola" });
+        const rowsPreparadas = routeOptimized.map((ad) => ({
           id: dataOrders?.docs?.find(
             (d) =>
               ad!.end_address.split(",", 1)[0] ===
@@ -234,8 +235,14 @@ const DeliverPage = () => {
           distance: ad?.distance?.text,
           address: ad.end_address,
           ll: ad.ll,
-        }))
-      );
+        }));
+        if (rowsPreparadas.find((r) => r.id === undefined)) throw Error;
+        setRowsInDelivery(rowsPreparadas);
+      } catch (error) {
+        console.log({ error });
+        toast.error("Ha ocurrido un error, calcule ruta nuevamente");
+        onFinishDeliver();
+      }
     }
   }, [routeOptimized, dataOrders]);
 

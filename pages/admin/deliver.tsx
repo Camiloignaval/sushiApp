@@ -151,7 +151,7 @@ const DeliverPage = () => {
         return (
           <a
             style={{ color: "black" }}
-            href={`https://waze.com/ul?ll${row.ll}&navigate=yes`}
+            href={`https://waze.com/ul?ll=${row.ll}&navigate=yes`}
             target="_blank"
             rel="noreferrer"
           >

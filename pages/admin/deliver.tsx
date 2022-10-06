@@ -11,8 +11,10 @@ import {
   DataGrid,
   esES,
 } from "@mui/x-data-grid";
+import axios from "axios";
 import Cookies from "js-cookie";
-import React, { useEffect, useState } from "react";
+import Link from "next/link";
+import React, { useEffect, useRef, useState } from "react";
 import { toast } from "react-hot-toast";
 import Swal from "sweetalert2";
 import { AdminLayout } from "../../components/layouts";
@@ -31,7 +33,10 @@ type googleObject = {
   ll: string;
 }[];
 
+const llHouse = "-33.50191475728067,-70.77686150347802";
+
 const DeliverPage = () => {
+  const toHouse = useRef(null);
   const [changeStatus, changeStatusState] = useChangeOrderStatusMutation();
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(20);
@@ -105,9 +110,9 @@ const DeliverPage = () => {
         cancelButtonColor: "#d33",
         cancelButtonText: "Cancelar",
         confirmButtonText: "Si, Entregado",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          // await changeStatus({ ids: [id], newStatus: "delivered" }).unwrap();
+          await changeStatus({ ids: [id], newStatus: "delivered" }).unwrap();
           const arrWithOutAdress = routeOptimized?.filter(
             (r) => r.end_address !== street
           );
@@ -121,9 +126,37 @@ const DeliverPage = () => {
     }
   };
 
+  const onFinishDeliver = () => {
+    localStorage.removeItem("orderDelivery");
+    setRouteOptimized(null);
+  };
+
   useEffect(() => {
     if (routeOptimized) {
-      localStorage.setItem("orderDelivery", JSON.stringify(routeOptimized));
+      if (routeOptimized.length === 0) {
+        // consultar si quiere finalizar
+        Swal.fire({
+          title: `Has entregado todos los pedidos!`,
+          text: "¿Que deseas hacer?",
+          icon: "question",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#d33",
+          cancelButtonText: "Solo finalizar",
+          confirmButtonText: "Finalizar, ir a casa",
+        }).then(async (result) => {
+          if (result.isConfirmed) {
+            // finalizar y dirigir a casa
+            onFinishDeliver();
+            (toHouse.current! as any).click();
+          } else {
+            // solo finalizar
+            onFinishDeliver();
+          }
+        });
+      } else {
+        localStorage.setItem("orderDelivery", JSON.stringify(routeOptimized));
+      }
     }
   }, [routeOptimized]);
 
@@ -225,9 +258,17 @@ const DeliverPage = () => {
       }
       title={"Ordenes en camino"}
     >
+      <Link
+        style={{ color: "black", display: "none" }}
+        href={`https://waze.com/ul?ll=${llHouse}&navigate=yes`}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <a ref={toHouse}></a>
+      </Link>
       <Box display={"flex"} justifyContent="end" sx={{ mb: 2 }}>
         {routeOptimized ? (
-          <Button color="error" onClick={calculateRoute}>
+          <Button color="error" onClick={onFinishDeliver}>
             Finalizar ruta
           </Button>
         ) : (

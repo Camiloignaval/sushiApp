@@ -25,6 +25,10 @@ export default async function handler(
 
     const [
       numberOfOrders,
+      numberOfOrdersIngresadas,
+      numberOfOrdersEnProceso,
+      numberOfOrdersDespachadas,
+      numberOfOrdersEntregadas,
       paidOrders,
       numberOfClients,
       numberOfProducts,
@@ -32,6 +36,10 @@ export default async function handler(
       lowInventory,
     ] = await Promise.all([
       Order.count(),
+      Order.find({ state: "ingested" }),
+      Order.find({ state: "inprocess" }),
+      Order.find({ state: "dispatched" }),
+      Order.find({ state: "delivered" }),
       Order.find({ isPaid: true }).count(),
       User.find({ role: "client" }).count(),
       Product.count(),

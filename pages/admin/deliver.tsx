@@ -91,13 +91,13 @@ const DeliverPage = () => {
     {
       field: "id",
       headerName: "Orden ID",
-      minWidth: 90,
+      minWidth: 50,
       flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row.id.slice(-10);
       },
     },
-    { field: "address", headerName: "Dirección", minWidth: 150, flex: 1 },
+    { field: "address", headerName: "Dirección", minWidth: 220, flex: 1 },
   ];
   const OnPressCheckDeliver = async (id: string, street: string) => {
     try {
@@ -164,7 +164,7 @@ const DeliverPage = () => {
     {
       field: "id",
       headerName: "Orden ID",
-      minWidth: 90,
+      minWidth: 95,
       flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row.id.slice(-10);
@@ -173,7 +173,7 @@ const DeliverPage = () => {
     {
       field: "address",
       headerName: "Dirección",
-      minWidth: 150,
+      minWidth: 160,
       flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         // const comuna = row.address?.trim()?.split(",", 2)[1].trim();

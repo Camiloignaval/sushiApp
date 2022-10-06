@@ -14,6 +14,7 @@ import {
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import { toast } from "react-hot-toast";
+import Swal from "sweetalert2";
 import { AdminLayout } from "../../components/layouts";
 import { FullScreenLoading } from "../../components/ui";
 import { IOrder } from "../../interfaces";
@@ -27,6 +28,7 @@ type googleObject = {
   distance: google.maps.Distance | undefined;
   duration: google.maps.Duration | undefined;
   end_address: string;
+  ll: string;
 }[];
 
 const DeliverPage = () => {
@@ -61,15 +63,17 @@ const DeliverPage = () => {
         placeIds?.length > 0 ? await optimizeRoute(placeIds as string[]) : null;
       if (orderAddress) {
         const objetoToSet = orderAddress.map(
-          ({ distance, duration, end_address }) => ({
-            distance,
-            duration,
-            end_address,
-          })
+          ({ distance, duration, end_address, end_location }) => {
+            return {
+              distance,
+              duration,
+              end_address,
+              ll: `${end_location.lat()}%20${end_location.lng()}`,
+            };
+          }
         );
         objetoToSet.splice(objetoToSet.length - 1);
         setRouteOptimized(objetoToSet);
-        console.log({ objetoToSet });
       }
     }
   };
@@ -88,15 +92,26 @@ const DeliverPage = () => {
   ];
   const OnPressCheckDeliver = async (id: string, street: string) => {
     try {
-      // await changeStatus({ ids: [id], newStatus: "delivered" }).unwrap();
-      const arrWithOutAdress = routeOptimized?.filter(
-        (r) => r.end_address !== street
-      );
-      console.log({ arrWithOutAdress });
-      setRouteOptimized(
-        (arrWithOutAdress ?? []).length > 0 ? (arrWithOutAdress as any) : []
-      );
-      // console.log({ aSetear });
+      Swal.fire({
+        title: `Entregaste el pedido en la dirección ${street}`,
+        text: "¿Estás seguro?",
+        icon: "question",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Si, Entregado",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // await changeStatus({ ids: [id], newStatus: "delivered" }).unwrap();
+          const arrWithOutAdress = routeOptimized?.filter(
+            (r) => r.end_address !== street
+          );
+          setRouteOptimized(
+            (arrWithOutAdress ?? []).length > 0 ? (arrWithOutAdress as any) : []
+          );
+        }
+      });
     } catch (error) {
       toast.error("Ha ocurrido un problema");
     }
@@ -124,30 +139,21 @@ const DeliverPage = () => {
       minWidth: 150,
       flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
-        const comuna = row.address
-          ?.trim()
-          // .replaceAll(" ", "%20")
-          ?.split(",", 2)[1]
-          .trim();
-        const direction = row.address
-          ?.trim()
-          // .replaceAll(" ", "%20")
-          ?.split(",", 1)[0]
-          ?.split(" ");
-        /* .join("%20") */
-        const numeration = direction?.pop();
-        direction.unshift(numeration);
-        direction.push(comuna);
+        // const comuna = row.address?.trim()?.split(",", 2)[1].trim();
+        // const direction = row.address?.trim()?.split(",", 1)[0]?.split(" ");
+        // const numeration = direction?.pop();
+        // direction.unshift(numeration);
+        // direction.push(comuna);
         return (
           <a
-            href={`https://waze.com/ul?q=${direction}`}
+            style={{ color: "black" }}
+            href={`https://waze.com/ul?ll${row.ll}&navigate=yes`}
             target="_blank"
             rel="noreferrer"
           >
             {row.address.split(",", 2)}`
           </a>
         );
-        // return `${row.address.split(",", 2)}`;
       },
     },
     {
@@ -180,8 +186,6 @@ const DeliverPage = () => {
 
   useEffect(() => {
     if (routeOptimized && dataOrders) {
-      console.log({ enuseefect: routeOptimized });
-      console.log({ enuseefectorders: dataOrders?.docs });
       setRowsInDelivery(
         routeOptimized.map((ad) => ({
           id: dataOrders?.docs?.find(
@@ -192,6 +196,7 @@ const DeliverPage = () => {
           time: ad?.duration?.text,
           distance: ad?.distance?.text,
           address: ad.end_address,
+          ll: ad.ll,
         }))
       );
     }

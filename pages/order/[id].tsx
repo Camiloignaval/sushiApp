@@ -1,9 +1,21 @@
 import React, { FC, useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import { dbOrders } from "../../database";
-import { IOrder } from "../../interfaces";
+import { IOrder, IProduct } from "../../interfaces";
 import { ShopLayout } from "../../components/layouts";
-import { Stepper, Step, StepLabel, Typography, Box, Grid } from "@mui/material";
+import {
+  Stepper,
+  Step,
+  StepLabel,
+  Typography,
+  Box,
+  Grid,
+  Button,
+  Card,
+  CardContent,
+  Divider,
+  Link,
+} from "@mui/material";
 import { styled } from "@mui/material/styles";
 import DeliveryDiningIcon from "@mui/icons-material/DeliveryDining";
 import ContentPasteIcon from "@mui/icons-material/ContentPaste";
@@ -24,6 +36,8 @@ import { FullScreenLoading } from "../../components/ui";
 import confetti from "canvas-confetti";
 import { first, orderBy } from "lodash";
 import { useRouter } from "next/router";
+import { CardList, OrdenSummary } from "../../components/cart";
+import { Extras } from "../../components/cart/Extras";
 
 // interface Props {
 //   order: IOrder;
@@ -40,26 +54,22 @@ const dispatchedGif =
 
 const OrderInfoPage /* : FC<Props> */ = (/* { order: orderByServer } */) => {
   const router = useRouter();
-  const [id, setId] = useState<string | null>();
-  // const { id } = router.query.id;
+  // const [id, setId] = useState<string | null>();
   const { data: order, isLoading } = useSearchOrderByIdQuery(
-    // orderByServer._id!,
     router.query.id as string,
     {
       pollingInterval: 30000, // 1 minuto,
     }
   );
-  useEffect(() => {
-    const { id } = router.query;
-    if (id) {
-      setId(id as string);
-    }
-  }, [router.query]);
+  // useEffect(() => {
+  //   const { id } = router.query;
+  //   if (id) {
+  //     setId(id as string);
+  //   }
+  // }, [router.query]);
 
-  console.log({ id: router.query.id });
   const [orderToShow, setOrderToShow] =
     useState<IOrder | null>(/* orderByServer */);
-  console.log({ order });
   useEffect(() => {
     if ((order as IOrder)?._id) {
       setOrderToShow(order as IOrder);
@@ -138,7 +148,7 @@ const OrderInfoPage /* : FC<Props> */ = (/* { order: orderByServer } */) => {
     }),
   }));
 
-  if (!order || isLoading || !id) return <FullScreenLoading />;
+  if (!order || isLoading || !router.query.id) return <FullScreenLoading />;
 
   function ColorlibStepIcon(props: StepIconProps) {
     const { active, completed, className } = props;
@@ -188,19 +198,6 @@ const OrderInfoPage /* : FC<Props> */ = (/* { order: orderByServer } */) => {
               </Step>
             ))}
           </Stepper>
-          <Grid container mt={4}>
-            <Grid item xs={1}></Grid>
-            <Grid item xs={11}>
-              <Typography variant="subtitle1">
-                <PersonOutlineOutlined sx={{ position: "relative", top: 5 }} />{" "}
-                {(orderToShow as IOrder)?.shippingAddress?.username}
-              </Typography>{" "}
-              <Typography variant="subtitle1">
-                <HomeOutlined sx={{ position: "relative", top: 5 }} />{" "}
-                {(orderToShow as IOrder)?.shippingAddress?.address}
-              </Typography>
-            </Grid>
-          </Grid>
           <Box
             sx={{
               display: "flex",
@@ -228,27 +225,61 @@ const OrderInfoPage /* : FC<Props> */ = (/* { order: orderByServer } */) => {
               alt=""
             />
           </Box>
+
+          {/* Resumen de compra */}
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={7}>
+              <Typography variant="h2" sx={{ marginBottom: 1, mt: 2 }}>
+                Resumen orden
+              </Typography>
+              {/* card list */}
+              <CardList orderProduct={order.orderItems} id={order._id} />
+              <Extras
+                productData={order.orderExtraItems as IProduct[]}
+                id={order._id}
+              />
+            </Grid>
+            <Grid item xs={12} sm={5}>
+              {/* cart */}
+              <Card className="summary-cart" sx={{ mt: 3 }}>
+                <CardContent>
+                  <Divider sx={{ my: 1 }} />
+                  <Box display="flex" justifyContent={"space-between"}>
+                    <Typography variant="subtitle1">
+                      Dirección de entrega
+                    </Typography>
+                  </Box>
+                  <Typography>{order.shippingAddress?.username}</Typography>
+                  <Typography>{order.shippingAddress?.address}</Typography>
+                  <Typography>{order.shippingAddress?.phone}</Typography>
+                  <Divider sx={{ my: 1 }} />
+
+                  <OrdenSummary order={order} />
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
         </>
       )}
     </ShopLayout>
   );
 };
 
-// export const getServerSideProps: GetServerSideProps = async ({ query }) => {
-//   const { id = "" } = query;
-//   const order = await dbOrders.getOrderById(id.toString());
+export const getServerSideProps: GetServerSideProps = async ({ query }) => {
+  const { id = "" } = query;
+  const order = await dbOrders.getOrderById(id.toString());
 
-//   if (!order) {
-//     return {
-//       redirect: {
-//         destination: `/`,
-//         permanent: false,
-//       },
-//     };
-//   }
-//   return {
-//     props: { order },
-//   };
-// };
+  if (!order) {
+    return {
+      redirect: {
+        destination: `/`,
+        permanent: false,
+      },
+    };
+  }
+  return {
+    props: {},
+  };
+};
 
 export default OrderInfoPage;

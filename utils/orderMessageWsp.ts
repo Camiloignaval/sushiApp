@@ -74,8 +74,9 @@ export const orderMessageWsp = (order: IOrder) => {
       message.push(` ${ei.quantity} ${ei.name}\n`);
     });
   }
+  message.push(`TOTAL: ${order.total}\n\n`);
   message.push(
-    `\nPuedes ver el estado de tu pedido en el siguiente link: ${process.env.HOST_NAME}/order/${order._id}`
+    `\nPuedes ver la información y estado de tu pedido en el siguiente link: ${process.env.HOST_NAME}/order/${order._id}`
   );
   console.log({ msg: message.join("") });
   return message.join("");

@@ -91,7 +91,7 @@ const DeliverPage = () => {
     {
       field: "id",
       headerName: "Orden ID",
-      minWidth: 50,
+      minWidth: 95,
       flex: 1,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row.id.slice(-10);
@@ -188,7 +188,7 @@ const DeliverPage = () => {
             target="_blank"
             rel="noreferrer"
           >
-            {row.address.split(",", 2)}`
+            {row.address.split(",", 2)}
           </a>
         );
       },

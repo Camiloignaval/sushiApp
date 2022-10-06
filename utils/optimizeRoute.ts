@@ -21,6 +21,8 @@ export const optimizeRoute = async (waypoints: string[]) => {
       travelMode: window.google.maps.TravelMode.DRIVING,
       waypoints: wayPoints,
       optimizeWaypoints: true,
+      avoidHighways: true,
+      avoidTolls: true,
     });
 
     const toReturn = resp.routes[0].legs;

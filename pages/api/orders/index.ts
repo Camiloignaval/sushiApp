@@ -138,14 +138,16 @@ const createNewOrder = async (
     }
     if (discount != 0) {
       if (cuponType === "percentage") {
-        const discountAmount = total * (discount / 100);
+        const discountAmount =
+          Math.ceil((total * (discount / 100)) / 100) * 100;
+        console.log({ discountAmount });
         if (maxDiscount) {
           if (discountAmount > maxDiscount) {
             total = total - maxDiscount;
           }
-          total = total - total * (discount / 100);
+          total = total - Math.ceil((total * (discount / 100)) / 100) * 100;
         } else {
-          total = total - total * (discount / 100);
+          total = total - Math.ceil((total * (discount / 100)) / 100) * 100;
         }
       } else {
         total -= discount;

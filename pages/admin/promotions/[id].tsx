@@ -83,15 +83,6 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories, sauces }) => {
     defaultValues: promotion,
   });
 
-  // console.log({ sauces });
-  // useEffect(() => {
-  //   const salsasInBdd = sauces.filter((s) =>
-  //     ["632de03363d307a2565621e2", "63365fe640807a37067429ff"].includes(s._id!)
-  //   );
-  //   console.log({ salsasInBdd });
-  //   setValue("includesSauces", salsasInBdd as any, { shouldValidate: true });
-  // }, []);
-
   const onFilesSelected = async ({ target }: ChangeEvent<HTMLInputElement>) => {
     if (!target.files || target.files.length === 0) return;
     try {
@@ -154,7 +145,6 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories, sauces }) => {
   useEffect(() => {}, [getValues("promotionItems")]);
 
   const onSubmit = (formData: FormData) => {
-    console.log({ formData });
     if (getValues("inOffer")) {
       if (getValues("offerPrice")! > getValues("price")) {
         toast.error("El valor oferta es mayor al actual, favor verifique");
@@ -406,7 +396,6 @@ const PromotionInfoPage: FC<Props> = ({ promotion, categories, sauces }) => {
                     renderValue={(selected) => (
                       <Box sx={{ display: "flex", flexWrap: "wrap", gap: 0.5 }}>
                         {selected.map((value, i) => {
-                          console.log({ value });
                           return (
                             <Chip
                               key={i}

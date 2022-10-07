@@ -50,7 +50,6 @@ export const FormControlByCategory: FC<Props> = ({
   useEffect(() => {
     let isLessThanMax = false;
     if (label === "Envolturas") {
-      console.log("entre aqui");
       isLessThanMax = promoToSendCart[dictCategory[label]].length > maxQty!;
     } else if (!isVeggie || label !== "Vegetales") {
       isLessThanMax =

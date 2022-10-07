@@ -32,7 +32,6 @@ interface Props {
 }
 
 export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
-  console.log({ promotion });
   const dispatch = useDispatch();
   const [note, setNote] = useState("");
   const { data: productData } = useGetProductsQuery(null);
@@ -62,7 +61,6 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
   // revisar si esta en carrito
   useEffect(() => {
     const promoFindInCart = cart.find((promo) => promo?._id === promotion._id);
-    console.log({ promoFindInCart });
     if (promoFindInCart) {
       setPromoToSendCart((prev) => ({
         ...prev,
@@ -144,7 +142,6 @@ export const ModalOptions: FC<Props> = ({ open, setOpen, promotion }) => {
     // Si no estaba, se le agrega al carrito
     !isInCart &&
       newCart.push({ ...promoToSendCart, sauces: saucesChooseFiler });
-    console.log({ newCart });
     dispatch(addOrUpdateCart(newCart));
     setOpen(false);
     setisInCart(true);

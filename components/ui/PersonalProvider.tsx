@@ -167,7 +167,8 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
         discount = coupon.discount;
       }
       if (coupon.type === "percentage") {
-        discount = subTotal * (coupon.discount / 100);
+        discount = Math.ceil((subTotal * (coupon.discount / 100)) / 100) * 100;
+        console.log({ discount });
         if (coupon.maxDiscount) {
           if (discount > coupon.maxDiscount) {
             discount = coupon.maxDiscount;

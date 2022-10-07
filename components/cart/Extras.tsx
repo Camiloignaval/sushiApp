@@ -18,7 +18,6 @@ export const Extras: FC<Props> = ({
 }) => {
   const { extraProduct } = useSelector((state: RootState) => state.cart);
   const { isLoggedIn: isAdmin } = useSelector((state: RootState) => state.auth);
-  console.log({ productData });
   return (
     <FormControl
       sx={{ m: 3, width: "100%" }}

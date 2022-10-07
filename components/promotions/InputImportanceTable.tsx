@@ -11,7 +11,7 @@ export const InputImportanceTable: FC<Props> = ({ num, id }) => {
 
   const handleUpdate = (e: ChangeEvent<HTMLInputElement>) => {
     if (value !== num) {
-      console.log("hare el cambio");
+      // console.log("hare el cambio");
     }
   };
   return (

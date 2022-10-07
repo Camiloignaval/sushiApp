@@ -49,7 +49,6 @@ export const printOrder = async (order: IOrder) => {
     )
     .Feed(1);
   order.orderItems.forEach((item, i) => {
-    console.log(i, item);
     conector
       .EstablecerEnfatizado(false)
       .EstablecerAlineacion(ConectorPluginV3.ALINEACION_IZQUIERDA)

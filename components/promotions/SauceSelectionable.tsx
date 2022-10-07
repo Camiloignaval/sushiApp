@@ -20,8 +20,6 @@ export const SauceSelectionable: FC<Props> = ({
   setSaucesChoose,
   blockPlusButton,
 }) => {
-  console.log({ sauce });
-
   const updatedQuantity = (qty: number) => {
     setSaucesChoose((prev) =>
       prev.map((p) => {

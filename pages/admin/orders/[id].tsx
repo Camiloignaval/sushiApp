@@ -132,7 +132,6 @@ export const getServerSideProps: GetServerSideProps = async ({
     };
   }
 
-  console.log({ order });
   return {
     props: {
       order,

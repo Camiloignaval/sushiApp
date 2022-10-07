@@ -142,7 +142,6 @@ const ProductsPage = () => {
     price: product.price,
     importanceNumber: product?.importanceNumber,
   }));
-  console.log({ rows });
 
   return (
     <AdminLayout

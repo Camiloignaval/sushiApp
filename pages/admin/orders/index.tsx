@@ -50,7 +50,7 @@ const OrdersPage = () => {
       statusQuery && `&status=${statusQuery}`
     }`,
     {
-      pollingInterval: 5000 /* 60000 */, // 1 minuto,
+      pollingInterval: 60000, // 1 minuto,
     }
   );
   const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
@@ -60,12 +60,6 @@ const OrdersPage = () => {
     dataOrders?.totalDocs || 0
   );
   const [rowCountStateOld, setRowCountStateOld] = useState<number | null>(null);
-
-  useEffect(() => {
-    if (newOrdersAlert) {
-      console.log({ alertSound: alertSound });
-    }
-  }, []);
 
   useEffect(() => {
     if (data) {

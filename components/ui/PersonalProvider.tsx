@@ -12,6 +12,7 @@ import {
   addOrUpdateCart,
   addOrUpdateExtraProducts,
   removeCoupon,
+  reserveHour,
   updateAdress,
   updateSummary,
 } from "../../store/Slices/CartSlice";
@@ -39,6 +40,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     valuedAddress,
     valuedPlaceId,
     shippingAddress,
+    reservedHour,
   } = useSelector((state: RootState) => state.cart);
   const { store } = useSelector((state: RootState) => state.ui);
 
@@ -129,6 +131,25 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     );
   }, [deliverPrice, firstRender, valuedAddress, valuedPlaceId]);
 
+  // atento a resrva de hroa
+  useEffect(() => {
+    if (firstRender) return;
+    reservedHour &&
+      localStorage.setItem("reserverHour", JSON.stringify(reservedHour));
+  }, [reservedHour, firstRender]);
+
+  useEffect(() => {
+    try {
+      setFirstRender(false);
+
+      const reserverHour = localStorage?.getItem("reserverHour")
+        ? JSON.parse(localStorage?.getItem("reserverHour")!)
+        : undefined;
+      reserverHour && dispatch(reserveHour(reserverHour));
+    } catch (error) {
+      console.log(error);
+    }
+  }, [dispatch]);
   // useEffect(() => {
   //   if (coupon && coupon.) {
   //     console.log({ coupon });

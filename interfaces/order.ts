@@ -22,6 +22,7 @@ export interface IOrder {
   coupon?: ICoupon | string;
   wspReceived?: boolean;
   discount: number;
+  reservedHour?: string;
 }
 
 export interface IOrderWithPaginate {

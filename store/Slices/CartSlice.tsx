@@ -18,6 +18,7 @@ export interface CartState {
   deliverPrice: number;
   valuedAddress: string;
   valuedPlaceId: string;
+  reservedHour?: string;
 }
 
 const initialState: CartState = {
@@ -93,6 +94,7 @@ export const CartSlice = createSlice({
       state.deliverPrice = 0;
       state.valuedAddress = "";
       state.valuedPlaceId = "";
+      state.reservedHour = undefined;
     },
     addDeliveryPrice: (state, action: PayloadAction<any>) => {
       state.deliverPrice = Number(action.payload.deliveryPrice);
@@ -103,6 +105,12 @@ export const CartSlice = createSlice({
       state.deliverPrice = 0;
       state.valuedAddress = "";
       state.valuedPlaceId = "";
+    },
+    reserveHour: (state, action: PayloadAction<string>) => {
+      state.reservedHour = action.payload;
+    },
+    cancelReserve: (state) => {
+      state.reservedHour = undefined;
     },
   },
 });
@@ -120,6 +128,8 @@ export const {
   removeCoupon,
   addDeliveryPrice,
   cleanDeliverPrice,
+  reserveHour,
+  cancelReserve,
 } = CartSlice.actions;
 
 export default CartSlice.reducer;

@@ -9,6 +9,8 @@ import {
   Link,
   Typography,
 } from "@mui/material";
+import esLocale from "date-fns/locale/es";
+
 import NextLink from "next/link";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -25,6 +27,7 @@ import { cleanCart } from "../../store/Slices/CartSlice";
 import { Extras } from "../../components/cart/Extras";
 import { useGetProductsQuery } from "../../store/RTKQuery/productsApi";
 import Swal from "sweetalert2";
+import { format } from "date-fns";
 
 const SummaryPage = () => {
   const router = useRouter();
@@ -40,11 +43,13 @@ const SummaryPage = () => {
     coupon,
     deliverPrice,
     discount,
+    reservedHour,
   } = useSelector((state: RootState) => state.cart);
   const [createNewOrder, createNewOrderState] = useCreateOrderMutation();
   const { data: productData, isLoading } = useGetProductsQuery(null);
   const [disabledSubmit, setDisabledSubmit] = useState(false);
   const { store } = useSelector((state: RootState) => state.ui);
+  // const { cart: generalCart } = useSelector((state: RootState) => state);
 
   useEffect(() => {
     if (!Cookies.get("address")) {
@@ -72,6 +77,7 @@ const SummaryPage = () => {
       total,
       discount,
       isPaid: false,
+      reservedHour,
       orderItems: cart.map((item) => {
         if (item.name !== "Roll personalizado")
           return {
@@ -213,11 +219,27 @@ const SummaryPage = () => {
               <Typography>{shippingAddress?.address}</Typography>
               <Typography>{"+56" + shippingAddress?.phone}</Typography>
               <Divider sx={{ my: 1 }} />
-              <Box display="flex" justifyContent={"end"}>
+              {reservedHour && (
+                // <>
+                <Box display="flex" justifyContent={"space-between"} mb={4}>
+                  <Typography>
+                    Reserva para el{" "}
+                    {format(new Date(reservedHour!), "dd MMMM yyyy HH:mm", {
+                      locale: esLocale,
+                    })}
+                  </Typography>
+                  <Box sx={{ flexGrow: 1 }} />
+                  <NextLink href="/cart" passHref>
+                    <Link underline="always">Editar</Link>
+                  </NextLink>
+                  <Divider sx={{ my: 1, display: "flex" }} />
+                </Box>
+              )}
+              {/* <Box display="flex" justifyContent={"end"}>
                 <NextLink href="/cart" passHref>
                   <Link underline="always">Editar</Link>
                 </NextLink>
-              </Box>
+              </Box> */}
               <OrdenSummary />
               <Box sx={{ mt: 3 }}>
                 <Button

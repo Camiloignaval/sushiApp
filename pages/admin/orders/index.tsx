@@ -2,9 +2,12 @@ import {
   ConfirmationNumberOutlined,
   DoneAllOutlined,
   MessageOutlined,
+  NotificationsNoneOutlined,
   ReplayOutlined,
 } from "@mui/icons-material";
-import { Box, Chip, Grid, IconButton } from "@mui/material";
+import AudioPlayer from "react-h5-audio-player";
+
+import { Badge, Box, Chip, Grid, IconButton } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
@@ -15,11 +18,12 @@ import {
 } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import ReactAudioPlayer from "react-audio-player";
 import { AdminLayout } from "../../../components/layouts";
 import { MessageModal, OrdersActions } from "../../../components/orders";
 import { FullScreenLoading } from "../../../components/ui";
-import { IOrder } from "../../../interfaces";
+import { IOrder, IOrderWithPaginate } from "../../../interfaces";
 import {
   useGetAllOrdersQuery,
   useRetryConfirmOrderMutation,
@@ -41,14 +45,61 @@ const OrdersPage = () => {
     name: "",
   });
 
-  const { data: dataOrders, isLoading } = useGetAllOrdersQuery(
+  const { data, isLoading } = useGetAllOrdersQuery(
     `page=${page + 1}&limit=${pageSize}${
       statusQuery && `&status=${statusQuery}`
     }`,
     {
-      pollingInterval: 60000, // 1 minuto,
+      pollingInterval: 5000 /* 60000 */, // 1 minuto,
     }
   );
+  const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
+  const [newOrdersAlert, setNewOrdersAlert] = useState<number | null>(0);
+  const alertSound = useRef() as React.LegacyRef<AudioPlayer>;
+  const [rowCountState, setRowCountState] = useState(
+    dataOrders?.totalDocs || 0
+  );
+  const [rowCountStateOld, setRowCountStateOld] = useState<number | null>(null);
+
+  useEffect(() => {
+    if (newOrdersAlert) {
+      console.log({ alertSound: alertSound });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (data) {
+      // if (dataOrders) {
+      //   // if (dataOrders?.docs?.length < data?.docs?.length) {
+      //   //   const newOrders = data?.docs?.length - dataOrders?.docs?.length;
+      //   //   setNewOrdersAlert((prev) => +prev! + +newOrders);
+      //   //   (alertSound as any)!.current?.audio.current.play();
+      //   // }
+      //   if (dataOrders?.docs?.length < data?.docs?.length) {
+      //     const newOrders = data?.docs?.length - dataOrders?.docs?.length;
+      //     setNewOrdersAlert((prev) => +prev! + +newOrders);
+      //     (alertSound as any)!.current?.audio.current.play();
+      //   }
+      // }
+      // una vez analizado si hay pedidos nuevos se setea para la tabla
+      setDataOrders(data);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    document.getElementById("iconbuttonBell")?.click();
+  }, []);
+
+  // efecto de vibracion campana
+  useEffect(() => {
+    if (newOrdersAlert !== 0) {
+      document.getElementById("bellNotification")?.classList.add("shakeIcon");
+    } else {
+      document
+        .getElementById("bellNotification")
+        ?.classList.remove("shakeIcon");
+    }
+  }, [newOrdersAlert]);
 
   useEffect(() => {
     if (router?.query?.status) {
@@ -208,10 +259,23 @@ const OrdersPage = () => {
     },
   ];
 
-  const [rowCountState, setRowCountState] = React.useState(
-    dataOrders?.totalDocs || 0
-  );
-  React.useEffect(() => {
+  useEffect(() => {
+    if (rowCountState > 0) {
+      if (rowCountState > rowCountStateOld! ?? rowCountState) {
+        setNewOrdersAlert(rowCountState - rowCountStateOld! ?? rowCountState);
+        (alertSound as any)!.current?.audio.current.play();
+      }
+    } else if (rowCountState < rowCountStateOld! ?? rowCountState) {
+      setRowCountStateOld(rowCountState);
+    } else {
+      setNewOrdersAlert(0);
+    }
+  }, [rowCountState, rowCountStateOld]);
+
+  useEffect(() => {
+    if (rowCountStateOld === null) {
+      setRowCountStateOld(dataOrders?.totalDocs ?? null);
+    }
     setRowCountState((prevRowCountState) =>
       dataOrders?.totalDocs !== undefined
         ? dataOrders?.totalDocs
@@ -219,7 +283,7 @@ const OrdersPage = () => {
     );
   }, [dataOrders?.totalDocs, setRowCountState]);
 
-  if (!dataOrders) return <FullScreenLoading />;
+  if (!dataOrders || !data) return <FullScreenLoading />;
 
   const rows = dataOrders?.docs!.map((order: IOrder) => ({
     id: order?._id,
@@ -242,6 +306,29 @@ const OrdersPage = () => {
     >
       <MessageModal user={userActiveToWsp} open={open} setOpen={setOpen} />
       <Box display={"flex"} justifyContent="end">
+        <AudioPlayer
+          preload="metadata"
+          src={"/sounds/notification-bell.wav"}
+          ref={alertSound}
+          style={{ display: "none" }}
+        />
+        <IconButton
+          id="iconbuttonBell"
+          sx={{ marginRight: 2 }}
+          // onClick={() => setNewOrdersAlert(0)}
+          onClick={() => {
+            setRowCountStateOld(rowCountState);
+            setNewOrdersAlert(0);
+          }}
+        >
+          <Badge
+            sx={{ display: "relative", right: 0 }}
+            badgeContent={newOrdersAlert}
+            color="secondary"
+          >
+            <NotificationsNoneOutlined id="bellNotification" />
+          </Badge>
+        </IconButton>
         <OrdersActions
           rowsId={selectedRows}
           data={dataOrders.docs?.filter((d) => selectedRows.includes(d?._id!))}

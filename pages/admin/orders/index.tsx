@@ -5,6 +5,7 @@ import {
   NotificationsNoneOutlined,
   ReplayOutlined,
   WarningOutlined,
+  WhatsApp,
 } from "@mui/icons-material";
 import AudioPlayer from "react-h5-audio-player";
 
@@ -36,6 +37,7 @@ import { printOrder } from "../../../utils/printOrder";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import Typography from "@mui/material/Typography";
+import { useSendDirectMessage } from "../../../hooks";
 
 const OrdersPage = () => {
   const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
@@ -44,18 +46,14 @@ const OrdersPage = () => {
   const [rowCountState, setRowCountState] = useState(
     dataOrders?.totalDocs || 0
   );
+  const [MessageModal, setuserActiveToWsp, setOpen] = useSendDirectMessage();
   const [rowCountStateOld, setRowCountStateOld] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [retryConfirmQuery, retryConfirmStatus] =
     useRetryConfirmOrderMutation();
   const [page, setPage] = React.useState(0);
   const [pageSize, setPageSize] = React.useState(20);
-  const [open, setOpen] = useState(false);
-  const [statusQuery, setStatusQuery] = useState<string | undefined>(undefined);
-  const [userActiveToWsp, setuserActiveToWsp] = useState({
-    phone: "",
-    name: "",
-  });
+
   const { endDate, phoneToFind, startDate, status } = useSelector(
     (state: RootState) => state.ui.filters
   );
@@ -318,7 +316,7 @@ const OrdersPage = () => {
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <IconButton onClick={() => handleMessageWsp(row.phone, row.name)}>
-            <MessageOutlined />
+            <WhatsApp color="success" />
           </IconButton>
         );
       },
@@ -371,7 +369,7 @@ const OrdersPage = () => {
       title={"Ordenes"}
       subTitle={"Mantenimiento de ordenes"}
     >
-      <MessageModal user={userActiveToWsp} open={open} setOpen={setOpen} />
+      <MessageModal />
       <Box display={"flex"} justifyContent="end">
         <AudioPlayer
           preload="metadata"

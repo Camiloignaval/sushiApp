@@ -28,8 +28,12 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 const getUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
-    const users = await User.find().select("-password").lean();
+    const users = await User.find({ role: { $in: ["client"] } })
+      .select("-password")
+      .lean();
+
     await db.disconnect();
+    console.log({ users });
     return res.status(200).json(users);
   } catch (error) {
     console.log({ errorinuser1: error });

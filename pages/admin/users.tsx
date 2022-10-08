@@ -1,6 +1,7 @@
-import { PeopleOutline } from "@mui/icons-material";
-import { Grid, MenuItem, Select } from "@mui/material";
+import { MessageOutlined, PeopleOutline, WhatsApp } from "@mui/icons-material";
+import { Grid, IconButton, MenuItem, Select } from "@mui/material";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import { format } from "date-fns";
 import React, { useEffect, useState } from "react";
 import { AdminLayout } from "../../components/layouts";
 import { FullScreenLoading } from "../../components/ui";
@@ -9,35 +10,48 @@ import {
   useGetUsersQuery,
   useUpdateUserRoleMutation,
 } from "../../store/RTKQuery/adminApi";
+import esLocale from "date-fns/locale/es";
+import { useSendDirectMessage } from "../../hooks";
 
 const UsersPage = () => {
   const { data: dataUsers } = useGetUsersQuery(null);
   const [updateRol] = useUpdateUserRoleMutation();
 
+  console.log({ dataUsers });
   const onRoleUpdated = (userId: string, role: string) => {
     updateRol({ userId, role });
   };
+  const [MessageModal, setuserActiveToWsp, setOpen] = useSendDirectMessage();
+  const handleMessageWsp = (phone: string, name: string) => {
+    setOpen(true);
+    setuserActiveToWsp({ phone, name });
+  };
 
   const columns: GridColDef[] = [
-    { field: "email", headerName: "Correo", width: 250 },
-    { field: "name", headerName: "Nombre completo", width: 300 },
+    { field: "name", flex: 1, headerName: "Nombre completo", minWidth: 200 },
+    { field: "phone", flex: 1, headerName: "Nombre completo", minWidth: 150 },
+    { field: "address", flex: 1, headerName: "Dirección", minWidth: 300 },
     {
-      field: "role",
-      headerName: "Rol",
-      width: 300,
+      field: "createdAt",
+      headerName: "Cliente desde",
+      flex: 1,
+      minWidth: 300,
+      renderCell: ({ row }: GridValueGetterParams) => {
+        return format(new Date(row.createdAt), "dd/MMMM/yyyy", {
+          locale: esLocale,
+        });
+      },
+    },
+    {
+      field: "wsp",
+      headerName: "Msg",
+      flex: 1,
+      minWidth: 80,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
-          <Select
-            value={row.role}
-            label="Rol"
-            sx={{ width: 300 }}
-            onChange={(e) => onRoleUpdated(row.id, e.target.value)}
-          >
-            <MenuItem value="admin">Admin</MenuItem>
-            <MenuItem value="client">Client</MenuItem>
-            <MenuItem value="super-user">Super usuario</MenuItem>
-            <MenuItem value="SEO">SEO</MenuItem>
-          </Select>
+          <IconButton onClick={() => handleMessageWsp(row.phone, row.name)}>
+            <WhatsApp color="success" />
+          </IconButton>
         );
       },
     },
@@ -49,6 +63,9 @@ const UsersPage = () => {
     id: user?._id,
     name: user?.name,
     role: user?.role,
+    phone: user?.phone,
+    address: user?.address,
+    createdAt: user?.createdAt,
   }));
 
   return (
@@ -57,6 +74,7 @@ const UsersPage = () => {
       title={"Usuarios"}
       subTitle={"Mantenimiento de usuarios"}
     >
+      <MessageModal />
       <Grid className="fadeIn" container xs={12} height={650} width="100%">
         <DataGrid
           rows={rows ?? []}

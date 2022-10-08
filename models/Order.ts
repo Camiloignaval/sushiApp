@@ -77,7 +77,7 @@ const orderSchema = new Schema(
     total: { type: Number, required: true },
     deliverPrice: { type: Number, required: true },
     isPaid: { type: Boolean, required: true, default: false },
-    paidAt: { type: String },
+    paidAt: { type: Date },
     discount: { type: Number },
     reservedHour: { type: Date },
     wspReceived: { type: Boolean, required: true, default: true },

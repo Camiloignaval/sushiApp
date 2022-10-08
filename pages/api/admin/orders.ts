@@ -139,7 +139,14 @@ const changeStatus = async (
         throw new Error("Favor revise la conección con Whatsapp");
       }
     }
-    await Order.updateMany({ _id: { $in: ids } }, { status: newStatus });
+    if (newStatus === "delivered") {
+      await Order.updateMany(
+        { _id: { $in: ids } },
+        { status: newStatus, paidAt: Date.now() }
+      );
+    } else {
+      await Order.updateMany({ _id: { $in: ids } }, { status: newStatus });
+    }
     await db.disconnect();
     return res.status(200).json({ message: "Ordenes actualizadas" });
   } catch (error) {

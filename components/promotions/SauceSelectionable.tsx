@@ -68,7 +68,7 @@ export const SauceSelectionable: FC<Props> = ({
               saucesChoose.find((s) => s.name === sauce.name)?.qty ?? 0
             }
             isPossibleZero
-            blockButtonPlus={blockPlusButton}
+            blockButtonPlus={blockPlusButton || !sauce.inStock}
           />
         </Box>
       }

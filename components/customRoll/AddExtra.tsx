@@ -72,7 +72,7 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
             display: "flex",
 
             justifyContent: "center",
-            opacity: prod.inStock || isAdmin ? 1 : 0.3,
+            opacity: prod.inStock || !editable ? 1 : 0.3,
           }}
           // loading="lazy"
         />
@@ -108,6 +108,7 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
             updatedQuantity={updatedQuantity}
             currentValue={+extraToSendCart.quantity}
             isPossibleZero
+            blockButtonPlus={!prod.inStock}
           />
         </Box>
       ) : (
@@ -117,7 +118,7 @@ export const AddExtra: FC<Props> = ({ prod, editable = false }) => {
           alignItems="center"
           variant="subtitle2"
         >
-          {isAdmin ? (
+          {isAdmin || !editable ? (
             <>
               {`${(prod as any).quantity} ${
                 (prod as any)?.quantity === 1 ? "unidad" : "unidades"

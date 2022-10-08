@@ -4,24 +4,27 @@ import {
   MessageOutlined,
   NotificationsNoneOutlined,
   ReplayOutlined,
+  WarningOutlined,
 } from "@mui/icons-material";
 import AudioPlayer from "react-h5-audio-player";
 
-import { Badge, Box, Chip, Grid, IconButton } from "@mui/material";
+import { Badge, Box, Chip, Grid, IconButton, Tooltip } from "@mui/material";
 import {
   DataGrid,
   GridColDef,
   GridRowId,
   GridValueGetterParams,
   esES,
-  GridToolbar,
 } from "@mui/x-data-grid";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
-import ReactAudioPlayer from "react-audio-player";
 import { AdminLayout } from "../../../components/layouts";
-import { MessageModal, OrdersActions } from "../../../components/orders";
+import {
+  FilterTabOrders,
+  MessageModal,
+  OrdersActions,
+} from "../../../components/orders";
 import { FullScreenLoading } from "../../../components/ui";
 import { IOrder, IOrderWithPaginate } from "../../../interfaces";
 import {
@@ -30,9 +33,17 @@ import {
 } from "../../../store/RTKQuery/ordersApi";
 import { currency } from "../../../utils";
 import { printOrder } from "../../../utils/printOrder";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../store";
 
 const OrdersPage = () => {
-  const router = useRouter();
+  const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
+  const [newOrdersAlert, setNewOrdersAlert] = useState<number | null>(0);
+  const alertSound = useRef() as React.LegacyRef<AudioPlayer>;
+  const [rowCountState, setRowCountState] = useState(
+    dataOrders?.totalDocs || 0
+  );
+  const [rowCountStateOld, setRowCountStateOld] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [retryConfirmQuery, retryConfirmStatus] =
     useRetryConfirmOrderMutation();
@@ -44,38 +55,30 @@ const OrdersPage = () => {
     phone: "",
     name: "",
   });
-
-  const { data, isLoading } = useGetAllOrdersQuery(
+  const { endDate, phoneToFind, startDate, status } = useSelector(
+    (state: RootState) => state.ui.filters
+  );
+  const { data, isLoading, refetch } = useGetAllOrdersQuery(
     `page=${page + 1}&limit=${pageSize}${
-      statusQuery && `&status=${statusQuery}`
+      status.length > 0 ? `&status=${status}` : ""
+    }${
+      startDate !== null
+        ? `&startDate=${new Date(startDate).toISOString()}`
+        : ""
+    }${endDate !== null ? `&endDate=${new Date(endDate).toISOString()}` : ""}${
+      phoneToFind !== "" ? `&phoneToFind=56${phoneToFind}` : ""
     }`,
     {
       pollingInterval: 60000, // 1 minuto,
     }
   );
-  const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
-  const [newOrdersAlert, setNewOrdersAlert] = useState<number | null>(0);
-  const alertSound = useRef() as React.LegacyRef<AudioPlayer>;
-  const [rowCountState, setRowCountState] = useState(
-    dataOrders?.totalDocs || 0
-  );
-  const [rowCountStateOld, setRowCountStateOld] = useState<number | null>(null);
+
+  useEffect(() => {
+    refetch();
+  }, [endDate, phoneToFind, startDate, status]);
 
   useEffect(() => {
     if (data) {
-      // if (dataOrders) {
-      //   // if (dataOrders?.docs?.length < data?.docs?.length) {
-      //   //   const newOrders = data?.docs?.length - dataOrders?.docs?.length;
-      //   //   setNewOrdersAlert((prev) => +prev! + +newOrders);
-      //   //   (alertSound as any)!.current?.audio.current.play();
-      //   // }
-      //   if (dataOrders?.docs?.length < data?.docs?.length) {
-      //     const newOrders = data?.docs?.length - dataOrders?.docs?.length;
-      //     setNewOrdersAlert((prev) => +prev! + +newOrders);
-      //     (alertSound as any)!.current?.audio.current.play();
-      //   }
-      // }
-      // una vez analizado si hay pedidos nuevos se setea para la tabla
       setDataOrders(data);
     }
   }, [data]);
@@ -95,12 +98,6 @@ const OrdersPage = () => {
     }
   }, [newOrdersAlert]);
 
-  useEffect(() => {
-    if (router?.query?.status) {
-      setStatusQuery(router?.query?.status as string);
-    }
-  }, [router?.query]);
-
   const retryConfirmOrder = (id: string, phone: string) => {
     retryConfirmQuery({ orderId: id, phone });
   };
@@ -115,9 +112,17 @@ const OrdersPage = () => {
       field: "id",
       headerName: "Orden ID",
       width: 110,
-      renderCell: ({ row }: GridValueGetterParams) => {
-        return row.id.slice(-10);
-      },
+      renderCell: ({ row }: GridValueGetterParams) => (
+        <a
+          style={{ color: "black" }}
+          href={`/admin/orders/${row.id}`}
+          target="_blank"
+          rel="noreferrer"
+        >
+          {row.id.slice(-10)}
+        </a>
+      ),
+      // return row.id.slice(-10);
     },
     { field: "name", headerName: "Nombre", width: 150 },
     { field: "phone", headerName: "Teléfono", width: 120 },
@@ -210,14 +215,42 @@ const OrdersPage = () => {
       width: 60,
     },
     {
-      field: "check",
-      headerName: "Ver orden",
+      field: "reserved",
+      width: 125,
+      headerName: "Reserva",
       renderCell: ({ row }: GridValueGetterParams) => {
-        return (
-          <a href={`/admin/orders/${row.id}`} target="_blank" rel="noreferrer">
-            Ver orden
-          </a>
-        );
+        if (row?.reservedHour) {
+          const leftMinutes = Math.round(
+            (new Date(row?.reservedHour).getTime() - new Date().getTime()) /
+              (1000 * 60)
+          );
+          return (
+            <>
+              {format(new Date(row?.reservedHour), "dd-MM HH:mm")}
+              {
+                /* ["ingested", "inprocess"].includes(row?.status) && */
+                leftMinutes <= 60 && (
+                  <Tooltip
+                    title={
+                      leftMinutes > 0
+                        ? `Quedan ${leftMinutes} minutos para la hora reservada!`
+                        : `Orden debería haber sido entregada hace ${-leftMinutes} minutos!`
+                    }
+                  >
+                    <IconButton sx={{ paddingLeft: 0 }}>
+                      <WarningOutlined color="error" />
+                    </IconButton>
+                  </Tooltip>
+                )
+              }
+            </>
+          );
+        } else {
+          return null;
+        }
+        // <a href={`/admin/orders/${row.id}`} target="_blank" rel="noreferrer">
+        //   Ver orden
+        // </a>
       },
     },
     { field: "createdAt", headerName: "Ingresada en", width: 160 },
@@ -288,6 +321,7 @@ const OrdersPage = () => {
     status: order?.status,
     phone: order.shippingAddress.phone,
     noProducts: order?.numberOfItems,
+    reservedHour: order?.reservedHour,
     createdAt: format(new Date(order?.createdAt!), "dd-MM-yyyy hh:mm:ss"),
     extras: order?.orderExtraItems?.length,
   }));
@@ -306,6 +340,8 @@ const OrdersPage = () => {
           ref={alertSound}
           style={{ display: "none" }}
         />
+        <FilterTabOrders refetch={refetch} />
+        <Box flexGrow={1}></Box>
         <IconButton
           id="iconbuttonBell"
           sx={{ marginRight: 2 }}
@@ -351,9 +387,9 @@ const OrdersPage = () => {
           onSelectionModelChange={(e) => setSelectedRows(e)}
           rows={rows ?? []}
           columns={columns}
-          components={{
-            Toolbar: GridToolbar,
-          }}
+          // components={{
+          //   Toolbar: GridToolbar,
+          // }}
           componentsProps={{
             pagination: { classes: null },
           }}

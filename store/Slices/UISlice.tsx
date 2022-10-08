@@ -10,6 +10,12 @@ export interface UIState {
     isOpen: boolean;
     type: storeOpen;
   };
+  filters: {
+    status: [string] | [];
+    startDate: string | null;
+    endDate: string | null;
+    phoneToFind: string;
+  };
 }
 
 const initialState: UIState = {
@@ -18,6 +24,12 @@ const initialState: UIState = {
   store: {
     isOpen: true,
     type: "open",
+  },
+  filters: {
+    status: [],
+    startDate: null,
+    endDate: null,
+    phoneToFind: "",
   },
 };
 
@@ -40,23 +52,29 @@ export const UISlice = createSlice({
     ) => {
       state.store = action.payload;
     },
-    // closeStore: (state) => {
-    //   state.store = {
-    //     isOpen: false,
-    //     type: "close",
-    //   };
-    // },
-    // openSoon: (state) => {
-    //   state.store = {
-    //     isOpen: false,
-    //     type: "soon",
-    //   };
-    // },
+
+    setFilters: (
+      state,
+      action: PayloadAction<{
+        status: [string] | [];
+        startDate: string | null;
+        endDate: string | null;
+        phoneToFind: string;
+      }>
+    ) => {
+      console.log({ actionn: action.payload });
+      state.filters = action.payload;
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { toggleMenu, activeScrollDown, desactiveScrollDown, storeState } =
-  UISlice.actions;
+export const {
+  toggleMenu,
+  activeScrollDown,
+  desactiveScrollDown,
+  storeState,
+  setFilters,
+} = UISlice.actions;
 
 export default UISlice.reducer;

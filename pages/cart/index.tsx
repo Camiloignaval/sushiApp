@@ -123,11 +123,11 @@ const CartPage = () => {
               {(!cart.reservedHour || showReserveHour) &&
                 (!showReserveHour ? (
                   <Button
-                    disabled // TODO sacar para desarrollar
+                    // disabled
                     className="circular-btn"
                     fullWidth
                     color="secondary"
-                    /* variant="h2" */ sx={{ marginBottom: 1 }}
+                    sx={{ marginBottom: 1 }}
                     onClick={() => setShowReserveHour(true)}
                   >
                     Agendar para otro Día/Hora

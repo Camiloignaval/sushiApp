@@ -44,25 +44,25 @@ const DashBoardPage = () => {
     >
       <Grid container spacing={2}>
         <SummaryTitle
-          link='/admin/orders?status=["ingested","inprocess","dispatched","delivered"]'
+          link="/admin/orders?status=ingested,inprocess,dispatched,delivered"
           title={data?.numberOfOrders.toString()!}
           subTitle={"Ordenes totales"}
           icon={<CreditCardOutlined color="secondary" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
-          link='/admin/orders?status=["ingested"]'
+          link="/admin/orders?status=ingested"
           title={data?.numberOfOrdersIngresadas.toString()!}
           subTitle={"Ordenes en espera"}
           icon={<HourglassBottomOutlined color="error" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
-          link='/admin/orders?status=["inprocess"]'
+          link="/admin/orders?status=inprocess"
           title={data?.numberOfOrdersEnProceso.toString()!}
           subTitle={"Ordenes en proceso"}
           icon={<OutdoorGrillOutlined color="warning" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
-          link='/admin/orders?status=["dispatched"]'
+          link="/admin/orders?status=dispatched"
           title={data?.numberOfOrdersDespachadas.toString()!}
           subTitle={"Ordenes despachadas"}
           icon={
@@ -70,7 +70,7 @@ const DashBoardPage = () => {
           }
         />
         <SummaryTitle
-          link='/admin/orders?status=["delivered"]'
+          link="/admin/orders?status=delivered"
           title={data?.numberOfOrdersEntregadas.toString()!}
           subTitle={"Ordenes entregadas"}
           icon={<DoneAllOutlined color="success" sx={{ fontSize: 40 }} />}

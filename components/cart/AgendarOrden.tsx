@@ -2,6 +2,7 @@ import { Box, Button, Grid, TextField, Typography } from "@mui/material";
 import { DateTimePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { addHours, format } from "date-fns";
+import { es } from "date-fns/locale";
 import React, { useState, FC } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
@@ -50,7 +51,7 @@ export const AgendarOrden: FC<Props> = ({ setShowReserveHour }) => {
   };
 
   return (
-    <LocalizationProvider dateAdapter={AdapterDateFns}>
+    <LocalizationProvider dateAdapter={AdapterDateFns} locale={es}>
       <Box display={"flex"} flexDirection="column">
         <Typography
           variant="caption"
@@ -69,12 +70,7 @@ export const AgendarOrden: FC<Props> = ({ setShowReserveHour }) => {
         <Grid item xs={8}>
           {/* DateTimePicker causa error en components */}
           <DateTimePicker
-            // onError={() => setErrorMessage("hay un error")}
-            // onError={(error, values) => {
-            //   console.log("Error is", error, values);
-            // }}
             disableMaskedInput
-            // minDateTime={format(new Date(), "yyyy-MM-dd HH:mm")}
             disablePast
             inputFormat={"dd-MM-yyyy HH:mm"}
             label="Seleccione Fecha y Hora"

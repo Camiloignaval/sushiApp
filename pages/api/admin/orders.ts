@@ -4,6 +4,7 @@ import { db } from "../../../database";
 import { IOrder } from "../../../interfaces";
 import { Order, User } from "../../../models";
 import axios from "axios";
+import { endOfDay, startOfDay } from "date-fns";
 
 type Data =
   | {
@@ -30,16 +31,46 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const queryParams = req.query;
+  const today = new Date();
+  const tomorrow = new Date(today.getDate() + 1);
+
   try {
     let {
       page = 1,
       limit = 20,
-      status = '["ingested", "inprocess", "dispatched"]',
+      status = "ingested,inprocess,dispatched",
+      startDate = undefined,
+      endDate = undefined,
+      phoneToFind = undefined,
     } = queryParams;
+    // console.log({ status, startDate, endDate, phoneToFind });
+    const queryToSend = {} as any;
+
+    if (phoneToFind) {
+      queryToSend["shippingAddress.phone"] = `+${phoneToFind}`;
+    }
+    queryToSend["status"] = { $in: (status as string).split(",") };
+
+    if (startDate && endDate) {
+      queryToSend["createdAt"] = {
+        $gte: startOfDay(new Date(startDate as string)),
+        $lt: endOfDay(new Date(endDate as string)),
+      };
+    }
+
+    console.log({ queryToSend });
+
     await db.connect();
     //TODO agregar filtros
     const orders = await Order.paginate(
-      { status: { $in: JSON.parse(status as string) } },
+      queryToSend,
+      // TODO NO SE PUEDE OR
+      // reservedHour: {
+      //   $exists: true,
+      //   $gte: startOfDay(new Date()),
+      //   $lt: endOfDay(new Date()),
+      // },
+      // },
       { page, limit, sort: { createdAt: "asc" } }
     );
 

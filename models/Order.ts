@@ -79,7 +79,7 @@ const orderSchema = new Schema(
     isPaid: { type: Boolean, required: true, default: false },
     paidAt: { type: String },
     discount: { type: Number },
-    reservedHour: { type: String },
+    reservedHour: { type: Date },
     wspReceived: { type: Boolean, required: true, default: true },
     status: {
       type: String,

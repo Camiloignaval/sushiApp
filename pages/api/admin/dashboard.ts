@@ -1,9 +1,12 @@
+import { endOfDay, startOfDay } from "date-fns";
+import { IOrder } from "./../../../interfaces/order";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { Order, User, Product, Promotion } from "../../../models";
 
 type Data =
   | {
+      ganancias: [any];
       numberOfOrders: number;
       numberOfOrdersIngresadas: number;
       numberOfOrdersEnProceso: number;
@@ -25,8 +28,23 @@ export default async function handler(
 ) {
   try {
     await db.connect();
+    const { startDate = undefined, endDate = undefined } = req.query;
+    var curr = new Date(); // get current date
+    var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
+    var last = first + 6; // last day is the first day + 6
+
+    var firstday = startOfDay(
+      startDate ? new Date(startDate as string) : new Date(curr.setDate(first))
+    );
+    var lastday = endOfDay(
+      endDate ? new Date(endDate as string) : new Date(curr.setDate(last))
+    );
+    console.log({ firstday, lastday });
+
+    // hay que cambiar ganancias por aggregaciones
 
     const [
+      ganancias,
       numberOfOrders,
       numberOfOrdersIngresadas,
       numberOfOrdersEnProceso,
@@ -38,6 +56,14 @@ export default async function handler(
       productsWithNoInventory,
       promotionsWithNoInventory,
     ] = await Promise.all([
+      // TODO cambiar updatedAt por paidDate (crear)
+      Order.find({
+        status: "delivered",
+        updatedAt: {
+          $gte: firstday,
+          $lt: lastday,
+        },
+      }).select("total deliverPrice discount"),
       Order.count(),
       Order.find({ status: "ingested" }).count(),
       Order.find({ status: "inprocess" }).count(),
@@ -63,6 +89,7 @@ export default async function handler(
       numberOfPromotions,
       productsWithNoInventory,
       promotionsWithNoInventory,
+      ganancias,
     });
   } catch (error) {
     console.log({ errorindashboard: error });

@@ -21,9 +21,9 @@ export const adminApi = createApi({
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
   tagTypes: ["Dashboard", "Users"],
   endpoints: (builder) => ({
-    getDashboardData: builder.query<IDashboard, null>({
-      query: () => ({
-        url: `/admin/dashboard`,
+    getDashboardData: builder.query<IDashboard, null | string>({
+      query: (dateRange) => ({
+        url: `/admin/dashboard${dateRange !== null ? dateRange : ""}`,
         method: "get",
       }),
       providesTags: ["Dashboard"],

@@ -35,6 +35,7 @@ import { currency } from "../../../utils";
 import { printOrder } from "../../../utils/printOrder";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import Typography from "@mui/material/Typography";
 
 const OrdersPage = () => {
   const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
@@ -226,7 +227,12 @@ const OrdersPage = () => {
           );
           return (
             <>
-              {format(new Date(row?.reservedHour), "dd-MM HH:mm")}
+              <Typography
+                variant="body2"
+                color={leftMinutes <= 60 ? "error" : "primary"}
+              >
+                {format(new Date(row?.reservedHour), "dd-MM HH:mm")}
+              </Typography>
               {
                 /* ["ingested", "inprocess"].includes(row?.status) && */
                 leftMinutes <= 60 && (
@@ -248,12 +254,45 @@ const OrdersPage = () => {
         } else {
           return null;
         }
-        // <a href={`/admin/orders/${row.id}`} target="_blank" rel="noreferrer">
-        //   Ver orden
-        // </a>
       },
     },
-    { field: "createdAt", headerName: "Ingresada en", width: 160 },
+    {
+      field: "createdAt",
+      headerName: "Ingresada en",
+      width: 160,
+      renderCell: ({ row }: GridValueGetterParams) => {
+        if (!row?.reservedHour) {
+          const passedMinutes = Math.round(
+            (new Date().getTime() - new Date(row?.createdAt).getTime()) /
+              (1000 * 60)
+          );
+          return (
+            <>
+              <Typography
+                variant="body2"
+                color={passedMinutes > 60 ? "error" : "primary"}
+              >
+                {format(new Date(row?.createdAt), "dd-MM-yyyy HH:mm")}
+              </Typography>
+              {
+                /* ["ingested", "inprocess"].includes(row?.status) && */
+                passedMinutes > 60 && (
+                  <Tooltip
+                    title={`Ya han pasado ${passedMinutes} minutos de que ingresó el pedido!`}
+                  >
+                    <IconButton sx={{ paddingLeft: 0 }}>
+                      <WarningOutlined color="error" />
+                    </IconButton>
+                  </Tooltip>
+                )
+              }
+            </>
+          );
+        } else {
+          return format(new Date(row?.createdAt), "dd-MM-yyyy HH:mm");
+        }
+      },
+    },
     {
       field: "ticket",
       headerName: "Ticket",
@@ -322,7 +361,7 @@ const OrdersPage = () => {
     phone: order.shippingAddress.phone,
     noProducts: order?.numberOfItems,
     reservedHour: order?.reservedHour,
-    createdAt: format(new Date(order?.createdAt!), "dd-MM-yyyy hh:mm:ss"),
+    createdAt: order?.createdAt,
     extras: order?.orderExtraItems?.length,
   }));
 

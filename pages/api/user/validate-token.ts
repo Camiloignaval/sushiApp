@@ -55,5 +55,8 @@ const checkJWT = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   res
     .status(200)
-    .json({ token: jwt.signToken(_id!, phone), user: { role, name, phone } });
+    .json({
+      token: jwt.signToken(_id!, phone, role),
+      user: { role, name, phone },
+    });
 };

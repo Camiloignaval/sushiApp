@@ -33,7 +33,6 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const queryParams = req.query;
   const today = new Date();
   const tomorrow = new Date(today.getDate() + 1);
-
   try {
     let {
       page = 1,
@@ -57,8 +56,6 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         $lt: endOfDay(new Date(endDate as string)),
       };
     }
-
-    console.log({ queryToSend });
 
     await db.connect();
     //TODO agregar filtros

@@ -28,8 +28,6 @@ class MyDocument extends Document {
             type="text/javascript"
             src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw&language=es&libraries=places,distancematrix"
           ></Script>
-          {/* conector plugin */}
-          {/* <script src="../utils/conectorPlugin.js"></script> */}
           <Main />
           <NextScript />
         </body>

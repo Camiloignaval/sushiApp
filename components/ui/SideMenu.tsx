@@ -90,93 +90,101 @@ export const SideMenu = () => {
               <ListItemText primary={"Salir"} />
             </ListItem>
           )}
-          {/* <ListItem button onClick={onLogout}>
-            <ListItemIcon>
-              <LocationCityOutlined />
-            </ListItemIcon>
-            <ListItemText primary={"Consulta tu dirección"} />
-          </ListItem> */}
 
+          <Divider />
+          {/* Deliver */}
+          {user?.role === "delivery" && (
+            <>
+              <ListSubheader>Deliver Panel</ListSubheader>
+              <ListItem button onClick={() => navigateTo(`/admin/deliver`)}>
+                <ListItemIcon>
+                  <DeliveryDiningOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"En ruta"} />
+              </ListItem>
+            </>
+          )}
           {/* Admin */}
-          <>
-            <Divider />
-            <ListSubheader>Admin Panel</ListSubheader>
-            <ListItem button onClick={() => navigateTo(`/admin`)}>
-              <ListItemIcon>
-                <DashboardOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"Dashboard"} />
-            </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin/promotions`)}>
-              <ListItemIcon>
-                <LocalOfferOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"Promociones"} />
-            </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin/products`)}>
-              <ListItemIcon>
-                <Inventory2Outlined />
-              </ListItemIcon>
-              <ListItemText primary={"Productos"} />
-            </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin/categories`)}>
-              <ListItemIcon>
-                <CategoryOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"Categorias"} />
-            </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin/coupons`)}>
-              <ListItemIcon>
-                <ConfirmationNumberOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"Cupones"} />
-            </ListItem>
+          {["admin", "superadmin"].includes(user?.role ?? "") && (
+            <>
+              <ListSubheader>Admin Panel</ListSubheader>
+              <ListItem button onClick={() => navigateTo(`/admin`)}>
+                <ListItemIcon>
+                  <DashboardOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Dashboard"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/promotions`)}>
+                <ListItemIcon>
+                  <LocalOfferOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Promociones"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/products`)}>
+                <ListItemIcon>
+                  <Inventory2Outlined />
+                </ListItemIcon>
+                <ListItemText primary={"Productos"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/categories`)}>
+                <ListItemIcon>
+                  <CategoryOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Categorias"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/coupons`)}>
+                <ListItemIcon>
+                  <ConfirmationNumberOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Cupones"} />
+              </ListItem>
 
-            <ListItem button onClick={() => navigateTo(`/admin/orders`)}>
-              <ListItemIcon>
-                <FilterFramesOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"Ordenes"} />
-            </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin/deliver`)}>
-              <ListItemIcon>
-                <DeliveryDiningOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"En ruta"} />
-            </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin/users`)}>
-              <ListItemIcon>
-                <AdminPanelSettings />
-              </ListItemIcon>
-              <ListItemText primary={"Clientes"} />
-            </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin/bills`)}>
-              <ListItemIcon>
-                <AccountBalanceWalletOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"Gastos"} />
-            </ListItem>
-            <ListItem button onClick={() => navigateTo(`/admin/settings`)}>
-              <ListItemIcon>
-                <SettingsOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"Configuración"} />
-            </ListItem>
-            <ListItem
-              button
-              onClick={() =>
-                window.open(
-                  "https://whatsapp-api-cv.herokuapp.com/connect",
-                  "_blank"
-                )
-              }
-            >
-              <ListItemIcon>
-                <WhatsappOutlined />
-              </ListItemIcon>
-              <ListItemText primary={"Whatsapp"} />
-            </ListItem>
-          </>
+              <ListItem button onClick={() => navigateTo(`/admin/orders`)}>
+                <ListItemIcon>
+                  <FilterFramesOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Ordenes"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/deliver`)}>
+                <ListItemIcon>
+                  <DeliveryDiningOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"En ruta"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/users`)}>
+                <ListItemIcon>
+                  <AdminPanelSettings />
+                </ListItemIcon>
+                <ListItemText primary={"Clientes"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/bills`)}>
+                <ListItemIcon>
+                  <AccountBalanceWalletOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Gastos"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/settings`)}>
+                <ListItemIcon>
+                  <SettingsOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Configuración"} />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() =>
+                  window.open(
+                    "https://whatsapp-api-cv.herokuapp.com/connect",
+                    "_blank"
+                  )
+                }
+              >
+                <ListItemIcon>
+                  <WhatsappOutlined />
+                </ListItemIcon>
+                <ListItemText primary={"Whatsapp"} />
+              </ListItem>
+            </>
+          )}
           {/* )} */}
         </List>
       </Box>

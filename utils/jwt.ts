@@ -1,11 +1,11 @@
 import jwt from "jsonwebtoken";
 
-export const signToken = (_id: string, phone: string) => {
+export const signToken = (_id: string, phone: string, role: string) => {
   if (!process.env.JWT_SECRET_SEED) {
     throw "No hay una semilla de JWT, Revisar .env";
   }
 
-  return jwt.sign({ _id, phone }, process.env.JWT_SECRET_SEED, {
+  return jwt.sign({ _id, phone, role }, process.env.JWT_SECRET_SEED, {
     expiresIn: "30d",
   });
 };

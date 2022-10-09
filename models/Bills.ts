@@ -8,6 +8,7 @@ const expenseSchema = new Schema(
   {
     week: { type: Date, required: true },
     bills: [{ expense: { type: Number, min: 0 }, name: { type: String } }],
+    gains: { type: Number },
   },
   {
     timestamps: true,

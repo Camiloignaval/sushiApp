@@ -45,8 +45,25 @@ export const expensesApi = createApi({
         });
       },
     }),
+    updateGains: builder.mutation<IResponse, number>({
+      query: (body) => ({
+        url: `/admin/bills`,
+        method: "post",
+        body,
+      }),
+      onQueryStarted(data, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Guardando gastos...",
+          success: "Gastos actualizados",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
-export const { useGetExpensesOfWeekQuery, useUpdateExpensesMutation } =
-  expensesApi;
+export const {
+  useGetExpensesOfWeekQuery,
+  useUpdateExpensesMutation,
+  useUpdateGainsMutation,
+} = expensesApi;

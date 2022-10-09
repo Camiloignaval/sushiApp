@@ -1,3 +1,4 @@
+import { startOfDay } from "date-fns";
 import { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { IExpense } from "../../../interfaces";
@@ -16,6 +17,8 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
       return findBills(req, res);
     case "PUT":
       return updateBills(req, res);
+    case "POST":
+      return closeWeek(req, res);
 
     default:
       return res.status(405).json({
@@ -55,6 +58,37 @@ const updateBills = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     );
     // await db.disconnect();
     return res.status(200).json({ message: "Gastos actualizados" });
+  } catch (error) {
+    console.log({ errorinbills: error });
+    // await db.disconnect();
+    if (error instanceof Error) {
+      return res.status(400).json({ message: error.message });
+    } else {
+      return res.status(400).json({ message: "Error desconocido" });
+    }
+  }
+};
+
+function getMonday() {
+  const d = new Date();
+  const day = d.getDay(),
+    diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+  return startOfDay(new Date(d.setDate(diff)));
+}
+const closeWeek = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+  const gains = req.body;
+  try {
+    const firstOfActualWeek = getMonday();
+
+    console.log({ gains, firstOfActualWeek });
+    await db.connect();
+    await Expense.findOneAndUpdate(
+      { week: firstOfActualWeek },
+      { gains: gains },
+      { upsert: true }
+    );
+    // await db.disconnect();
+    return res.status(200).json({ message: "Ganancias actualizadas" });
   } catch (error) {
     console.log({ errorinbills: error });
     // await db.disconnect();

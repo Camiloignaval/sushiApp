@@ -60,9 +60,6 @@ export default async function handler(
     };
 
     // hay que cambiar ganancias por aggregaciones
-    const query = await Expense.findOne({ week: firstOfActualWeek });
-    console.log({ query });
-    console.log({ firstOfActualWeek });
     const [
       billOfWeek,
       orderWithOutReserve,
@@ -126,8 +123,6 @@ export default async function handler(
     const weekBills = billOfWeek
       ? billOfWeek?.bills?.reduce((acc, curr) => acc + curr?.expense ?? 0, 0)
       : 0;
-
-    console.log({ weekBills, billOfWeek });
 
     const gananciasSemanales = gananciasSemenales.reduce(
       (acc: any, curr: any) => acc + curr.total,

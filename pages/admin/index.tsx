@@ -21,10 +21,11 @@ import {
   OutdoorGrillOutlined,
   PriorityHighOutlined,
   ProductionQuantityLimitsOutlined,
+  SaveOutlined,
   SsidChartOutlined,
   StarPurple500,
 } from "@mui/icons-material";
-import { Box, Grid, IconButton } from "@mui/material";
+import { Box, Button, Grid, IconButton } from "@mui/material";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -37,6 +38,7 @@ import { currency } from "../../utils";
 import esLocale from "date-fns/locale/es";
 import Divider from "@mui/material/Divider";
 import { GraficoDash } from "../../components/ui";
+import { useUpdateGainsMutation } from "../../store/RTKQuery/expenses";
 
 const DashBoardPage = () => {
   const router = useRouter();
@@ -56,8 +58,7 @@ const DashBoardPage = () => {
     //   pollingInterval: 300000,
     // }
   );
-
-  console.log({ data });
+  const [updateGains] = useUpdateGainsMutation();
 
   const handleFilter = () => {
     if (startDate !== null && endDate !== null) {
@@ -90,6 +91,11 @@ const DashBoardPage = () => {
     setTitleMessage("de la semana actual");
   };
 
+  const handleCloseWeek = () => {
+    console.log("entrte");
+    updateGains(data?.ganancias ?? 0);
+  };
+
   // useEffect(() => {
   //   console.log("entre a useeffecrt");
   //   if (startDate !== null && endDate !== null) {
@@ -120,6 +126,17 @@ const DashBoardPage = () => {
       title="Dashboard"
       subTitle={`Estadisticas generales ${titleMessage}`}
     >
+      <Box display="flex" justifyContent="end" sx={{ mb: 1 }}>
+        <Button
+          onClick={handleCloseWeek}
+          // disabled={updateCouponState.isLoading}
+          color="primary"
+          sx={{ width: "150px" }}
+          type="submit"
+        >
+          Cerrar semana
+        </Button>
+      </Box>
       <Grid container>
         <Box flexGrow={1} my={5}></Box>
         <DatePickerStart />

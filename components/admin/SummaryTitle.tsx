@@ -11,6 +11,7 @@ interface Props {
   icon: JSX.Element;
   link?: string;
   isLoading?: boolean;
+  sizeInMd?: number;
 }
 
 export const SummaryTitle: FC<Props> = ({
@@ -19,11 +20,12 @@ export const SummaryTitle: FC<Props> = ({
   icon,
   link = undefined,
   isLoading = false,
+  sizeInMd = 3,
 }) => {
   const router = useRouter();
   return (
     <>
-      <Grid item xs={12} sm={4} md={3}>
+      <Grid item xs={12} sm={4} md={sizeInMd}>
         {isLoading ? (
           // <DashboardSkeleton />
           <Facebook />

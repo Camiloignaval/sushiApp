@@ -12,7 +12,7 @@ const mongoConnection = {
 
 export const connect = async () => {
   if (mongoConnection.isConnected) {
-    console.log("Ya estabamos conectados");
+    // console.log("Ya estabamos conectados");
     return;
   }
 
@@ -20,7 +20,7 @@ export const connect = async () => {
     mongoConnection.isConnected = mongoose.connections[0].readyState;
 
     if (mongoConnection.isConnected === 1) {
-      console.log("Usando conexión anterior");
+      // console.log("Usando conexión anterior");
       return;
     }
 
@@ -30,7 +30,7 @@ export const connect = async () => {
     process.env.MONGO_URL || "" /* , { maxPoolSize: 10 } */
   );
   mongoConnection.isConnected = 1;
-  console.log("Conectado a MongoDB:", process.env.MONGO_URL);
+  // console.log("Conectado a MongoDB:", process.env.MONGO_URL);
 };
 
 export const disconnect = async () => {

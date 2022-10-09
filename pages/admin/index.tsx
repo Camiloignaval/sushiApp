@@ -1,6 +1,7 @@
 import {
   AccessTimeOutlined,
   AttachMoneyOutlined,
+  AutoGraphOutlined,
   CancelPresentationOutlined,
   CategoryOutlined,
   ClearOutlined,
@@ -15,9 +16,13 @@ import {
   GroupOutlined,
   HourglassBottomOutlined,
   LocalOffer,
+  MoneyOffOutlined,
   MoneyOutlined,
   OutdoorGrillOutlined,
+  PriorityHighOutlined,
   ProductionQuantityLimitsOutlined,
+  SsidChartOutlined,
+  StarPurple500,
 } from "@mui/icons-material";
 import { Box, Grid, IconButton } from "@mui/material";
 import { format } from "date-fns";
@@ -81,6 +86,7 @@ const DashBoardPage = () => {
     setEnd(null);
     setqueryToSend(null);
     refetch();
+    setTitleMessage("de la semana actual");
   };
 
   // useEffect(() => {
@@ -124,32 +130,48 @@ const DashBoardPage = () => {
           <ClearOutlined />
         </IconButton>
       </Grid>
+
       <Grid container spacing={2}>
         <SummaryTitle
+          sizeInMd={6}
           isLoading={isLoading}
-          title={currency.format(
-            data?.ganancias.reduce((acc, curr) => acc + curr.total, 0)
-          )}
+          title={currency.format(data?.ganancias ?? 0)}
+          subTitle={"Ganancia semanal"}
+          icon={<AutoGraphOutlined color="warning" sx={{ fontSize: 40 }} />}
+        />
+        <SummaryTitle
+          sizeInMd={6}
+          isLoading={isLoading}
+          title={currency.format(data?.bills ?? 0)}
+          subTitle={"Gastos semanal"}
+          icon={<MoneyOffOutlined color="error" sx={{ fontSize: 40 }} />}
+        />
+      </Grid>
+      <Divider sx={{ my: 4, mx: 4, display: "block" }} />
+
+      <Grid container spacing={2}>
+        <SummaryTitle
+          sizeInMd={4}
+          isLoading={isLoading}
+          title={currency.format(data?.inTotal ?? 0)}
           subTitle={"Ingreso bruto"}
           icon={<AttachMoneyOutlined color="success" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          sizeInMd={4}
           isLoading={isLoading}
-          title={currency.format(
-            data?.ganancias.reduce((acc, curr) => acc + curr.deliverPrice, 0)
-          )}
+          title={currency.format(data?.inByDelivery ?? 0)}
           subTitle={"Ingresos por despacho"}
           icon={
             <DeliveryDiningOutlined color="success" sx={{ fontSize: 40 }} />
           }
         />
         <SummaryTitle
+          sizeInMd={4}
           isLoading={isLoading}
-          title={currency.format(
-            data?.ganancias.reduce((acc, curr) => acc + curr?.discount, 0)
-          )}
+          title={currency.format(data?.discount ?? 0)}
           subTitle={"Descuento utilizado"}
-          icon={<LocalOffer color="secondary" sx={{ fontSize: 40 }} />}
+          icon={<LocalOffer color="error" sx={{ fontSize: 40 }} />}
         />
       </Grid>
 
@@ -236,11 +258,14 @@ const DashBoardPage = () => {
             <CancelPresentationOutlined color="error" sx={{ fontSize: 40 }} />
           }
         />
-        {/* <SummaryTitle
-          title={refreshIn.toString()}
-          subTitle={"Actualizacion en"}
-          icon={<AccessTimeOutlined color="secondary" sx={{ fontSize: 40 }} />}
-        /> */}
+        <SummaryTitle
+          isLoading={isLoading}
+          title={`${data?.avgTime} min.`}
+          subTitle={"Tiempo promedio de entrega"}
+          icon={
+            <PriorityHighOutlined color="secondary" sx={{ fontSize: 40 }} />
+          }
+        />
       </Grid>
     </AdminLayout>
   );

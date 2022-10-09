@@ -1,12 +1,14 @@
-import { endOfDay, startOfDay } from "date-fns";
+import { addDays, endOfDay, format, startOfDay } from "date-fns";
 import { IOrder } from "./../../../interfaces/order";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { Order, User, Product, Promotion } from "../../../models";
+import Expense from "../../../models/Bills";
 
 type Data =
   | {
-      ganancias: [any];
+      bills: number;
+      ganancias: number;
       numberOfOrders: number;
       numberOfOrdersIngresadas: number;
       numberOfOrdersEnProceso: number;
@@ -18,10 +20,21 @@ type Data =
       productsWithNoInventory: number; // 0
       promotionsWithNoInventory: number;
       numberOfNewClients: number;
+      inByDelivery: number;
+      discount: number;
+      inTotal: number;
+      avgTime: number;
     }
   | {
       message: string;
     };
+
+function getMonday() {
+  const d = new Date();
+  const day = d.getDay(),
+    diff = d.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+  return startOfDay(new Date(d.setDate(diff)));
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -30,27 +43,29 @@ export default async function handler(
   try {
     await db.connect();
     const { startDate = undefined, endDate = undefined } = req.query;
-    var curr = new Date(); // get current date
-    var first = curr.getDate() - curr.getDay(); // First day is the day of the month - the day of the week
-    var last = first + 6; // last day is the first day + 6
 
-    var firstday = startOfDay(
-      startDate ? new Date(startDate as string) : new Date(curr.setDate(first))
+    const firstOfActalWeek = getMonday();
+    const lastOfActalWeek = endOfDay(addDays(firstOfActalWeek, 6));
+
+    var firstdayToFilter = startOfDay(
+      startDate ? new Date(startDate as string) : firstOfActalWeek
     );
-    var lastday = endOfDay(
-      endDate ? new Date(endDate as string) : new Date(curr.setDate(last))
+    var lastdayToFilter = endOfDay(
+      endDate ? new Date(endDate as string) : lastOfActalWeek
     );
-    console.log({ firstday, lastday });
 
     const filterByDate = {
-      $gte: firstday,
-      $lt: lastday,
+      $gte: firstdayToFilter,
+      $lt: lastdayToFilter,
     };
 
     // hay que cambiar ganancias por aggregaciones
 
     const [
+      billOfWeek,
+      orderWithOutReserve,
       ganancias,
+      gananciasSemenales,
       numberOfOrders,
       numberOfOrdersIngresadas,
       numberOfOrdersEnProceso,
@@ -63,11 +78,31 @@ export default async function handler(
       productsWithNoInventory,
       promotionsWithNoInventory,
     ] = await Promise.all([
+      Expense.findOne({ week: firstOfActalWeek }),
+      Order.find({
+        status: "delivered",
+        createdAt: filterByDate,
+        reservedHour: { $exists: false },
+      }).select(
+        "total deliverPrice discount createdAt paidAt reservedHour updatedAt"
+      ),
       Order.find({
         status: "delivered",
         // TODO buscar si tiene reserverHour filtrar por eso, sino por createdAt
         createdAt: filterByDate,
-      }).select("total deliverPrice discount"),
+      }).select(
+        "total deliverPrice discount createdAt paidAt reservedHour updatedAt"
+      ),
+      Order.find({
+        status: "delivered",
+        // TODO buscar si tiene reserverHour filtrar por eso, sino por createdAt
+        createdAt: {
+          $gte: firstOfActalWeek,
+          $lt: lastOfActalWeek,
+        },
+      }).select(
+        "total deliverPrice discount createdAt paidAt reservedHour updatedAt"
+      ),
       Order.find({ createdAt: filterByDate }).count(),
       Order.find({ status: "ingested", createdAt: filterByDate }).count(),
       Order.find({ status: "inprocess", updatedAt: filterByDate }).count(),
@@ -86,7 +121,23 @@ export default async function handler(
 
     await db.disconnect();
 
+    const weekBills = billOfWeek
+      ? billOfWeek?.bills?.reduce((acc, curr) => acc + curr?.expense ?? 0, 0)
+      : 0;
+
+    const gananciasSemanales = gananciasSemenales.reduce(
+      (acc: any, curr: any) => acc + curr.total,
+      0
+    );
+
+    const bla = await Order.find({
+      status: "delivered",
+      paidAt: filterByDate,
+    }).count();
+    console.log({ bla });
+
     res.status(200).json({
+      bills: weekBills,
       numberOfOrders,
       numberOfOrdersIngresadas,
       numberOfOrdersEnProceso,
@@ -98,7 +149,28 @@ export default async function handler(
       numberOfPromotions,
       productsWithNoInventory,
       promotionsWithNoInventory,
-      ganancias,
+      ganancias: gananciasSemanales - weekBills,
+      inByDelivery: ganancias.reduce(
+        (acc: any, curr: any) => acc + curr.deliverPrice,
+        0
+      ),
+      discount: ganancias.reduce(
+        (acc: any, curr: any) => acc + curr?.discount,
+        0
+      ),
+      inTotal: ganancias.reduce((acc: any, curr: any) => acc + curr.total, 0),
+      avgTime: Math.round(
+        orderWithOutReserve.reduce((acc: any, curr: any) => {
+          const endTime = curr?.paidAt ?? curr?.updatedAt;
+          const startTime = curr?.reservedHour ?? curr?.createdAt;
+          const diff = Math.round(
+            (new Date(endTime).getTime() - new Date(startTime).getTime()) /
+              (1000 * 60)
+          );
+
+          return acc + diff;
+        }, 0) / ganancias?.length
+      ),
     });
   } catch (error) {
     console.log({ errorindashboard: error });

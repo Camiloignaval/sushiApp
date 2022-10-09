@@ -10,5 +10,10 @@ export interface IDashboard {
   numberOfPromotions: Number;
   productsWithNoInventory: Number; // 0
   promotionsWithNoInventory: Number;
-  ganancias: [any];
+  ganancias: number;
+  inByDelivery: number;
+  discount: number;
+  inTotal: number;
+  avgTime: number;
+  bills: number;
 }

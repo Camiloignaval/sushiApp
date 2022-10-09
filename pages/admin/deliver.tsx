@@ -180,7 +180,8 @@ const DeliverPage = () => {
         return (
           <a
             style={{ color: "black" }}
-            href={`https://waze.com/ul?ll=${row.ll}&navigate=yes`}
+            // href={`https://waze.com/ul?ll=${row.ll}&navigate=yes`}
+            href={`waze://waze.com/ul?ll=${row.ll}&navigate=yes`}
             target="_blank"
             rel="noreferrer"
           >
@@ -263,7 +264,8 @@ const DeliverPage = () => {
     >
       <Link
         style={{ color: "black", display: "none" }}
-        href={`https://waze.com/ul?ll=${llHouse}&navigate=yes`}
+        // href={`https://waze.com/ul?ll=${llHouse}&navigate=yes`}
+        href={`waze://waze.com/ul?ll=${llHouse}&navigate=yes`}
         target="_blank"
         rel="noreferrer"
       >

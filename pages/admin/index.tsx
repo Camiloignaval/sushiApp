@@ -36,6 +36,7 @@ import { useGetDashboardDataQuery } from "../../store/RTKQuery/adminApi";
 import { currency } from "../../utils";
 import esLocale from "date-fns/locale/es";
 import Divider from "@mui/material/Divider";
+import { GraficoDash } from "../../components/ui";
 
 const DashBoardPage = () => {
   const router = useRouter();

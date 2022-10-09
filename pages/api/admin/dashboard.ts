@@ -44,11 +44,11 @@ export default async function handler(
     await db.connect();
     const { startDate = undefined, endDate = undefined } = req.query;
 
-    const firstOfActalWeek = getMonday();
-    const lastOfActalWeek = endOfDay(addDays(firstOfActalWeek, 6));
+    const firstOfActualWeek = getMonday();
+    const lastOfActalWeek = endOfDay(addDays(firstOfActualWeek, 6));
 
     var firstdayToFilter = startOfDay(
-      startDate ? new Date(startDate as string) : firstOfActalWeek
+      startDate ? new Date(startDate as string) : firstOfActualWeek
     );
     var lastdayToFilter = endOfDay(
       endDate ? new Date(endDate as string) : lastOfActalWeek
@@ -60,7 +60,9 @@ export default async function handler(
     };
 
     // hay que cambiar ganancias por aggregaciones
-
+    const query = await Expense.findOne({ week: firstOfActualWeek });
+    console.log({ query });
+    console.log({ firstOfActualWeek });
     const [
       billOfWeek,
       orderWithOutReserve,
@@ -78,7 +80,7 @@ export default async function handler(
       productsWithNoInventory,
       promotionsWithNoInventory,
     ] = await Promise.all([
-      Expense.findOne({ week: firstOfActalWeek }),
+      Expense.findOne({ week: firstOfActualWeek }),
       Order.find({
         status: "delivered",
         createdAt: filterByDate,
@@ -97,7 +99,7 @@ export default async function handler(
         status: "delivered",
         // TODO buscar si tiene reserverHour filtrar por eso, sino por createdAt
         createdAt: {
-          $gte: firstOfActalWeek,
+          $gte: firstOfActualWeek,
           $lt: lastOfActalWeek,
         },
       }).select(
@@ -131,12 +133,6 @@ export default async function handler(
       (acc: any, curr: any) => acc + curr.total,
       0
     );
-
-    const bla = await Order.find({
-      status: "delivered",
-      paidAt: filterByDate,
-    }).count();
-    console.log({ bla });
 
     res.status(200).json({
       bills: weekBills,

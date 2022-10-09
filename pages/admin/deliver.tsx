@@ -180,8 +180,8 @@ const DeliverPage = () => {
         return (
           <a
             style={{ color: "black" }}
-            // href={`https://waze.com/ul?ll=${row.ll}&navigate=yes`}
-            href={`waze://waze.com/ul?ll=${row.ll}&navigate=yes`}
+            href={`https://waze.com/ul?ll=${row.ll}&navigate=yes`}
+            // href={`waze://waze.com/ul?ll=${row.ll}&navigate=yes`}
             target="_blank"
             rel="noreferrer"
           >
@@ -221,7 +221,6 @@ const DeliverPage = () => {
   useEffect(() => {
     if (routeOptimized && dataOrders) {
       try {
-        console.log({ holaa: "hola" });
         const rowsPreparadas = routeOptimized.map((ad) => ({
           id: dataOrders?.docs?.find(
             (d) =>
@@ -233,6 +232,7 @@ const DeliverPage = () => {
           address: ad.end_address,
           ll: ad.ll,
         }));
+        console.log({ rowsPreparadas });
         if (rowsPreparadas.find((r) => r.id === undefined)) throw Error;
         setRowsInDelivery(rowsPreparadas);
       } catch (error) {
@@ -264,8 +264,8 @@ const DeliverPage = () => {
     >
       <Link
         style={{ color: "black", display: "none" }}
-        // href={`https://waze.com/ul?ll=${llHouse}&navigate=yes`}
-        href={`waze://waze.com/ul?ll=${llHouse}&navigate=yes`}
+        href={`https://waze.com/ul?ll=${llHouse}&navigate=yes`}
+        // href={`waze://waze.com/ul?ll=${llHouse}&navigate=yes`}
         target="_blank"
         rel="noreferrer"
       >

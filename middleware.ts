@@ -3,14 +3,29 @@ import type { NextRequest } from "next/server";
 import * as jose from "jose";
 import { analizeIfStoreIsOpen } from "./utils/analizeIfStoreIsOpen";
 import { useState } from "react";
+import Cookies from "js-cookie";
 
 export async function middleware(req: NextRequest) {
-  console.log({ entre: "entre a middleware" });
-  const cookie = req.headers.get("cookie");
   const adminRoles = ["admin", "super-admin", "SEO"];
   const token = req.cookies.get("token");
   const { protocol, host, pathname } = req.nextUrl;
 
+  // no dejar entrar a login si tiene sesion inisiada y token correcto
+  if (req.nextUrl.pathname.startsWith("/login")) {
+    try {
+      if (!token) {
+        return NextResponse.next();
+      }
+      await jose.jwtVerify(
+        token || "",
+        new TextEncoder().encode(process.env.JWT_SECRET_SEED || "")
+      );
+      return NextResponse.redirect(`${protocol}/${host}/`);
+    } catch (error) {
+      Cookies.remove("token");
+      return NextResponse.next();
+    }
+  }
   if (
     req.nextUrl.pathname.startsWith("/checkout")
     // ||
@@ -64,5 +79,6 @@ export const config = {
     "/checkout/:path*",
     "/admin/:path*",
     "/api/admin/:path*" /* , "/cart" */,
+    "/login",
   ],
 };

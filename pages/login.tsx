@@ -1,4 +1,6 @@
 import { Box, Button, Grid, TextField, Typography } from "@mui/material";
+import Cookies from "js-cookie";
+import { GetServerSideProps } from "next";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
@@ -139,11 +141,19 @@ const LoginPage = () => {
 //   query,
 // }) => {
 //   const session = false; /*  await getSession({ req }); */
-//   const { p = "/" } = query;
+//   // const { p = "/" } = query;
+//   const { token } = req.cookies;
+//   const verify= await jose.jwtVerify(
+//     token || "",
+//     new TextEncoder().encode(process.env.JWT_SECRET_SEED || "")
+//   );
+//   // console.log({ req: req.cookies });
+//   // const token = Cookies.get("token");
+//   console.log(token);
 //   if (session) {
 //     return {
 //       redirect: {
-//         destination: p.toString(),
+//         destination: "/",
 //         permanent: false,
 //       },
 //     };

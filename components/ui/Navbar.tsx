@@ -3,22 +3,17 @@ import {
   Badge,
   Box,
   Button,
-  Chip,
   IconButton,
-  Input,
-  InputAdornment,
   Link,
   Toolbar,
   Typography,
 } from "@mui/material";
-import React, { useState, FC } from "react";
+import React, { FC } from "react";
 import NextLink from "next/link";
-import { BiSearchAlt } from "react-icons/bi";
 import { AiOutlineShoppingCart } from "react-icons/ai";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../../store/Slices/UISlice";
-import { IoMdClose } from "react-icons/io";
 import { RootState } from "../../store";
 import { currency } from "../../utils";
 import { HomeOutlined, MapOutlined } from "@mui/icons-material";
@@ -29,24 +24,15 @@ interface Props {
 }
 
 export const Navbar: FC<Props> = ({ showPrice = false }) => {
-  const { asPath, push } = useRouter();
   const dispatch = useDispatch();
   const router = useRouter();
   // const pathName = useMemo(() => router.pathname, [router]);
-  const [searchTerm, setSearchTerm] = useState("");
   const { scrollIsDown } = useSelector((state: RootState) => state.ui);
   const { isLoggedIn } = useSelector((state: RootState) => state.auth);
-  const [isSearchVisible, setIsSearchVisible] = useState(false);
   const { numberOfItems, total } = useSelector(
     (state: RootState) => state.cart
   );
   const { store } = useSelector((state: RootState) => state.ui);
-
-  const onSearchTerm = () => {
-    if (searchTerm.trim().length === 0) return;
-    push(`/search/${searchTerm}`);
-    setIsSearchVisible(false);
-  };
 
   return (
     <AppBar
@@ -75,12 +61,15 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
                 transform: { xs: "scale(1, 1.3)", sm: "scale(1, 1)" },
               }}
             >
-              Sushi Panko |
+              Sushi Panko
             </Typography>
             <Typography
               variant="overline"
-              mt={0.3}
-              sx={{ marginLeft: { xs: 0.2, sm: 0.5 } }}
+              mt={0.4}
+              sx={{
+                marginLeft: { xs: 0.2, sm: 1 },
+                transform: { xs: "scale(.8, .9)", sm: "scale(1, 1)" },
+              }}
             >
               Maipú
             </Typography>
@@ -88,44 +77,6 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
         </NextLink>
         <Box sx={{ flexGrow: 1 }} />
         <Box sx={{ flexGrow: 1 }} />
-        {/* pantallas pequeños */}
-        {/* <IconButton
-          sx={{ display: { xs: "", sm: "none" } }}
-          onClick={() => dispatch(toggleMenu())}
-        >
-          <BiSearchAlt />
-        </IconButton> */}
-        {/* pantallas grandes */}
-        {/* {isSearchVisible ? (
-          <Input
-            sx={{ display: { xs: "none", sm: "flex" } }}
-            autoFocus
-            onKeyPress={(e) => (e.key == "Enter" ? onSearchTerm() : null)}
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            type="text"
-            placeholder="Buscar..."
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  onClick={() => setIsSearchVisible(false)}
-                  aria-label="toggle password visibility"
-                >
-                  <IoMdClose />
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        ) : (
-          <IconButton
-            sx={{ display: { xs: "none", sm: "flex" } }}
-            onClick={() => setIsSearchVisible(true)}
-            aria-label="toggle password visibility"
-            className="fadeIn"
-          >
-            <BiSearchAlt />
-          </IconButton>
-        )} */}
         {showPrice && (
           <>
             <Box sx={{ display: { xs: "none", sm: "flex" } }}>

@@ -54,7 +54,6 @@ export const SideMenu = () => {
   };
 
   const handleLogout = () => {
-    // Cookies.remove("token");
     Cookies.remove("cart");
     Cookies.remove("address");
     Cookies.remove("token");

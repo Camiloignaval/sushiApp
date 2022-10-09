@@ -67,8 +67,7 @@ export const authApi = createApi({
             dispatch(LogIn(user));
           })
           .catch(() => {
-            // ! arroja error al recargar
-            // Cookies.remove("token");
+            Cookies.remove("token");
           });
       },
     }),

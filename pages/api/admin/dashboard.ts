@@ -17,6 +17,7 @@ type Data =
       numberOfPromotions: number;
       productsWithNoInventory: number; // 0
       promotionsWithNoInventory: number;
+      numberOfNewClients: number;
     }
   | {
       message: string;
@@ -41,6 +42,11 @@ export default async function handler(
     );
     console.log({ firstday, lastday });
 
+    const filterByDate = {
+      $gte: firstday,
+      $lt: lastday,
+    };
+
     // hay que cambiar ganancias por aggregaciones
 
     const [
@@ -51,25 +57,27 @@ export default async function handler(
       numberOfOrdersDespachadas,
       numberOfOrdersEntregadas,
       numberOfClients,
+      numberOfNewClients,
       numberOfProducts,
       numberOfPromotions,
       productsWithNoInventory,
       promotionsWithNoInventory,
     ] = await Promise.all([
-      // TODO cambiar updatedAt por paidDate (crear)
       Order.find({
         status: "delivered",
-        updatedAt: {
-          $gte: firstday,
-          $lt: lastday,
-        },
+        // TODO buscar si tiene reserverHour filtrar por eso, sino por createdAt
+        createdAt: filterByDate,
       }).select("total deliverPrice discount"),
-      Order.count(),
-      Order.find({ status: "ingested" }).count(),
-      Order.find({ status: "inprocess" }).count(),
-      Order.find({ status: "dispatched" }).count(),
-      Order.find({ status: "delivered" }).count(),
+      Order.find({ createdAt: filterByDate }).count(),
+      Order.find({ status: "ingested", createdAt: filterByDate }).count(),
+      Order.find({ status: "inprocess", updatedAt: filterByDate }).count(),
+      Order.find({ status: "dispatched", updatedAt: filterByDate }).count(),
+      Order.find({ status: "delivered", paidAt: filterByDate }).count(),
       User.find({ role: "client" }).count(),
+      User.find({
+        role: "client",
+        updatedAt: filterByDate,
+      }).count(),
       Product.count(),
       Promotion.count(),
       Product.find({ inStock: false }).count(),
@@ -85,6 +93,7 @@ export default async function handler(
       numberOfOrdersDespachadas,
       numberOfOrdersEntregadas,
       numberOfClients,
+      numberOfNewClients,
       numberOfProducts,
       numberOfPromotions,
       productsWithNoInventory,

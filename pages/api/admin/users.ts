@@ -28,7 +28,7 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 const getUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
-    const users = await User.find({ role: { $in: ["client"] } })
+    const users = await User.find({ role: "client" })
       .select("-password")
       .lean();
 

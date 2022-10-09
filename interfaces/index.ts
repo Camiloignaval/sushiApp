@@ -8,3 +8,4 @@ export * from "./dashboard";
 export * from "./category";
 export * from "./cupon";
 export * from "./settings";
+export * from "./expense";

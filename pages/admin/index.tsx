@@ -11,6 +11,7 @@ import {
   DiningOutlined,
   DoneAllOutlined,
   FilterList,
+  GroupAddOutlined,
   GroupOutlined,
   HourglassBottomOutlined,
   LocalOffer,
@@ -18,10 +19,10 @@ import {
   OutdoorGrillOutlined,
   ProductionQuantityLimitsOutlined,
 } from "@mui/icons-material";
-import { Box, Grid, IconButton, Typography } from "@mui/material";
+import { Box, Grid, IconButton } from "@mui/material";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { toast } from "react-hot-toast";
 import { SummaryTitle } from "../../components/admin/SummaryTitle";
 import { AdminLayout } from "../../components/layouts";
@@ -29,6 +30,7 @@ import { useDatePicker } from "../../hooks/useDatePicker";
 import { useGetDashboardDataQuery } from "../../store/RTKQuery/adminApi";
 import { currency } from "../../utils";
 import esLocale from "date-fns/locale/es";
+import Divider from "@mui/material/Divider";
 
 const DashBoardPage = () => {
   const router = useRouter();
@@ -42,12 +44,14 @@ const DashBoardPage = () => {
 
   const [queryToSend, setqueryToSend] = useState<string | null>(null);
 
-  const { data, refetch } = useGetDashboardDataQuery(
+  const { data, refetch, isLoading } = useGetDashboardDataQuery(
     queryToSend
     //   {
     //   pollingInterval: 300000,
     // }
   );
+
+  console.log({ data });
 
   const handleFilter = () => {
     if (startDate !== null && endDate !== null) {
@@ -102,6 +106,7 @@ const DashBoardPage = () => {
   //   return () => clearInterval(interval);
   // }, []);
   // console.log({ ganancias: data?.ganancias });
+
   return (
     <AdminLayout
       icon={<DashboardOutlined />}
@@ -121,13 +126,15 @@ const DashBoardPage = () => {
       </Grid>
       <Grid container spacing={2}>
         <SummaryTitle
+          isLoading={isLoading}
           title={currency.format(
             data?.ganancias.reduce((acc, curr) => acc + curr.total, 0)
           )}
-          subTitle={"Ingresos"}
+          subTitle={"Ingreso bruto"}
           icon={<AttachMoneyOutlined color="success" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          isLoading={isLoading}
           title={currency.format(
             data?.ganancias.reduce((acc, curr) => acc + curr.deliverPrice, 0)
           )}
@@ -137,31 +144,40 @@ const DashBoardPage = () => {
           }
         />
         <SummaryTitle
+          isLoading={isLoading}
           title={currency.format(
             data?.ganancias.reduce((acc, curr) => acc + curr?.discount, 0)
           )}
-          subTitle={"Descuentos"}
+          subTitle={"Descuento utilizado"}
           icon={<LocalOffer color="secondary" sx={{ fontSize: 40 }} />}
         />
+      </Grid>
+
+      <Divider sx={{ my: 4, mx: 4, display: "block" }} />
+      <Grid container spacing={2}>
         <SummaryTitle
+          isLoading={isLoading}
           link="/admin/orders?status=ingested,inprocess,dispatched,delivered"
           title={data?.numberOfOrders.toString()!}
           subTitle={"Ordenes totales"}
           icon={<CreditCardOutlined color="secondary" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          isLoading={isLoading}
           link="/admin/orders?status=ingested"
           title={data?.numberOfOrdersIngresadas.toString()!}
           subTitle={"Ordenes en espera"}
           icon={<HourglassBottomOutlined color="error" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          isLoading={isLoading}
           link="/admin/orders?status=inprocess"
           title={data?.numberOfOrdersEnProceso.toString()!}
           subTitle={"Ordenes en proceso"}
           icon={<OutdoorGrillOutlined color="warning" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          isLoading={isLoading}
           link="/admin/orders?status=dispatched"
           title={data?.numberOfOrdersDespachadas.toString()!}
           subTitle={"Ordenes despachadas"}
@@ -170,23 +186,35 @@ const DashBoardPage = () => {
           }
         />
         <SummaryTitle
+          isLoading={isLoading}
           link="/admin/orders?status=delivered"
           title={data?.numberOfOrdersEntregadas.toString()!}
           subTitle={"Ordenes entregadas"}
           icon={<DoneAllOutlined color="success" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          isLoading={isLoading}
+          link="/admin/users"
+          title={data?.numberOfNewClients?.toString()! ?? 0}
+          subTitle={"Nuevos clientes"}
+          icon={<GroupAddOutlined color="success" sx={{ fontSize: 40 }} />}
+        />
+        <SummaryTitle
+          isLoading={isLoading}
+          link="/admin/users"
           title={data?.numberOfClients.toString()!}
-          subTitle={"Clientes"}
+          subTitle={"Total clientes"}
           icon={<GroupOutlined color="primary" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          isLoading={isLoading}
           link="/admin/products"
           title={data?.numberOfProducts.toString()!}
           subTitle={"Productos"}
           icon={<CategoryOutlined color="warning" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          isLoading={isLoading}
           title={data?.productsWithNoInventory.toString()!}
           subTitle={"Productos sin stock"}
           icon={
@@ -194,12 +222,14 @@ const DashBoardPage = () => {
           }
         />
         <SummaryTitle
+          isLoading={isLoading}
           link="/admin/promotions"
           title={data?.numberOfPromotions.toString()!}
           subTitle={"Promociones"}
           icon={<CategoryOutlined color="warning" sx={{ fontSize: 40 }} />}
         />
         <SummaryTitle
+          isLoading={isLoading}
           title={data?.promotionsWithNoInventory.toString()!}
           subTitle={"Promociones sin stock"}
           icon={

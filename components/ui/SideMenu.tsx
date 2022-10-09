@@ -9,6 +9,8 @@ import {
   ListSubheader,
 } from "@mui/material";
 import {
+  AccountBalanceOutlined,
+  AccountBalanceWalletOutlined,
   AdminPanelSettings,
   CategoryOutlined,
   ConfirmationNumberOutlined,
@@ -148,6 +150,12 @@ export const SideMenu = () => {
                 <AdminPanelSettings />
               </ListItemIcon>
               <ListItemText primary={"Clientes"} />
+            </ListItem>
+            <ListItem button onClick={() => navigateTo(`/admin/bills`)}>
+              <ListItemIcon>
+                <AccountBalanceWalletOutlined />
+              </ListItemIcon>
+              <ListItemText primary={"Gastos"} />
             </ListItem>
             <ListItem button onClick={() => navigateTo(`/admin/settings`)}>
               <ListItemIcon>

@@ -5,6 +5,7 @@ export interface IDashboard {
   numberOfOrdersDespachadas: Number;
   numberOfOrdersEntregadas: Number;
   numberOfClients: Number; // role:client
+  numberOfNewClients: Number; // role:client
   numberOfProducts: Number;
   numberOfPromotions: Number;
   productsWithNoInventory: Number; // 0

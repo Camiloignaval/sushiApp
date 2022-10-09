@@ -227,26 +227,27 @@ const OrdersPage = () => {
             <>
               <Typography
                 variant="body2"
-                color={leftMinutes <= 60 ? "error" : "primary"}
+                color={
+                  !["delivered"].includes(row?.status) && leftMinutes <= 60
+                    ? "error"
+                    : "primary"
+                }
               >
                 {format(new Date(row?.reservedHour), "dd-MM HH:mm")}
               </Typography>
-              {
-                /* ["ingested", "inprocess"].includes(row?.status) && */
-                leftMinutes <= 60 && (
-                  <Tooltip
-                    title={
-                      leftMinutes > 0
-                        ? `Quedan ${leftMinutes} minutos para la hora reservada!`
-                        : `Orden debería haber sido entregada hace ${-leftMinutes} minutos!`
-                    }
-                  >
-                    <IconButton sx={{ paddingLeft: 0 }}>
-                      <WarningOutlined color="error" />
-                    </IconButton>
-                  </Tooltip>
-                )
-              }
+              {!["delivered"].includes(row?.status) && leftMinutes <= 60 && (
+                <Tooltip
+                  title={
+                    leftMinutes > 0
+                      ? `Quedan ${leftMinutes} minutos para la hora reservada!`
+                      : `Orden debería haber sido entregada hace ${-leftMinutes} minutos!`
+                  }
+                >
+                  <IconButton sx={{ paddingLeft: 0 }}>
+                    <WarningOutlined color="error" />
+                  </IconButton>
+                </Tooltip>
+              )}
             </>
           );
         } else {
@@ -268,22 +269,23 @@ const OrdersPage = () => {
             <>
               <Typography
                 variant="body2"
-                color={passedMinutes > 60 ? "error" : "primary"}
+                color={
+                  !["delivered"].includes(row?.status) && passedMinutes > 60
+                    ? "error"
+                    : "primary"
+                }
               >
                 {format(new Date(row?.createdAt), "dd-MM-yyyy HH:mm")}
               </Typography>
-              {
-                /* ["ingested", "inprocess"].includes(row?.status) && */
-                passedMinutes > 60 && (
-                  <Tooltip
-                    title={`Ya han pasado ${passedMinutes} minutos de que ingresó el pedido!`}
-                  >
-                    <IconButton sx={{ paddingLeft: 0 }}>
-                      <WarningOutlined color="error" />
-                    </IconButton>
-                  </Tooltip>
-                )
-              }
+              {!["delivered"].includes(row?.status) && passedMinutes > 60 && (
+                <Tooltip
+                  title={`Ya han pasado ${passedMinutes} minutos de que ingresó el pedido!`}
+                >
+                  <IconButton sx={{ paddingLeft: 0 }}>
+                    <WarningOutlined color="error" />
+                  </IconButton>
+                </Tooltip>
+              )}
             </>
           );
         } else {

@@ -119,7 +119,7 @@ export default async function handler(
       Promotion.find({ inStock: false }).count(),
     ]);
 
-    await db.disconnect();
+    // await db.disconnect();
 
     const weekBills = billOfWeek
       ? billOfWeek?.bills?.reduce((acc, curr) => acc + curr?.expense ?? 0, 0)
@@ -174,7 +174,7 @@ export default async function handler(
     });
   } catch (error) {
     console.log({ errorindashboard: error });
-    await db.disconnect();
+    // await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }
 }

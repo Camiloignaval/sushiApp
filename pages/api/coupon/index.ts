@@ -35,7 +35,7 @@ const validCoupon = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       .lean();
 
     if (!cupon) {
-      await db.disconnect();
+      // await db.disconnect();
       return res.status(400).json({ message: "Cupón no valido" });
     }
     const idCoupon = cupon._id;
@@ -44,14 +44,14 @@ const validCoupon = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       "shippingAddress.phone": `+56${phone}`,
     });
     if (isUsedByPhone) {
-      await db.disconnect();
+      // await db.disconnect();
       return res.status(400).json({ message: "Usuario ya ha utilizado cupón" });
     }
     validateCoupon(cupon, +amount);
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(200).json({ cupon });
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errorincoupon: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

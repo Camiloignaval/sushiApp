@@ -52,7 +52,7 @@ const registerUser = async (
 
   await db.connect();
   const user = await User.findOne({ email });
-  await db.disconnect();
+  // await db.disconnect();
 
   if (user) {
     return res.status(400).json({

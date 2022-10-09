@@ -10,7 +10,7 @@ export const checkUserEmailPassword = async (
   try {
     await db.connect();
     const user = await User.findOne({ email });
-    await db.disconnect();
+    // await db.disconnect();
 
     if (!user) {
       return null;
@@ -29,7 +29,7 @@ export const checkUserEmailPassword = async (
       name,
     };
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errordbusers: error });
     return null;
   }
@@ -39,13 +39,13 @@ export const findUserByPhone = async (phone: string) => {
   try {
     await db.connect();
     const user = await User.findOne({ phone });
-    await db.disconnect();
+    // await db.disconnect();
     if (!user) {
       return null;
     }
     return user;
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errordbusers: error });
     return null;
   }

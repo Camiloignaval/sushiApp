@@ -43,7 +43,7 @@ const checkJWT = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
   const user = await User.findById(userId).lean();
 
-  await db.disconnect();
+  // await db.disconnect();
 
   if (!user) {
     return res.status(400).json({

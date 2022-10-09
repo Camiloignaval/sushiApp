@@ -30,7 +30,7 @@ const findUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const user = await User.findOne({ phone: phone }).select(
       " phone address name placeId -_id"
     );
-    await db.disconnect();
+    // await db.disconnect();
 
     if (!user) {
       return res.status(400).json({
@@ -41,7 +41,7 @@ const findUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     res.status(200).json(user);
   } catch (error) {
     console.log(error);
-    await db.disconnect();
+    // await db.disconnect();
 
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

@@ -39,14 +39,14 @@ const updateCoupon = async (
   try {
     await db.connect();
     const cuponresp = await Coupon.findByIdAndUpdate(body._id, body);
-    await db.disconnect();
+    // await db.disconnect();
     if (!cuponresp) throw new Error("Ha ocurrido un error");
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
     console.log({ errorincoupons1: error });
 
-    await db.disconnect();
+    // await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -64,18 +64,18 @@ const createCoupon = async (
     await db.connect();
     const findSameCoupon = await Coupon.find({ $or: [{ name }, { code }] });
     if (findSameCoupon.length > 0) {
-      await db.disconnect();
+      // await db.disconnect();
       return res.status(400).json({
         message: "Ya existe una cupón con ese nombre o código",
       });
     }
     const cupon = new Coupon(req.body);
     await cupon.save();
-    await db.disconnect();
+    // await db.disconnect();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
     console.log({ errorincoupons2: error });
-    await db.disconnect();
+    // await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }
 };

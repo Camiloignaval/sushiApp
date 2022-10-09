@@ -207,11 +207,11 @@ const createNewOrder = async (
       );
     }
 
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(201).json({ message: "creada" });
   } catch (error) {
     console.log({ errororderclient: error.message });
-    await db.disconnect();
+    // await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

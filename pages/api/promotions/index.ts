@@ -35,12 +35,12 @@ const getPromotions = async (
       .populate("category")
       .sort("importanceNumber")
       .lean();
-    await db.disconnect();
+    // await db.disconnect();
 
     res.status(200).json(promotions);
   } catch (error) {
     console.log({ errorinpromotionsclient: error });
-    await db.disconnect();
+    // await db.disconnect();
 
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

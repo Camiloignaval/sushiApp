@@ -49,11 +49,11 @@ const retryConfirmOrder = async (
       throw new Error("No ha sido posible enviar mensaje...");
     }
 
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(200).json({ message: "Confirmacion exitosa" });
   } catch (error) {
     console.log({ errorinorder: error });
-    await db.disconnect();
+    // await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

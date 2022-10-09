@@ -40,11 +40,11 @@ const searchProducts = async (
     const products = await Product.find({ $text: { $search: q } })
       .select("title slug price inStock images -_id")
       .lean();
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(200).json(products);
   } catch (error) {
     console.log({ errorsearch: error });
-    await db.disconnect();
+    // await db.disconnect();
 
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

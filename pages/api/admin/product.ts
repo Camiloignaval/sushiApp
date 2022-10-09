@@ -31,11 +31,11 @@ const updateProductStatus = async (
   try {
     await db.connect();
     await Product.findByIdAndUpdate(body.id, { [body.category]: body.value });
-    await db.disconnect();
+    // await db.disconnect();
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errorinproduct: error });
 
     if (error instanceof Error) {

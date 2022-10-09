@@ -74,11 +74,11 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       { page, limit, sort: { createdAt: "asc" } }
     );
 
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(200).json(orders as any);
   } catch (error) {
     console.log({ errorinorders1: error });
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(400).json({ message: "Ha ocurrido un error..." });
   }
 };
@@ -90,11 +90,11 @@ const anulateOrder = async (
   try {
     await db.connect();
     await Order.updateMany({ _id: { $in: idsOrder } }, { deleted: true });
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(200).json({ message: "Eliminadas" });
   } catch (error) {
     console.log({ errorinorders2: error });
-    await db.disconnect();
+    // await db.disconnect();
 
     return res.status(400).json({ message: "Ha ocurrido un error..." });
   }
@@ -147,10 +147,10 @@ const changeStatus = async (
     } else {
       await Order.updateMany({ _id: { $in: ids } }, { status: newStatus });
     }
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(200).json({ message: "Ordenes actualizadas" });
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errorinorders3: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

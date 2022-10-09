@@ -33,12 +33,12 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
     const products = await Product.find().lean();
-    await db.disconnect();
+    // await db.disconnect();
 
     // TODO  must update images
     return res.status(200).json(products);
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errorinproducts1: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
@@ -67,12 +67,12 @@ const updateProduct = async (
       await cloudinary.api.delete_resources_by_prefix(`SushiApp/${fileId}`);
     }
     await Product.findByIdAndUpdate(body._id, body);
-    await db.disconnect();
+    // await db.disconnect();
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
     console.log({ errorinproducts2: error });
-    await db.disconnect();
+    // await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {
@@ -90,19 +90,19 @@ const createProduct = async (
     await db.connect();
     const findBySameTypeAndName = await Product.findOne({ name, type });
     if (findBySameTypeAndName) {
-      await db.disconnect();
+      // await db.disconnect();
       return res.status(400).json({
         message: "Ya existe un producto de este tipo con el mismo nombre",
       });
     }
     const product = new Product(req.body);
     await product.save();
-    await db.disconnect();
+    // await db.disconnect();
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
     console.log({ errorinproducts3: error });
 
-    await db.disconnect();
+    // await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }
 };
@@ -120,11 +120,11 @@ const deleteProduct = async (
         message: "No existe producto con id indicado",
       });
     }
-    await db.disconnect();
+    // await db.disconnect();
     res.status(200).json({ message: "Producto eliminado con éxito" });
   } catch (error) {
     console.log({ errorinproducts4: error });
-    await db.disconnect();
+    // await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }
 };

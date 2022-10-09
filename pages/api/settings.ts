@@ -25,10 +25,10 @@ const getSettings = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
     const settings = await Settings.find();
-    await db.disconnect();
+    // await db.disconnect();
     return res.status(200).json(settings[0]!);
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errorsettingsclient: error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

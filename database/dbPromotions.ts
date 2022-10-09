@@ -8,13 +8,13 @@ export const getPromotionById = async (
   try {
     await db.connect();
     const promotion = await Promotion.findById(id).lean();
-    await db.disconnect();
+    // await db.disconnect();
     if (!promotion) {
       return null;
     }
     return JSON.parse(JSON.stringify(promotion));
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errordbpromotions: error });
     return null;
   }
@@ -31,10 +31,10 @@ export const getAllPromotions = async (): Promise<IProduct[]> => {
       .sort("-importanceNumber")
       .populate("category includesSauces")
       .lean();
-    await db.disconnect();
+    // await db.disconnect();
     return JSON.parse(JSON.stringify(products));
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ errordbpromotions: error });
     return [];
   }

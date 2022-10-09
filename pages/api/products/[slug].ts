@@ -29,7 +29,7 @@ const getProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     const { slug } = req.query;
     await db.connect();
     const product = await Product.findOne({ slug }).lean();
-    await db.disconnect();
+    // await db.disconnect();
 
     if (!product) {
       return res.status(404).json({
@@ -39,7 +39,7 @@ const getProduct = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(200).json(product);
   } catch (error) {
     console.log({ errorproductclient1: error });
-    await db.disconnect();
+    // await db.disconnect();
 
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

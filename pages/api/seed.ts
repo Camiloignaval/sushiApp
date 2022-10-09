@@ -28,7 +28,7 @@ export default async function handler(
   await Product.insertMany(seedDataBase.initialData.products);
   await User.insertMany(seedDataBase.initialData.users);
   await Promotion.insertMany(seedDataBase.initialData.promotions);
-  await db.disconnect();
+  // await db.disconnect();
 
   res.status(200).json({ message: "Realizado con exito" });
 }

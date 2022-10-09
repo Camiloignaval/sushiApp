@@ -35,7 +35,7 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
     const user = await User.findOne({ userName });
-    await db.disconnect();
+    // await db.disconnect();
 
     if (!user) {
       return res.status(400).json({
@@ -57,7 +57,7 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     res.status(200).json({ token, user: { role, name, userName } });
   } catch (error) {
-    await db.disconnect();
+    // await db.disconnect();
     console.log({ error });
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });

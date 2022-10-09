@@ -34,7 +34,7 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
     const products = await Product.find().lean();
-    await db.disconnect();
+    // await db.disconnect();
 
     // TODO  must update images
     return res.status(200).json(products);
@@ -75,7 +75,7 @@ const updatePromotion = async (
       })
     );
     await Promotion.findByIdAndUpdate(body._id, body);
-    await db.disconnect();
+    // await db.disconnect();
 
     return res.status(200).json({ message: "Actualizado con éxito" });
   } catch (error) {
@@ -98,13 +98,13 @@ const createPromotion = async (
     await db.connect();
     const findBySameName = await Promotion.findOne({ name });
     if (findBySameName) {
-      await db.disconnect();
+      // await db.disconnect();
       return res.status(400).json({
         message: "Ya existe una promoción con este nombre",
       });
     }
     if (req.body.images.length === 0) {
-      await db.disconnect();
+      // await db.disconnect();
 
       return res.status(400).json({
         message: "Debe seleccionar a lo menos 1 imágen",
@@ -113,13 +113,13 @@ const createPromotion = async (
 
     const product = new Promotion(req.body);
     await product.save();
-    await db.disconnect();
+    // await db.disconnect();
 
     res.status(201).json({ message: "Creado con éxito" });
   } catch (error) {
     console.log({ errorinpromotions2: error });
 
-    await db.disconnect();
+    // await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }
 };
@@ -134,17 +134,17 @@ const deletePromotion = async (
     await db.connect();
     const deletedPromotion = await Promotion.findByIdAndDelete(id);
     if (!deletedPromotion) {
-      await db.disconnect();
+      // await db.disconnect();
       return res.status(400).json({
         message: "No existe promoción con id indicado",
       });
     }
-    await db.disconnect();
+    // await db.disconnect();
 
     res.status(200).json({ message: "Promoción eliminada con éxito" });
   } catch (error) {
     console.log({ errorinpromotions3: error });
-    await db.disconnect();
+    // await db.disconnect();
     res.status(500).json({ message: "Algo ha salido mal..." });
   }
 };

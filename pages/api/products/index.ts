@@ -28,13 +28,13 @@ const getProducts = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
     const products = await Product.find().lean();
-    await db.disconnect();
+    // await db.disconnect();
 
     // TODO  must update images
     return res.status(200).json(products);
   } catch (error) {
     console.log({ errorproductclient2: error });
-    await db.disconnect();
+    // await db.disconnect();
     if (error instanceof Error) {
       return res.status(400).json({ message: error.message });
     } else {

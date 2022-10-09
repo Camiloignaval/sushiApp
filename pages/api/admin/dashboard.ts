@@ -125,6 +125,8 @@ export default async function handler(
       ? billOfWeek?.bills?.reduce((acc, curr) => acc + curr?.expense ?? 0, 0)
       : 0;
 
+    console.log({ weekBills, billOfWeek });
+
     const gananciasSemanales = gananciasSemenales.reduce(
       (acc: any, curr: any) => acc + curr.total,
       0

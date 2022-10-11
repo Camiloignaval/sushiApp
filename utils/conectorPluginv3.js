@@ -1,4 +1,5 @@
 import axios from "axios";
+import NextCors from "nextjs-cors";
 
 export const ConectorPluginV3 = (() => {
   /**
@@ -17,7 +18,7 @@ export const ConectorPluginV3 = (() => {
   }
 
   class ConectorPlugin {
-    static URL_PLUGIN_POR_DEFECTO = "http://[::1]:8000";
+    static URL_PLUGIN_POR_DEFECTO = "http://localhost:8000";
     // static URL_PLUGIN_POR_DEFECTO = "https://sushipanko.herokuapp.com";
     static Operacion = Operacion;
     static TAMAÑO_IMAGEN_NORMAL = 0;
@@ -361,18 +362,36 @@ export const ConectorPluginV3 = (() => {
         operaciones: this.operaciones,
         nombreImpresora,
       };
-      // const { data } = await axios.post(
-      //   "/api/print/print",
-      //   // JSON.stringify(payload)
-      //   payload
-      // );
-      // return await data;
-
-      const response = await axios.post(
-        ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
-        JSON.stringify(payload)
+      const { data } = await axios.post(
+        "/api/print/print",
+        // JSON.stringify(payload)
+        payload,
+        {
+          mode: "no-cors",
+          headers: {
+            "Access-Control-Allow-Origin": "*",
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+          credentials: "same-origin",
+        }
       );
-      return response;
+      return data;
+
+      // await NextCors(req, res, {
+      //   // Options
+      //   payload: JSON.stringify(payload),
+
+      //   methods: "POST",
+      //   origin: "*",
+      //   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+      // });
+
+      // const response = await axios.post(
+      //   ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
+      //   JSON.stringify(payload)
+      // );
+      // return response;
     }
   }
   return ConectorPlugin;

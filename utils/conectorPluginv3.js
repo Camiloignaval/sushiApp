@@ -363,8 +363,10 @@ export const ConectorPluginV3 = (() => {
         nombreImpresora,
       };
       const { data } = await axios.post(
-        "/api/print/print",
-        // JSON.stringify(payload)
+        // "/api/print/print",
+        ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
+
+        //// JSON.stringify(payload)
         payload,
         {
           mode: "no-cors",

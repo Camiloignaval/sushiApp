@@ -17,7 +17,7 @@ export const ConectorPluginV3 = (() => {
   }
 
   class ConectorPlugin {
-    static URL_PLUGIN_POR_DEFECTO = "http://127.0.0.1:8000";
+    static URL_PLUGIN_POR_DEFECTO = "http://[::1]:8000";
     // static URL_PLUGIN_POR_DEFECTO = "https://sushipanko.herokuapp.com";
     static Operacion = Operacion;
     static TAMAÑO_IMAGEN_NORMAL = 0;

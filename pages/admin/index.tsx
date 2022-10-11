@@ -278,7 +278,7 @@ const DashBoardPage = () => {
         />
         <SummaryTitle
           isLoading={isLoading}
-          title={`${data?.avgTime} min.`}
+          title={`${data?.avgTime ?? "- "} min.`}
           subTitle={"Tiempo promedio de entrega"}
           icon={
             <PriorityHighOutlined color="secondary" sx={{ fontSize: 40 }} />

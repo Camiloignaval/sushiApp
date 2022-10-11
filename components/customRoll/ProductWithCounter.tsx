@@ -1,4 +1,5 @@
 import { FormControlLabel, Checkbox, Grid, Chip, Box } from "@mui/material";
+import Image from "next/image";
 import React, { FC, useEffect, useState } from "react";
 import { ICartProduct, IProduct } from "../../interfaces";
 import product from "../../pages/api/admin/product";
@@ -95,8 +96,8 @@ export const ProductWithCounter: FC<Props> = ({
         label={
           <Grid container>
             <Grid item xs={12}>
-              <img
-                src={product.image}
+              <Image
+                src={product.image! ?? ""}
                 key={product._id}
                 width="60px"
                 height="60px"

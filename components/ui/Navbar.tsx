@@ -42,13 +42,13 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
       }}
     >
       <Toolbar>
-        {/* <img width={40} alt="Logo" src="/logos/logo-sushi-panko.png"></img> */}
         <Image
           onDoubleClick={() => router.push("/login")}
           width={40}
           height={40}
           alt="Logo"
-          src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko-pequeno_cijlft.png"
+          // src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko-pequeno_cijlft.png"
+          src="https://res.cloudinary.com/dc6vako2z/image/upload/v1665472282/SushiApp/logo-sushi-panko-pequeno_cijlft_szxjwx.webp"
         ></Image>
         <NextLink href="/" passHref>
           <Link display="flex" alignItems="center">

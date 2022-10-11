@@ -1,4 +1,5 @@
 import { Grid, Box, Chip, Typography } from "@mui/material";
+import Image from "next/image";
 import React, { FC, useState } from "react";
 import { IProduct } from "../../interfaces";
 import { ItemCounter } from "../ui";
@@ -35,7 +36,7 @@ export const SauceSelectionable: FC<Props> = ({
   return (
     <Grid item xs={6} md={4} lg={3}>
       <Box position={"relative"} display={"flex"} justifyContent={"center"}>
-        <img
+        <Image
           src={sauce.image!.toString() ?? ""}
           alt="Producto Extra"
           width="60px"

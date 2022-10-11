@@ -361,24 +361,18 @@ export const ConectorPluginV3 = (() => {
         operaciones: this.operaciones,
         nombreImpresora,
       };
-      const { data } = await axios.post(
-        "/api/print/print",
-        // JSON.stringify(payload)
-        payload
-      );
-
-      // const response = await fetch("/api/print", {
-      //   method: "POST",
-      //   body: JSON.stringify(payload),
-      //   // headers: 'Access-Control-Allow-Origin'
-      // });
-      // return await response.json();
-      // const response = await axios.post(
-      //   ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
-      //   JSON.stringify(payload)
+      // const { data } = await axios.post(
+      //   "/api/print/print",
+      //   // JSON.stringify(payload)
+      //   payload
       // );
-      // return await response.json();
-      return await data;
+      // return await data;
+
+      const response = await axios.post(
+        ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
+        JSON.stringify(payload)
+      );
+      return response;
     }
   }
   return ConectorPlugin;

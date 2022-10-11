@@ -32,6 +32,11 @@ export const MainShopLayout: FC<Props> = ({
     <>
       <Head>
         <title>{title}</title>
+        <meta name="author" content="Camilo Valenzuela" />
+        <meta
+          name="keywords"
+          content="sushi, maipú, maipu, panko, rolls, roll, tempura, comida rapida, delivery, sushipanko"
+        />
         <meta name="description" content={pageDescription} />
         <meta name="og:title" content={title} />
         <meta name="og:description" content={pageDescription} />

@@ -31,15 +31,4 @@ const nextConfig = {
 //   },
 // };
 
-// module.exports = {
-//   async rewrites() {
-//     return [
-//       {
-//         source: "https://maps.googleapis.com/maps/api/:path*",
-//         destination: "https://sushipanko.cl/:path*",
-//       },
-//     ];
-//   },
-// };
-
 module.exports = nextConfig;

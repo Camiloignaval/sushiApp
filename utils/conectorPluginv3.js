@@ -363,20 +363,9 @@ export const ConectorPluginV3 = (() => {
         nombreImpresora,
       };
       const { data } = await axios.post(
-        // "/api/print/print",
-        ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
-
+        "/api/print/print",
         //// JSON.stringify(payload)
-        payload,
-        {
-          mode: "no-cors",
-          headers: {
-            "Access-Control-Allow-Origin": "*",
-            "Content-Type": "application/json",
-          },
-          withCredentials: true,
-          credentials: "same-origin",
-        }
+        payload
       );
       return data;
 

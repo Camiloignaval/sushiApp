@@ -79,7 +79,7 @@ const registerUser = async (
 
   const { _id, role } = newUser;
 
-  const token = jwt.signToken(_id, email);
+  const token = jwt.signToken(_id, email, role);
 
   res.status(200).json({ token, user: { role, name, email } });
 };

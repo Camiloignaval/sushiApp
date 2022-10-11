@@ -362,12 +362,12 @@ export const ConectorPluginV3 = (() => {
         operaciones: this.operaciones,
         nombreImpresora,
       };
-      const { data } = await axios.post(
-        "/api/print/print",
-        //// JSON.stringify(payload)
-        payload
-      );
-      return data;
+      // const { data } = await axios.post(
+      //   "/api/print/print",
+      //   //// JSON.stringify(payload)
+      //   payload
+      // );
+      // return data;
 
       // await NextCors(req, res, {
       //   // Options
@@ -378,11 +378,11 @@ export const ConectorPluginV3 = (() => {
       //   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
       // });
 
-      // const response = await axios.post(
-      //   ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
-      //   JSON.stringify(payload)
-      // );
-      // return response;
+      const response = await axios.post(
+        ConectorPlugin.URL_PLUGIN_POR_DEFECTO + "/imprimir",
+        JSON.stringify(payload)
+      );
+      return response;
     }
   }
   return ConectorPlugin;

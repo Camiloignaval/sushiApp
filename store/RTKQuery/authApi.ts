@@ -33,27 +33,27 @@ export const authApi = createApi({
         });
       },
     }),
-    Register: builder.mutation<
-      IResponse,
-      { email: string; password: string; name: string }
-    >({
-      query: (body) => ({
-        url: `/user/register`,
-        method: "post",
-        body,
-      }),
-      onQueryStarted(_, { queryFulfilled, dispatch }) {
-        toast.promise(queryFulfilled, {
-          loading: "Registrando usuario...",
-          success: ({ data: { user, token } }) => {
-            Cookies.set("token", token);
-            dispatch(LogIn(user));
-            return "Registro exitoso";
-          },
-          error: ({ error }) => error.data.message.toString(),
-        });
-      },
-    }),
+    // Register: builder.mutation<
+    //   IResponse,
+    //   { email: string; password: string; name: string }
+    // >({
+    //   query: (body) => ({
+    //     url: `/admin/register`,
+    //     method: "post",
+    //     body,
+    //   }),
+    //   onQueryStarted(_, { queryFulfilled, dispatch }) {
+    //     toast.promise(queryFulfilled, {
+    //       loading: "Registrando usuario...",
+    //       success: ({ data: { user, token } }) => {
+    //         Cookies.set("token", token);
+    //         dispatch(LogIn(user));
+    //         return "Registro exitoso";
+    //       },
+    //       error: ({ error }) => error.data.message.toString(),
+    //     });
+    //   },
+    // }),
     checkToken: builder.mutation<IResponse, void>({
       query: (body) => ({
         url: `/user/validate-token`,
@@ -74,5 +74,4 @@ export const authApi = createApi({
   }),
 });
 
-export const { useLogInMutation, useRegisterMutation, useCheckTokenMutation } =
-  authApi;
+export const { useLogInMutation, useCheckTokenMutation } = authApi;

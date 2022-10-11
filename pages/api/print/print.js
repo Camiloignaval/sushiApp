@@ -2,7 +2,7 @@ import nc from "next-connect";
 import cors from "cors";
 import axios from "axios";
 
-const print = nc(/* { req, res } */)
+const print = nc()
   .use(cors())
   .post(async (req, res) => {
     const body = req.body;

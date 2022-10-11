@@ -19,7 +19,7 @@ interface IResponse {
 export const adminApi = createApi({
   reducerPath: "adminApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
-  tagTypes: ["Dashboard", "Users"],
+  tagTypes: ["Dashboard", "Users", "Admins"],
   endpoints: (builder) => ({
     getDashboardData: builder.query<IDashboard, null | string>({
       query: (dateRange) => ({
@@ -45,28 +45,55 @@ export const adminApi = createApi({
         });
       },
     }),
-    updateUserRole: builder.mutation<IUser[], { userId: string; role: string }>(
-      {
-        query: (body) => ({
-          url: `/admin/users`,
-          method: "put",
-          body,
-        }),
-        invalidatesTags: ["Users"],
-        onQueryStarted(_, { queryFulfilled }) {
-          toast.promise(queryFulfilled, {
-            loading: "Actualizando rol...",
-            success: "Actualizado con éxito",
-            error: ({ error }) => error.data.message.toString(),
-          });
-        },
-      }
-    ),
+    newAdminUser: builder.mutation<IUser, IUser>({
+      query: (body) => ({
+        url: `/admin/admins`,
+        method: "post",
+        body,
+      }),
+      invalidatesTags: ["Admins"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Creando usuario...",
+          success: "Usuario creado con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
+    updateAdminUser: builder.mutation<IUser, IUser>({
+      query: (body) => ({
+        url: `/admin/admins`,
+        method: "put",
+        body,
+      }),
+      invalidatesTags: ["Admins"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Actualizando usuario...",
+          success: "Usuario actualizado con éxito",
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
+    getAdmins: builder.query<IUser[], null>({
+      query: () => ({
+        url: `/admin/admins`,
+        method: "get",
+      }),
+      providesTags: ["Admins"],
+      onQueryStarted(_, { queryFulfilled }) {
+        queryFulfilled.catch(({ error }) => {
+          toast.error("Ha ocurrido un error al obtener datos");
+        });
+      },
+    }),
   }),
 });
 
 export const {
   useGetDashboardDataQuery,
   useGetUsersQuery,
-  useUpdateUserRoleMutation,
+  useGetAdminsQuery,
+  useUpdateAdminUserMutation,
+  useNewAdminUserMutation,
 } = adminApi;

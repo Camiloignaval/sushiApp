@@ -21,6 +21,7 @@ import {
   LocalOfferOutlined,
   LocationCityOutlined,
   LoginOutlined,
+  PeopleOutlineOutlined,
   SettingsOutlined,
   VpnKeyOutlined,
   WhatsappOutlined,
@@ -151,9 +152,15 @@ export const SideMenu = () => {
                 </ListItemIcon>
                 <ListItemText primary={"En ruta"} />
               </ListItem>
-              <ListItem button onClick={() => navigateTo(`/admin/users`)}>
+              <ListItem button onClick={() => navigateTo(`/admin/profiles`)}>
                 <ListItemIcon>
                   <AdminPanelSettings />
+                </ListItemIcon>
+                <ListItemText primary={"Perfiles"} />
+              </ListItem>
+              <ListItem button onClick={() => navigateTo(`/admin/users`)}>
+                <ListItemIcon>
+                  <PeopleOutlineOutlined />
                 </ListItemIcon>
                 <ListItemText primary={"Clientes"} />
               </ListItem>

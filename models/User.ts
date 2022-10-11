@@ -9,6 +9,7 @@ const userSchema = new Schema(
     address: { type: String, required: true },
     phone: { type: String, required: true, unique: true },
     placeId: { type: String },
+    isEnabled: { type: Boolean, default: true },
     role: {
       type: String,
       enum: {

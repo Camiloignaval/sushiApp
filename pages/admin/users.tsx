@@ -6,21 +6,15 @@ import React, { useEffect, useState } from "react";
 import { AdminLayout } from "../../components/layouts";
 import { FullScreenLoading } from "../../components/ui";
 import { IUser } from "../../interfaces";
-import {
-  useGetUsersQuery,
-  useUpdateUserRoleMutation,
-} from "../../store/RTKQuery/adminApi";
+import { useGetUsersQuery } from "../../store/RTKQuery/adminApi";
 import esLocale from "date-fns/locale/es";
 import { useSendDirectMessage } from "../../hooks";
 
 const UsersPage = () => {
   const { data: dataUsers } = useGetUsersQuery(null);
-  const [updateRol] = useUpdateUserRoleMutation();
 
   console.log({ dataUsers });
-  const onRoleUpdated = (userId: string, role: string) => {
-    updateRol({ userId, role });
-  };
+
   const [MessageModal, setuserActiveToWsp, setOpen] = useSendDirectMessage();
   const handleMessageWsp = (phone: string, name: string) => {
     setOpen(true);

@@ -38,6 +38,7 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import Typography from "@mui/material/Typography";
 import { useSendDirectMessage } from "../../../hooks";
+import axios from "axios";
 
 const OrdersPage = () => {
   const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
@@ -300,10 +301,14 @@ const OrdersPage = () => {
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <IconButton
-            onClick={() =>
-              printOrder(
-                dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
-              )
+            onClick={
+              () =>
+                printOrder(
+                  dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
+                )
+              // handlePrint(
+              //   dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
+              // )
             }
           >
             <ConfirmationNumberOutlined />
@@ -325,6 +330,10 @@ const OrdersPage = () => {
     },
   ];
 
+  // const handlePrint = async (order: IOrder) => {
+  //   console.log("imprimire", order);
+  //   await axios.post(process.env.NEXT_PUBLIC_HOST_WSP_API + "/print", order);
+  // };
   useEffect(() => {
     if (rowCountState > 0) {
       if (rowCountState > rowCountStateOld! ?? rowCountState) {

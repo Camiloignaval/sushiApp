@@ -9,5 +9,5 @@ export interface IUser {
   placeId?: string;
   createdAt?: string;
   updatedAt?: string;
-  isEnabled?: string;
+  isEnabled?: boolean;
 }

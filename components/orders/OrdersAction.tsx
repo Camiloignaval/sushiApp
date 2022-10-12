@@ -13,7 +13,10 @@ import { IOrder } from "../../interfaces";
 import { GridRowId } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { printOrder } from "../../utils/printOrder";
-import { useChangeOrderStatusMutation } from "../../store/RTKQuery/ordersApi";
+import {
+  useAnulateOrdersMutation,
+  useChangeOrderStatusMutation,
+} from "../../store/RTKQuery/ordersApi";
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -71,6 +74,7 @@ export const OrdersActions: React.FC<Props> = ({ data = [], rowsId = [] }) => {
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+  const [anulateOrderQuery, anulateOrderStatus] = useAnulateOrdersMutation();
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -101,6 +105,13 @@ export const OrdersActions: React.FC<Props> = ({ data = [], rowsId = [] }) => {
   const handleDeliver = () => {
     changeStatus({ ids: rowsId, newStatus: "delivered" });
     handleClose();
+  };
+
+  const anulateOrder = async () => {
+    try {
+      await anulateOrderQuery(rowsId).unwrap();
+      handleClose();
+    } catch (error) {}
   };
 
   return (
@@ -153,7 +164,7 @@ export const OrdersActions: React.FC<Props> = ({ data = [], rowsId = [] }) => {
           <DeliveryDiningOutlined />
           Entregadas
         </MenuItem>
-        <MenuItem onClick={handleClose} disableRipple>
+        <MenuItem onClick={anulateOrder} disableRipple>
           <DoDisturbAltOutlined />
           Anular
         </MenuItem>

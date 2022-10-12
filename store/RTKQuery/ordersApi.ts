@@ -90,7 +90,7 @@ export const ordersApi = createApi({
         });
       },
     }),
-    anulateOrders: builder.mutation<IResponse, string[]>({
+    anulateOrders: builder.mutation<IResponse, string[] | GridRowId[]>({
       query: (body) => ({
         url: `/admin/orders`,
         method: "delete",
@@ -99,8 +99,8 @@ export const ordersApi = createApi({
       invalidatesTags: ["Orders"],
       onQueryStarted(_, { queryFulfilled }) {
         toast.promise(queryFulfilled, {
-          loading: "Anulando orden...",
-          success: "Orden anulada con éxito",
+          loading: "Anulando orden(es)...",
+          success: "Orden(es) anulada(s) con éxito",
           error: ({ error }) => error.data.message.toString(),
         });
       },

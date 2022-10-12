@@ -236,7 +236,7 @@ export const CardList: FC<Props> = ({
 
                   {(editable || isLoggedIn) && (
                     <>
-                      {!isLoggedIn && (
+                      {editable && (
                         <Button
                           onClick={() => handleDelete(product as ICartProduct)}
                           variant="text"

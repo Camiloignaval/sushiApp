@@ -59,6 +59,12 @@ html {
   right: 0%;
   width: 50px;
 }
+
+.disabledRow {
+  background-color: rgba(219, 219, 219, 0.166);
+  color: rgba(128, 128, 128, 0.466);
+}
+
 .bounce {
   -moz-animation: bounce 3s infinite;
   -webkit-animation: bounce 3s infinite;

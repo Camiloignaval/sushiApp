@@ -30,7 +30,6 @@ const getUsers = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       .lean();
 
     // await db.disconnect();
-    console.log({ users });
     return res.status(200).json(users);
   } catch (error) {
     console.log({ errorinuser1: error });

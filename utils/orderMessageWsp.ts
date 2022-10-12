@@ -25,7 +25,6 @@ export const orderMessageWsp = (order: IOrder) => {
         ]
 
           .map((i) => {
-            console.log({ i });
             return ` ${i.qty!} ${i.name}`;
           })
           .join(" -");
@@ -78,6 +77,5 @@ export const orderMessageWsp = (order: IOrder) => {
   message.push(
     `\nPuedes ver la información y estado de tu pedido en el siguiente link: ${process.env.HOST_NAME}/order/${order._id}`
   );
-  console.log({ msg: message.join("") });
   return message.join("");
 };

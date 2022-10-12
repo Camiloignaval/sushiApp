@@ -13,8 +13,6 @@ import { useSendDirectMessage } from "../../hooks";
 const UsersPage = () => {
   const { data: dataUsers } = useGetUsersQuery(null);
 
-  console.log({ dataUsers });
-
   const [MessageModal, setuserActiveToWsp, setOpen] = useSendDirectMessage();
   const handleMessageWsp = (phone: string, name: string) => {
     setOpen(true);

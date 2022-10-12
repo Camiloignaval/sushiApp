@@ -38,7 +38,6 @@ const getAdmins = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       .lean();
 
     // await db.disconnect();
-    console.log({ users });
     return res.status(200).json(users);
   } catch (error) {
     console.log({ errorinuser1: error });
@@ -69,7 +68,6 @@ const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
     if (body.password) {
       body.password = bcrypt.hashSync(body.password);
-      console.log({ pas: body.password });
     }
     await User.findOneAndUpdate({ _id }, body);
     await db.disconnect();

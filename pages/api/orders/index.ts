@@ -44,7 +44,6 @@ const createNewOrder = async (
     if (customRolls?.length > 0) {
       await Promise.all(
         customRolls.map(async (p) => {
-          console.log({ p: JSON.stringify(p) });
           const idsToSearch = [
             ...(p.envelopes ?? []),
             ...(p?.extraProduct ?? []),
@@ -69,7 +68,6 @@ const createNewOrder = async (
         })
       );
     }
-    console.log({ priceFinalOfRollsPersonalized });
     // calculo de promociones
     let priceTotalPromos = 0;
     const promos = body.orderItems.filter(
@@ -109,7 +107,6 @@ const createNewOrder = async (
 
     // TODO falta sumar despacho
     if (subTotal !== body.subTotal) {
-      console.log({ subTotal, body: body.subTotal });
       throw new Error("Ha ocurrido un error, valores han sido alterados");
     }
 
@@ -140,7 +137,6 @@ const createNewOrder = async (
       if (cuponType === "percentage") {
         const discountAmount =
           Math.ceil((total * (discount / 100)) / 100) * 100;
-        console.log({ discountAmount });
         if (maxDiscount) {
           if (discountAmount > maxDiscount) {
             total = total - maxDiscount;

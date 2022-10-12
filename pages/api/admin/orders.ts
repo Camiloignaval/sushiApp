@@ -61,16 +61,18 @@ const getOrders = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     //TODO agregar filtros
     const orders = await Order.paginate(
       queryToSend,
-      // TODO NO SE PUEDE OR
-      // reservedHour: {
-      //   $exists: true,
-      //   $gte: startOfDay(new Date()),
-      //   $lt: endOfDay(new Date()),
-      // },
+
+      /* {
+          $exists: true,
+          $gte: startOfDay(new Date()),
+          $lt: endOfDay(new Date()),
+        }, */
+
       // },
       { page, limit, sort: { createdAt: "asc" } }
     );
 
+    // console.log({ orders });
     // await db.disconnect();
     return res.status(200).json(orders as any);
   } catch (error) {
@@ -113,7 +115,6 @@ const changeStatus = async (
       return res
         .status(400)
         .json({ message: "Uno o mas de los ids no existen" });
-    console.log({ newStatus });
     if (newStatus === "dispatched") {
       const numbersPhone = await Order.find({ _id: { $in: ids } }).select(
         "shippingAddress.phone -_id"

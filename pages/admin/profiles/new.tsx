@@ -54,7 +54,6 @@ const NewAdminUser = () => {
     try {
       delete data.password2;
       data.phone = `+56${data.phone}`;
-      console.log({ data });
       await newAdminUser(data).unwrap();
       router.push("/admin/profiles");
     } catch (error) {

@@ -49,6 +49,23 @@ export const DrawerCustomRoll: FC<Props> = ({ open, setOpen }) => {
     sauces: [],
   });
 
+  useEffect(() => {
+    if (open === false) {
+      setPromoToSendCart({
+        _id: uuidv4(),
+        image: "",
+        price: 0,
+        name: "Roll personalizado",
+        quantity: 1,
+        extraProduct: [],
+        proteins: [],
+        vegetables: [],
+        envelopes: [],
+        sauces: [],
+      });
+    }
+  }, [open]);
+
   // cambiar imagen de promo
   useEffect(() => {
     if (promoToSendCart.envelopes!.length > 0) {

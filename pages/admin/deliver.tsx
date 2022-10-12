@@ -232,7 +232,6 @@ const DeliverPage = () => {
           address: ad.end_address,
           ll: ad.ll,
         }));
-        console.log({ rowsPreparadas });
         if (rowsPreparadas.find((r) => r.id === undefined)) throw Error;
         setRowsInDelivery(rowsPreparadas);
       } catch (error) {

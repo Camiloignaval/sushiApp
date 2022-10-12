@@ -29,7 +29,6 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 
 const findBills = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { startOfWeek = null } = req.query;
-  console.log({ startOfWeek });
   try {
     if (!startOfWeek) throw new Error("No hay fecha a buscar");
     await db.connect();
@@ -49,7 +48,6 @@ const findBills = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 const updateBills = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const { bills, week } = req.body;
   try {
-    console.log({ bills, week });
     await db.connect();
     await Expense.findOneAndUpdate(
       { week },
@@ -80,7 +78,6 @@ const closeWeek = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     const firstOfActualWeek = getMonday();
 
-    console.log({ gains, firstOfActualWeek });
     await db.connect();
     await Expense.findOneAndUpdate(
       { week: firstOfActualWeek },

@@ -63,7 +63,7 @@ const EditAdminUser: FC<Props> = ({ user }) => {
       data.phone = `+56${data.phone}`;
       console.log({ data });
       await updateAdminUser(data).unwrap();
-      //   router.push("/admin/profiles");
+      router.push("/admin/profiles");
     } catch (error) {
       console.log(error);
     }
@@ -80,7 +80,7 @@ const EditAdminUser: FC<Props> = ({ user }) => {
     <AdminLayout
       icon={<PeopleOutline />}
       title={"Administradores"}
-      subTitle={"Creación de nuevo usuario"}
+      subTitle={"Edición de usuario"}
     >
       <form onSubmit={handleSubmit(onEditUser)}>
         <Box justifyItems="center" mt={6}>

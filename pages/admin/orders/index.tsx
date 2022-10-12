@@ -1,7 +1,6 @@
 import {
   ConfirmationNumberOutlined,
   DoneAllOutlined,
-  MessageOutlined,
   NotificationsNoneOutlined,
   ReplayOutlined,
   WarningOutlined,
@@ -16,16 +15,13 @@ import {
   GridRowId,
   GridValueGetterParams,
   esES,
+  GridRowParams,
+  GridCellParams,
 } from "@mui/x-data-grid";
-import { format } from "date-fns";
-import { useRouter } from "next/router";
+import { format, isAfter, isFuture, isSameDay } from "date-fns";
 import React, { useEffect, useRef, useState } from "react";
 import { AdminLayout } from "../../../components/layouts";
-import {
-  FilterTabOrders,
-  MessageModal,
-  OrdersActions,
-} from "../../../components/orders";
+import { FilterTabOrders, OrdersActions } from "../../../components/orders";
 import { FullScreenLoading } from "../../../components/ui";
 import { IOrder, IOrderWithPaginate } from "../../../interfaces";
 import {
@@ -38,7 +34,6 @@ import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 import Typography from "@mui/material/Typography";
 import { useSendDirectMessage } from "../../../hooks";
-import axios from "axios";
 
 const OrdersPage = () => {
   const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
@@ -69,7 +64,7 @@ const OrdersPage = () => {
       phoneToFind !== "" ? `&phoneToFind=56${phoneToFind}` : ""
     }`,
     {
-      pollingInterval: 60000, // 1 minuto,
+      pollingInterval: 10000, // 1 minuto,
     }
   );
 
@@ -160,6 +155,20 @@ const OrdersPage = () => {
       headerName: "Estado",
       width: 120,
       renderCell: ({ row }: GridValueGetterParams) => {
+        if (
+          row?.reservedHour &&
+          !isSameDay(new Date(row?.reservedHour), new Date()) &&
+          !isAfter(new Date(), new Date(row?.reservedHour))
+        ) {
+          return (
+            <Chip
+              variant="outlined"
+              label="RESERVA"
+              color="primary"
+              sx={{ width: "100%", opacity: 0.5 }}
+            />
+          );
+        }
         if (row.status === "ingested") {
           return (
             <Chip
@@ -420,6 +429,30 @@ const OrdersPage = () => {
         width="100%"
       >
         <DataGrid
+          getCellClassName={(params: GridCellParams<number>) => {
+            if (
+              params?.row?.reservedHour &&
+              !isSameDay(new Date(params?.row?.reservedHour), new Date()) &&
+              !isAfter(new Date(), new Date(params?.row?.reservedHour))
+            ) {
+              return "disabledRow";
+            }
+            return "";
+          }}
+          isRowSelectable={(params: GridRowParams) => {
+            if (params?.row?.reservedHour) {
+              const reserveIsToday = isSameDay(
+                new Date(params?.row?.reservedHour),
+                new Date()
+              );
+
+              return (
+                reserveIsToday ||
+                isAfter(new Date(), new Date(params?.row?.reservedHour))
+              );
+            }
+            return true;
+          }}
           rowCount={rowCountState}
           loading={isLoading}
           rowsPerPageOptions={[10, 20, 30, 50, 70, 100]}

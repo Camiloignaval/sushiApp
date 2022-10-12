@@ -38,7 +38,6 @@ export const FilterTabOrders: FC<Props> = ({ refetch }) => {
   const [phoneToFind, setPhoneToFind] = useState("");
 
   const handleFilter = () => {
-    console.log({ statusChoose, startChoose, endChoose, phoneToFind });
     dispatch(
       setFilters({
         status: statusChoose as any,
@@ -67,7 +66,6 @@ export const FilterTabOrders: FC<Props> = ({ refetch }) => {
 
   useEffect(() => {
     if (router.isReady && router?.query?.status) {
-      console.log({ status: router?.query?.status });
       setStatusChoose((router?.query?.status as string).split(","));
       dispatch(
         setFilters({

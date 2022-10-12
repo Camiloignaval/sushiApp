@@ -15,8 +15,6 @@ const ProfilesPage = () => {
   const { data: dataUsers } = useGetAdminsQuery(null);
   const { user } = useSelector((state: RootState) => state.auth);
 
-  console.log({ dataUsers });
-
   const columns: GridColDef[] = [
     {
       field: "name",

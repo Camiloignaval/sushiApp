@@ -62,7 +62,6 @@ export const UISlice = createSlice({
         phoneToFind: string;
       }>
     ) => {
-      console.log({ actionn: action.payload });
       state.filters = action.payload;
     },
   },

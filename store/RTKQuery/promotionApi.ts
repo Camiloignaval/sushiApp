@@ -62,6 +62,24 @@ export const promotionApi = createApi({
         });
       },
     }),
+    updatePromotionByProperty: builder.mutation<
+      IPromotion[],
+      { id: string; category: string; value: string | boolean }
+    >({
+      query: (body) => ({
+        url: `/admin/promotion`,
+        method: "put",
+        body: body,
+      }),
+      invalidatesTags: ["Promotions"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Actualizando promoción...",
+          success: `Promoción actualizado con éxito`,
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
@@ -69,4 +87,5 @@ export const {
   useGetAllPromotionsQuery,
   useUpdatePromotionMutation,
   useDeletePromotionMutation,
+  useUpdatePromotionByPropertyMutation,
 } = promotionApi;

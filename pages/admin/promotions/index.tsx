@@ -24,7 +24,10 @@ import { useDeletePromotion } from "../../../hooks";
 import { IPromotion } from "../../../interfaces";
 
 import { useUpdateProductByPropertyMutation } from "../../../store/RTKQuery/productsApi";
-import { useGetAllPromotionsQuery } from "../../../store/RTKQuery/promotionApi";
+import {
+  useGetAllPromotionsQuery,
+  useUpdatePromotionByPropertyMutation,
+} from "../../../store/RTKQuery/promotionApi";
 import { currency } from "../../../utils";
 
 const dictType = {
@@ -36,7 +39,7 @@ const dictType = {
 
 const ProductsPage = () => {
   const { data: dataPromotions } = useGetAllPromotionsQuery(null);
-  const [updateProduct] = useUpdateProductByPropertyMutation();
+  const [updatePromotion] = useUpdatePromotionByPropertyMutation();
   const { onDeletePromotion, deletePromotionStatus } = useDeletePromotion();
   const [numberImportance, setNumberImportance] = useState(0);
 
@@ -88,13 +91,18 @@ const ProductsPage = () => {
         return (
           <Switch
             checked={row.inStock}
-            onClick={({ target }) =>
-              updateProduct({
+            onClick={({ target }) => {
+              console.log({
                 id: row.id,
                 category: "inStock",
                 value: (target as HTMLInputElement).checked,
-              })
-            }
+              });
+              updatePromotion({
+                id: row.id,
+                category: "inStock",
+                value: (target as HTMLInputElement).checked,
+              });
+            }}
           />
         );
       },

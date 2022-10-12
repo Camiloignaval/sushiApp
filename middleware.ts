@@ -10,7 +10,7 @@ export async function middleware(req: NextRequest) {
   const token = req.cookies.get("token");
   const { protocol, host, pathname } = req.nextUrl;
 
-  // no dejar entrar a login si tiene sesion inisiada y token correcto
+  // no dejar entrar a login si tiene sesion iniciada y token correcto
   if (req.nextUrl.pathname.startsWith("/login")) {
     try {
       if (!token) {

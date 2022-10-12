@@ -88,7 +88,6 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
             : [promo],
         };
       });
-      console.log({ promosSeparate });
       setPromosByCategory(promosSeparate);
     }
   }, [promotions]);

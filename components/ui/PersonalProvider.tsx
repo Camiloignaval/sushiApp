@@ -222,6 +222,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     if (firstRender) {
       try {
         const token = Cookie.get("token");
+        console.log({ token });
         if (token) {
           checkToken();
         }

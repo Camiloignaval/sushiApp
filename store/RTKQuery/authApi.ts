@@ -25,7 +25,7 @@ export const authApi = createApi({
         toast.promise(queryFulfilled, {
           loading: "Iniciando sesión...",
           success: ({ data: { user, token } }) => {
-            Cookies.set("token", token);
+            Cookies.set("token", token, { expires: 7 });
             dispatch(LogIn(user));
             return "Ingreso correcto";
           },
@@ -63,7 +63,7 @@ export const authApi = createApi({
       onQueryStarted(_, { queryFulfilled, dispatch }) {
         queryFulfilled
           .then(({ data: { token, user } }) => {
-            Cookies.set("token", token);
+            Cookies.set("token", token, { expires: 7 });
             dispatch(LogIn(user));
           })
           .catch(() => {

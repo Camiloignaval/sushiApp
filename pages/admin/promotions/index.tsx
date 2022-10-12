@@ -73,15 +73,15 @@ const ProductsPage = () => {
       },
     },
     { field: "type", headerName: "Categoría", flex: 1, minWidth: 100 },
-    // {
-    //   field: "importanceNumber",
-    //   headerName: "N°",
-    //   flex: 1,
-    //   minWidth: 65,
-    //   renderCell: ({ row }: GridValueGetterParams) => (
-    //     <InputImportanceTable num={row.importanceNumber} id={row.id} />
-    //   ),
-    // },
+    {
+      field: "importanceNumber",
+      headerName: "N°",
+      flex: 1,
+      minWidth: 65,
+      renderCell: ({ row }: GridValueGetterParams) => (
+        <InputImportanceTable num={row.importanceNumber} id={row.id} />
+      ),
+    },
     {
       field: "inStock",
       flex: 1,
@@ -91,18 +91,13 @@ const ProductsPage = () => {
         return (
           <Switch
             checked={row.inStock}
-            onClick={({ target }) => {
-              console.log({
-                id: row.id,
-                category: "inStock",
-                value: (target as HTMLInputElement).checked,
-              });
+            onClick={({ target }) =>
               updatePromotion({
                 id: row.id,
                 category: "inStock",
                 value: (target as HTMLInputElement).checked,
-              });
-            }}
+              })
+            }
           />
         );
       },

@@ -28,7 +28,8 @@ export const getAllPromotions = async (): Promise<IProduct[]> => {
   try {
     await db.connect();
     const products = await Promotion.find({})
-      .sort("-importanceNumber")
+      // .sort("-importanceNumber")
+      .sort({ importanceNumber: -1, createdAt: 1 })
       .populate("category includesSauces")
       .lean();
     // await db.disconnect();

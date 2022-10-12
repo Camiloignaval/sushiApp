@@ -64,7 +64,7 @@ export const promotionApi = createApi({
     }),
     updatePromotionByProperty: builder.mutation<
       IPromotion[],
-      { id: string; category: string; value: string | boolean }
+      { id: string; category: string; value: string | boolean | number }
     >({
       query: (body) => ({
         url: `/admin/promotion`,
@@ -80,6 +80,21 @@ export const promotionApi = createApi({
         });
       },
     }),
+    deleteImportanceNumber: builder.mutation<IPromotion[], { id: string }>({
+      query: (body) => ({
+        url: `/admin/promotion`,
+        method: "delete",
+        body: body,
+      }),
+      invalidatesTags: ["Promotions"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Eliminando  importancia...",
+          success: `Promoción actualizado con éxito`,
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
@@ -88,4 +103,5 @@ export const {
   useUpdatePromotionMutation,
   useDeletePromotionMutation,
   useUpdatePromotionByPropertyMutation,
+  useDeleteImportanceNumberMutation,
 } = promotionApi;

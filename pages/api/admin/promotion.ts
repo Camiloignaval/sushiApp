@@ -15,6 +15,8 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
   switch (req.method) {
     case "PUT":
       return updatePromotionStatus(req, res);
+    case "DELETE":
+      return deleteImportance(req, res);
 
     default:
       return res.status(400).json({
@@ -28,8 +30,7 @@ const updatePromotionStatus = async (
   res: NextApiResponse<Data>
 ) => {
   const body = req.body;
-  console.log("hoalaaaaaaaaaaa");
-  console.log({ body });
+
   try {
     await db.connect();
     await Promotion.findByIdAndUpdate(body.id, { [body.category]: body.value });
@@ -45,5 +46,35 @@ const updatePromotionStatus = async (
     } else {
       return res.status(400).json({ message: "Error desconocido" });
     }
+  }
+};
+
+const deleteImportance = async (
+  req: NextApiRequest,
+  res: NextApiResponse<Data>
+) => {
+  const {
+    body: { id = "" },
+  } = req;
+
+  try {
+    await db.connect();
+    console.log({ id });
+    const deletedIimportance = await Promotion.findByIdAndUpdate(id, {
+      $unset: { importanceNumber: "" },
+    });
+    if (!deletedIimportance) {
+      // await db.disconnect();
+      return res.status(400).json({
+        message: "No existe promoción con id indicado",
+      });
+    }
+    await db.disconnect();
+
+    res.status(200).json({ message: "Promoción eliminada con éxito" });
+  } catch (error) {
+    console.log({ errorinpromotions3: error });
+    // await db.disconnect();
+    res.status(500).json({ message: "Algo ha salido mal..." });
   }
 };

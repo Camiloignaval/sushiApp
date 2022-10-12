@@ -6,6 +6,7 @@ import { ICategory } from "../interfaces";
 const categorySchema = new Schema(
   {
     name: { type: String },
+    importanceNumber: { type: Number },
   },
   {
     timestamps: true,

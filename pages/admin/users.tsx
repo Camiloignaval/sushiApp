@@ -22,12 +22,12 @@ const UsersPage = () => {
   const columns: GridColDef[] = [
     { field: "name", flex: 1, headerName: "Nombre completo", minWidth: 200 },
     { field: "phone", flex: 1, headerName: "Nombre completo", minWidth: 150 },
-    { field: "address", flex: 1, headerName: "Dirección", minWidth: 300 },
+    { field: "address", flex: 1, headerName: "Dirección", minWidth: 250 },
     {
       field: "createdAt",
       headerName: "Cliente desde",
       flex: 1,
-      minWidth: 300,
+      minWidth: 160,
       renderCell: ({ row }: GridValueGetterParams) => {
         return format(new Date(row.createdAt), "dd/MMMM/yyyy", {
           locale: esLocale,
@@ -38,7 +38,7 @@ const UsersPage = () => {
       field: "wsp",
       headerName: "Msg",
       flex: 1,
-      minWidth: 80,
+      minWidth: 60,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <IconButton onClick={() => handleMessageWsp(row.phone, row.name)}>

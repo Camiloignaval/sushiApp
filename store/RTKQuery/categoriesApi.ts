@@ -13,7 +13,7 @@ interface IResponse {
 export const categoriesApi = createApi({
   reducerPath: "categoriesApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
-  tagTypes: ["Categories"],
+  tagTypes: ["Categories", "Category"],
   endpoints: (builder) => ({
     getCategories: builder.query<ICategory[], void>({
       query: (body) => ({
@@ -71,6 +71,39 @@ export const categoriesApi = createApi({
         });
       },
     }),
+    updateCategoryByProperty: builder.mutation<
+      IResponse,
+      { id: string; category: string; value: string | boolean | number }
+    >({
+      query: (body) => ({
+        url: `/admin/category`,
+        method: "put",
+        body: body,
+      }),
+      invalidatesTags: ["Categories"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Actualizando categoría...",
+          success: `Categoría actualizada con éxito`,
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
+    deleteImportanceNumber: builder.mutation<IResponse, { id: string }>({
+      query: (body) => ({
+        url: `/admin/category`,
+        method: "delete",
+        body: body,
+      }),
+      invalidatesTags: ["Categories"],
+      onQueryStarted(_, { queryFulfilled }) {
+        toast.promise(queryFulfilled, {
+          loading: "Eliminando  importancia...",
+          success: `Categoría actualizada con éxito`,
+          error: ({ error }) => error.data.message.toString(),
+        });
+      },
+    }),
   }),
 });
 
@@ -79,4 +112,6 @@ export const {
   useGetCategoriesQuery,
   useNewCategoryMutation,
   useDeleteCategoryMutation,
+  useDeleteImportanceNumberMutation,
+  useUpdateCategoryByPropertyMutation,
 } = categoriesApi;

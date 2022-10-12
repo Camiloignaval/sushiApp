@@ -38,7 +38,8 @@ const getCategories = async (
   try {
     await db.connect();
     const categories = await Category.find(/* condition */)
-      .select("-createdAt -updatedAt")
+      .select("-updatedAt")
+      .sort({ importanceNumber: -1, createdAt: 1 })
       .lean();
     // await db.disconnect();
 

@@ -28,7 +28,7 @@ export const AdminLayout: FC<Props> = ({ children, title, subTitle, icon }) => {
           <Typography variant="h1" component="h1">
             {icon} {title}
           </Typography>
-          <Typography variant="h2" sx={{ mb: 1 }}>
+          <Typography variant="h2" sx={{ mb: 4 }}>
             {subTitle}
           </Typography>
         </Box>

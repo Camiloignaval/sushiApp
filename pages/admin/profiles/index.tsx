@@ -20,19 +20,19 @@ const ProfilesPage = () => {
       field: "name",
       flex: 1,
       headerName: "Nombre",
-      minWidth: 200,
+      minWidth: 100,
       renderCell: ({ row }: GridValueGetterParams) => (
         <NextLink href={`/admin/profiles/${row.id}`} passHref>
           <Link underline="always">{row.name}</Link>
         </NextLink>
       ),
     },
-    { field: "userName", flex: 1, headerName: "Nombre Usuario", minWidth: 200 },
+    { field: "userName", flex: 1, headerName: "Nombre Usuario", minWidth: 120 },
     {
       field: "role",
       flex: 1,
       headerName: "Cargo",
-      minWidth: 200,
+      minWidth: 110,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row.role === "admin"
           ? "Administrador"
@@ -41,7 +41,7 @@ const ProfilesPage = () => {
           : "SuperAdministrador";
       },
     },
-    { field: "phone", flex: 1, headerName: "Teléfono", minWidth: 200 },
+    { field: "phone", flex: 1, headerName: "Teléfono", minWidth: 120 },
   ];
 
   if (!dataUsers) return <FullScreenLoading />;

@@ -137,16 +137,31 @@ const DashBoardPage = () => {
           Cerrar semana
         </Button>
       </Box>
-      <Grid container>
+      <Grid container mt={4} position="relative">
         <Box flexGrow={1} my={5}></Box>
-        <DatePickerStart />
-        <DatePickerEnd />
-        <IconButton onClick={handleFilter} size="small" color="primary">
-          <FilterList />
-        </IconButton>
-        <IconButton onClick={onCleanFilters} size="small" color="primary">
-          <ClearOutlined />
-        </IconButton>
+        <Grid item xs={6} md={3}>
+          <DatePickerStart />
+        </Grid>
+        <Grid item xs={6} md={3}>
+          <DatePickerEnd />
+        </Grid>
+        {/* <DatePickerStart />
+        <DatePickerEnd /> */}
+
+        <Box
+          sx={{
+            position: { xs: "absolute", md: "initial" },
+            bottom: 5,
+            right: 0,
+          }}
+        >
+          <IconButton onClick={handleFilter} size="small" color="primary">
+            <FilterList />
+          </IconButton>
+          <IconButton onClick={onCleanFilters} size="small" color="primary">
+            <ClearOutlined />
+          </IconButton>
+        </Box>
       </Grid>
 
       <Grid container spacing={2}>

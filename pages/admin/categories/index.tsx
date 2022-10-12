@@ -13,9 +13,10 @@ import {
 } from "@mui/x-data-grid";
 
 import React, { useMemo, useState } from "react";
+import { InputImportanceCategory } from "../../../components/categories";
 import { AdminLayout } from "../../../components/layouts";
+import { InputImportanceTable } from "../../../components/promotions/InputImportanceTable";
 import { FullScreenLoading } from "../../../components/ui";
-import { useDeleteProduct } from "../../../hooks";
 import { useDeleteCategory } from "../../../hooks/useDeleteCategory";
 import { ICategory } from "../../../interfaces";
 import {
@@ -48,7 +49,15 @@ const CategoriesPage = () => {
       width: 150,
       editable: updateNameStatus.isLoading,
     },
-
+    {
+      field: "importanceNumber",
+      headerName: "N°",
+      flex: 1,
+      minWidth: 65,
+      renderCell: ({ row }: GridValueGetterParams) => (
+        <InputImportanceCategory num={row.importanceNumber} id={row.id} />
+      ),
+    },
     {
       field: "delete",
       flex: 1,
@@ -74,6 +83,7 @@ const CategoriesPage = () => {
       (categories ?? [])!.map((categories: ICategory) => ({
         id: categories._id,
         name: categories.name,
+        importanceNumber: categories?.importanceNumber,
       })),
     [categories]
   );

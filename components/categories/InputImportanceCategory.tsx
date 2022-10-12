@@ -3,18 +3,18 @@ import { IconButton, TextField } from "@mui/material";
 import React, { ChangeEvent, FC, useState } from "react";
 import {
   useDeleteImportanceNumberMutation,
-  useUpdatePromotionByPropertyMutation,
-} from "../../store/RTKQuery/promotionApi";
+  useUpdateCategoryByPropertyMutation,
+} from "../../store/RTKQuery/categoriesApi";
 
 interface Props {
   num: number;
   id: string;
 }
 
-export const InputImportanceTable: FC<Props> = ({ num, id }) => {
+export const InputImportanceCategory: FC<Props> = ({ num, id }) => {
   const [value, setValue] = useState<any>(num ? num * -1 : num);
   const [updateImportance, updateImportanceStatus] =
-    useUpdatePromotionByPropertyMutation();
+    useUpdateCategoryByPropertyMutation();
   const [deleteImportance, deleteImportanceStatus] =
     useDeleteImportanceNumberMutation();
 

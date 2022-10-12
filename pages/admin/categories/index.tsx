@@ -38,6 +38,7 @@ const CategoriesPage = () => {
       field: "id",
       flex: 1,
       headerName: "Id",
+      minWidth: 100,
       renderCell: ({ row }: GridValueGetterParams) => {
         return row.id.slice(-10);
       },
@@ -46,14 +47,14 @@ const CategoriesPage = () => {
       field: "name",
       flex: 1,
       headerName: "Nombre",
-      width: 150,
+      minWidth: 140,
       editable: updateNameStatus.isLoading,
     },
     {
       field: "importanceNumber",
       headerName: "N°",
       flex: 1,
-      minWidth: 65,
+      minWidth: 100,
       renderCell: ({ row }: GridValueGetterParams) => (
         <InputImportanceCategory num={row.importanceNumber} id={row.id} />
       ),
@@ -62,7 +63,7 @@ const CategoriesPage = () => {
       field: "delete",
       flex: 1,
       headerName: "Eliminar",
-      width: 70,
+      minWidth: 70,
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <IconButton

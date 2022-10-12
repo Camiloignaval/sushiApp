@@ -77,7 +77,7 @@ const ProductsPage = () => {
       field: "importanceNumber",
       headerName: "N°",
       flex: 1,
-      minWidth: 65,
+      minWidth: 100,
       renderCell: ({ row }: GridValueGetterParams) => (
         <InputImportanceTable num={row.importanceNumber} id={row.id} />
       ),

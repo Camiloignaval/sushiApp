@@ -1,3 +1,4 @@
+import { IUser } from "./../../../interfaces/user";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { User } from "../../../models";
@@ -43,7 +44,7 @@ const loginUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       });
     }
 
-    if (!user?.password || user.role === "client")
+    if (!user?.password || user.role === "client" || !user?.isEnabled)
       throw new Error("Usuario sin acceso");
 
     if (!bcrypt.compareSync(password, user.password!)) {

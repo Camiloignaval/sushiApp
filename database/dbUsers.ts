@@ -50,3 +50,21 @@ export const findUserByPhone = async (phone: string) => {
     return null;
   }
 };
+
+export const findAdminUser = async (id: string) => {
+  try {
+    await db.connect();
+    const user = await User.findById(id).select(
+      "isEnabled name phone role userName"
+    );
+    // await db.disconnect();
+    if (!user) {
+      return null;
+    }
+    return JSON.parse(JSON.stringify(user));
+  } catch (error) {
+    // await db.disconnect();
+    console.log({ errordbusers: error });
+    return null;
+  }
+};

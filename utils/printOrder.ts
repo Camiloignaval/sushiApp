@@ -1,24 +1,12 @@
-import { IProduct } from "./../interfaces/products";
 import { IOrder } from "./../interfaces/order";
 import { ConectorPlugin } from "./conectorPlugin";
 import { ConectorPluginV3 } from "./conectorPluginv3";
 import { currency } from ".";
-import { toast } from "react-hot-toast";
 interface IProductCustomRoll {
   name?: string;
   price?: number;
   _id?: string;
 }
-
-// export const printOrder = async () => {
-//   const nombreImpresora = "ImpresoraTermica"; // Puede ser obtenida de la lista de impresoras o puedes escribirlo si lo conoces
-//   const conector = new ConectorPluginV3();
-//   const respuesta = await conector
-//     .Iniciar()
-//     .EscribirTexto("Hola mundo")
-//     .Feed(1)
-//     .imprimirEn(nombreImpresora);
-// };
 
 export const printOrder = async (order: IOrder) => {
   const nombreImpresora = "ImpresoraTermica"; // Puede ser obtenida de la lista de impresoras o puedes escribirlo si lo conoces
@@ -109,7 +97,7 @@ export const printOrder = async (order: IOrder) => {
       conector
         .EstablecerEnfatizado(true)
         .EstablecerAlineacion(ConectorPluginV3.ALINEACION_CENTRO)
-        .TextoSegunPaginaDeCodigos(2, "cp850", `*${item?.note}*\n`);
+        .TextoSegunPaginaDeCodigos(2, "cp850", `NOTA: ${item?.note} \n`);
     }
     conector.Feed(1);
   });

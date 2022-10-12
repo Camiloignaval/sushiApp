@@ -31,7 +31,9 @@ export default function (req: NextApiRequest, res: NextApiResponse<Data>) {
 const getAdmins = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
     await db.connect();
-    const users = await User.find({ role: { $in: ["admin", "delivery"] } })
+    const users = await User.find({
+      role: { $in: ["admin", "delivery", "superadmin"] },
+    })
       .select("-password")
       .lean();
 
@@ -46,31 +48,31 @@ const getAdmins = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 };
 
 const updateUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  const { username = "", phone = "" } = req.body;
+  const { userName = "", phone = "", _id } = req.body;
+  const body = req.body;
 
   try {
-    console.log({ body: req.body });
-    // if (!isValidObjectId(userId)) {
-    //   return res.status(400).json({ message: "Id de usuario no es valido" });
-    // }
+    if (!isValidObjectId(_id)) {
+      return res.status(400).json({ message: "Id de usuario no es valido" });
+    }
 
-    // const validRoles = ["admin", "client", "SEO", "super-user"];
+    await db.connect();
+    const user = await User.findOne({ phone });
+    if (!user) {
+      return res.status(400).json({ message: "Id no existe en registros" });
+    }
+    if (user && user?.id !== _id) {
+      return res
+        .status(400)
+        .json({ message: "Teléfono ya pertenece a otro usuario" });
+    }
 
-    // if (!validRoles.includes(role)) {
-    //   return res.status(400).json({ message: "Rol no permitido" });
-    // }
-
-    // await db.connect();
-    // const user = await User.findById(userId);
-
-    // if (!user) {
-    //   return res
-    //     .status(400)
-    //     .json({ message: "Usuario no existe en registros" });
-    // }
-
-    // await User.findOneAndUpdate({ _id: userId }, { role });
-    // await db.disconnect();
+    if (body.password) {
+      body.password = bcrypt.hashSync(body.password);
+      console.log({ pas: body.password });
+    }
+    await User.findOneAndUpdate({ _id }, body);
+    await db.disconnect();
     res.status(200).json({ message: "Usuario actualizado" });
   } catch (error) {
     console.log({ errorinuser2: error });
@@ -83,7 +85,6 @@ const newUser = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   const body = req.body;
   body.address = "Sin dirección";
   body.password = bcrypt.hashSync(password);
-  console.log({ body });
   try {
     await db.connect();
     const userWithUserName = await User.findOne({ userName });

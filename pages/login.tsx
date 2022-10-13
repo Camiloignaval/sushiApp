@@ -122,11 +122,7 @@ const LoginPage = () => {
                   xs={12}
                   display="flex"
                   justifyContent="end"
-                >
-                  {/* <NextLink href={`/auth/register?p=${destination}`} passHref>
-                <Link underline="always">No tienes cuenta?</Link>
-              </NextLink> */}
-                </Grid>
+                ></Grid>
               </Grid>
             </Box>
           </Grid>

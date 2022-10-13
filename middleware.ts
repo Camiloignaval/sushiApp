@@ -26,54 +26,6 @@ export async function middleware(req: NextRequest) {
       return NextResponse.next();
     }
   }
-  // if (
-  //   req.nextUrl.pathname.startsWith("/checkout")
-  //   // ||
-  //   // req.nextUrl.pathname.startsWith("/cart")
-  // ) {
-  //   try {
-  //     // console.log({ analise: "analise" });
-  //     // const settings = req?.cookies?.get("settings")
-  //     //   ? JSON.parse(req.cookies.get("settings")!)
-  //     //   : undefined;
-  //     // console.log({ settings });
-  //     // if (!settings) {
-  //     //   return NextResponse.redirect(`${protocol}/${host}/`);
-  //     // }
-  //     // const isOpen = analizeIfStoreIsOpen(settings);
-  //     // console.log({ isOpen });
-  //     // if (!isOpen) {
-  //     //   return NextResponse.redirect(`${protocol}/${host}/`);
-  //     // }
-  //     return NextResponse.next();
-  //   } catch (error) {
-  //     console.log({ errorinmiddlewarecart: error });
-  //     return NextResponse.redirect(`${protocol}/${host}/`);
-  //   }
-  // }
-
-  // if (req.nextUrl.pathname.startsWith("/admin/deliver")) {
-  //   console.log("entre a pagfina de deliverys");
-
-  //   try {
-  //     if (!token) {
-  //       console.log("entre a pagfina de deliverys 2");
-
-  //       return NextResponse.redirect(`${protocol}/${host}/`);
-  //     }
-  //     await jose.jwtVerify(
-  //       token || "",
-  //       new TextEncoder().encode(process.env.JWT_SECRET_SEED || "")
-  //     );
-  //     console.log("entre a pagfina de deliverys3");
-
-  //     return NextResponse.next();
-  //   } catch (error) {
-  //     console.log("entre a pagfina de deliverys4");
-
-  //     return NextResponse.redirect(`${protocol}/${host}/`);
-  //   }
-  // }
 
   if (req.nextUrl.pathname.startsWith("/admin")) {
     try {

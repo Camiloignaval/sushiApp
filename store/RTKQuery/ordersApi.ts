@@ -112,6 +112,12 @@ export const ordersApi = createApi({
       }),
       providesTags: ["Order"],
     }),
+    countOrdersNumber: builder.query<number, null>({
+      query: () => ({
+        url: `/admin/ordersnumber`,
+        method: "get",
+      }),
+    }),
   }),
 });
 
@@ -122,4 +128,5 @@ export const {
   useRetryConfirmOrderMutation,
   useAnulateOrdersMutation,
   useSearchOrderByIdQuery,
+  useCountOrdersNumberQuery,
 } = ordersApi;

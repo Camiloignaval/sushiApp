@@ -17,8 +17,14 @@ import {
   updateSummary,
 } from "../../store/Slices/CartSlice";
 import { currency } from "../../utils";
-import { storeState } from "../../store/Slices/UISlice";
+import {
+  changeNewNotifications,
+  changeordersViews,
+  changeTotalOrders,
+  storeState,
+} from "../../store/Slices/UISlice";
 import { analizeIfStoreIsOpen } from "../../utils/analizeIfStoreIsOpen";
+import { useCountOrdersNumberQuery } from "../../store/RTKQuery/ordersApi";
 
 interface Props {
   children: React.ReactNode;
@@ -42,7 +48,26 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     shippingAddress,
     reservedHour,
   } = useSelector((state: RootState) => state.cart);
-  const { store } = useSelector((state: RootState) => state.ui);
+  // const { store, ordersviews, actualOrders, newNotifications } = useSelector(
+  //   (state: RootState) => state.ui
+  // );
+  // const { data: numberOfOrders } = useCountOrdersNumberQuery(null);
+
+  // NOTIFICACIONES
+  // setear ordenes al inicio
+  // useEffect(() => {
+  //   if (numberOfOrders) {
+  //     if (ordersviews === null) {
+  //       console.log({ ordersviews });
+  //       console.log("entre a changeordersViews");
+  //       dispatch(changeordersViews(numberOfOrders));
+  //     }
+  //     dispatch(changeTotalOrders(numberOfOrders));
+  //   }
+  // }, [numberOfOrders, firstRender]);
+  // useEffect(() => {
+  //   dispatch(changeNewNotifications(+actualOrders - +ordersviews! ?? 0));
+  // }, [actualOrders, ordersviews]);
 
   // analizar si esta abierta la tienda o no
   useEffect(() => {

@@ -61,7 +61,11 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
     defaultValues: getAdressFromCookies(),
   });
   const [isPossibleSave, setIsPossibleSave] = useState(false);
-  const [coords, setCoords] = useState({});
+  const [coords, setCoords] = useState(
+    localStorage.getItem("coords")
+      ? JSON.parse(localStorage.getItem("coords")!)
+      : {}
+  );
 
   // verificar que valor cotizado corresponda que la direccion guardada
   useEffect(() => {
@@ -130,6 +134,7 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
     });
     const latlng = data?.result?.geometry?.location;
     setCoords(latlng);
+    localStorage.setItem("coords", JSON.stringify(latlng));
     // calcular tarifa de delivery
     let deliveryPrice = 1000;
     const { rows } = dataDistance;

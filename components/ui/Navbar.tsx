@@ -18,6 +18,7 @@ import { RootState } from "../../store";
 import { currency } from "../../utils";
 import { HomeOutlined, MapOutlined } from "@mui/icons-material";
 import Image from "next/image";
+import { BellNotification } from "./BellNotification";
 
 interface Props {
   showPrice?: boolean;
@@ -33,7 +34,6 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
     (state: RootState) => state.cart
   );
   const { store } = useSelector((state: RootState) => state.ui);
-
   return (
     <AppBar
       sx={{
@@ -47,7 +47,6 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
           width={40}
           height={40}
           alt="Logo"
-          // src="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko-pequeno_cijlft.png"
           src="https://res.cloudinary.com/dc6vako2z/image/upload/v1665472282/SushiApp/logo-sushi-panko-pequeno_cijlft_szxjwx.webp"
         ></Image>
         <NextLink href="/" passHref>
@@ -117,12 +116,14 @@ export const Navbar: FC<Props> = ({ showPrice = false }) => {
           <HomeOutlined fontSize="inherit" />
         </IconButton>
         {isLoggedIn && (
-          <Button
-            sx={{ backgroundColor: "transparent" }}
-            onClick={() => dispatch(toggleMenu())}
-          >
-            Menú
-          </Button>
+          <>
+            <Button
+              sx={{ backgroundColor: "transparent" }}
+              onClick={() => dispatch(toggleMenu())}
+            >
+              Menú
+            </Button>
+          </>
         )}
       </Toolbar>
     </AppBar>

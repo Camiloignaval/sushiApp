@@ -6,6 +6,9 @@ export type storeOpen = "close" | "soon" | "open";
 export interface UIState {
   sideBarIsOpen: boolean;
   scrollIsDown: boolean;
+  newNotifications: number;
+  ordersviews: number | null;
+  actualOrders: number;
   store: {
     isOpen: boolean;
     type: storeOpen;
@@ -31,6 +34,9 @@ const initialState: UIState = {
     endDate: null,
     phoneToFind: "",
   },
+  newNotifications: 0,
+  ordersviews: null,
+  actualOrders: 0,
 };
 
 export const UISlice = createSlice({
@@ -64,6 +70,15 @@ export const UISlice = createSlice({
     ) => {
       state.filters = action.payload;
     },
+    changeTotalOrders: (state, action: PayloadAction<number>) => {
+      state.actualOrders = action.payload;
+    },
+    changeordersViews: (state, action: PayloadAction<number>) => {
+      state.ordersviews = action.payload;
+    },
+    changeNewNotifications: (state, action: PayloadAction<number>) => {
+      state.newNotifications = action.payload;
+    },
   },
 });
 
@@ -74,6 +89,9 @@ export const {
   desactiveScrollDown,
   storeState,
   setFilters,
+  changeNewNotifications,
+  changeTotalOrders,
+  changeordersViews,
 } = UISlice.actions;
 
 export default UISlice.reducer;

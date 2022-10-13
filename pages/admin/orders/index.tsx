@@ -1,12 +1,10 @@
 import {
   ConfirmationNumberOutlined,
   DoneAllOutlined,
-  NotificationsNoneOutlined,
   ReplayOutlined,
   WarningOutlined,
   WhatsApp,
 } from "@mui/icons-material";
-import AudioPlayer from "react-h5-audio-player";
 
 import { Badge, Box, Chip, Grid, IconButton, Tooltip } from "@mui/material";
 import {
@@ -37,13 +35,11 @@ import { useSendDirectMessage } from "../../../hooks";
 
 const OrdersPage = () => {
   const [dataOrders, setDataOrders] = useState<IOrderWithPaginate | null>(null);
-  const [newOrdersAlert, setNewOrdersAlert] = useState<number | null>(0);
-  const alertSound = useRef() as React.LegacyRef<AudioPlayer>;
   const [rowCountState, setRowCountState] = useState(
     dataOrders?.totalDocs || 0
   );
+  const { newNotifications } = useSelector((state: RootState) => state.ui);
   const [MessageModal, setuserActiveToWsp, setOpen] = useSendDirectMessage();
-  const [rowCountStateOld, setRowCountStateOld] = useState<number | null>(null);
   const [selectedRows, setSelectedRows] = useState<GridRowId[]>([]);
   const [retryConfirmQuery, retryConfirmStatus] =
     useRetryConfirmOrderMutation();
@@ -64,7 +60,7 @@ const OrdersPage = () => {
       phoneToFind !== "" ? `&phoneToFind=56${phoneToFind}` : ""
     }`,
     {
-      pollingInterval: 10000, // 1 minuto,
+      pollingInterval: 60000, // 1 minuto,
     }
   );
 
@@ -78,21 +74,6 @@ const OrdersPage = () => {
     }
   }, [data]);
 
-  useEffect(() => {
-    document.getElementById("iconbuttonBell")?.click();
-  }, []);
-
-  // efecto de vibracion campana
-  useEffect(() => {
-    if (newOrdersAlert !== 0) {
-      document.getElementById("bellNotification")?.classList.add("shakeIcon");
-    } else {
-      document
-        .getElementById("bellNotification")
-        ?.classList.remove("shakeIcon");
-    }
-  }, [newOrdersAlert]);
-
   const retryConfirmOrder = (id: string, phone: string) => {
     retryConfirmQuery({ orderId: id, phone });
   };
@@ -101,6 +82,12 @@ const OrdersPage = () => {
     setOpen(true);
     setuserActiveToWsp({ phone, name });
   };
+
+  useEffect(() => {
+    if (newNotifications > 0) {
+      refetch();
+    }
+  }, [newNotifications]);
 
   const columns: GridColDef[] = [
     {
@@ -310,14 +297,10 @@ const OrdersPage = () => {
       renderCell: ({ row }: GridValueGetterParams) => {
         return (
           <IconButton
-            onClick={
-              () =>
-                printOrder(
-                  dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
-                )
-              // handlePrint(
-              //   dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
-              // )
+            onClick={() =>
+              printOrder(
+                dataOrders?.docs?.find((d) => d._id === row.id) as IOrder
+              )
             }
           >
             <ConfirmationNumberOutlined />
@@ -339,27 +322,7 @@ const OrdersPage = () => {
     },
   ];
 
-  // const handlePrint = async (order: IOrder) => {
-  //   console.log("imprimire", order);
-  //   await axios.post(process.env.NEXT_PUBLIC_HOST_WSP_API + "/print", order);
-  // };
   useEffect(() => {
-    if (rowCountState > 0) {
-      if (rowCountState > rowCountStateOld! ?? rowCountState) {
-        setNewOrdersAlert(rowCountState - rowCountStateOld! ?? rowCountState);
-        (alertSound as any)!.current?.audio.current.play();
-      }
-    } else if (rowCountState < rowCountStateOld! ?? rowCountState) {
-      setRowCountStateOld(rowCountState);
-    } else {
-      setNewOrdersAlert(0);
-    }
-  }, [rowCountState, rowCountStateOld]);
-
-  useEffect(() => {
-    if (rowCountStateOld === null) {
-      setRowCountStateOld(dataOrders?.totalDocs ?? null);
-    }
     setRowCountState((prevRowCountState) =>
       dataOrders?.totalDocs !== undefined
         ? dataOrders?.totalDocs
@@ -391,36 +354,15 @@ const OrdersPage = () => {
     >
       <MessageModal />
       <Box display={"flex"} justifyContent="end">
-        <AudioPlayer
-          preload="metadata"
-          src={"/sounds/notification-bell.wav"}
-          ref={alertSound}
-          style={{ display: "none" }}
-        />
         <FilterTabOrders refetch={refetch} />
-        <Box flexGrow={1}></Box>
-        <IconButton
-          id="iconbuttonBell"
-          sx={{ marginRight: 2 }}
-          // onClick={() => setNewOrdersAlert(0)}
-          onClick={() => {
-            setRowCountStateOld(rowCountState);
-            setNewOrdersAlert(0);
-          }}
-        >
-          <Badge
-            sx={{ display: "relative", right: 0 }}
-            badgeContent={newOrdersAlert}
-            color="secondary"
-          >
-            <NotificationsNoneOutlined id="bellNotification" />
-          </Badge>
-        </IconButton>
+        <Box display={"flex"} flexGrow={1}></Box>
+
         <OrdersActions
           rowsId={selectedRows}
           data={dataOrders.docs?.filter((d) => selectedRows.includes(d?._id!))}
         />
       </Box>
+
       <Grid
         className="fadeIn"
         container
@@ -468,9 +410,6 @@ const OrdersPage = () => {
           onSelectionModelChange={(e) => setSelectedRows(e)}
           rows={rows ?? []}
           columns={columns}
-          // components={{
-          //   Toolbar: GridToolbar,
-          // }}
           componentsProps={{
             pagination: { classes: null },
           }}

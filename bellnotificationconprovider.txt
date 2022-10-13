@@ -1,0 +1,73 @@
+import { NotificationsNoneOutlined } from "@mui/icons-material";
+import { Box, IconButton, Badge } from "@mui/material";
+import React, { useEffect, useRef } from "react";
+import AudioPlayer from "react-h5-audio-player";
+import { useCountOrdersNumberQuery } from "../../store/RTKQuery/ordersApi";
+import { RootState } from "../../store";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  changeordersViews,
+  changeTotalOrders,
+} from "../../store/Slices/UISlice";
+
+export const BellNotification = () => {
+  const { actualOrders, newNotifications } = useSelector(
+    (state: RootState) => state.ui
+  );
+  const dispatch = useDispatch();
+  const { data: numberOfOrders } = useCountOrdersNumberQuery(null, {
+    pollingInterval: 10000, // 1 minuto,
+  });
+  const alertSound = useRef() as React.LegacyRef<AudioPlayer>;
+  useEffect(() => {
+    document.getElementById("iconbuttonBell")?.click();
+  }, []);
+
+  useEffect(() => {
+    if (numberOfOrders) {
+      dispatch(changeTotalOrders(numberOfOrders));
+    }
+  }, [numberOfOrders]);
+
+  // efecto de vibracion campana
+  useEffect(() => {
+    if (newNotifications !== 0) {
+      document.getElementById("bellNotification")?.classList.add("shakeIcon");
+      (alertSound as any)!.current?.audio.current.play();
+    } else {
+      document
+        .getElementById("bellNotification")
+        ?.classList.remove("shakeIcon");
+    }
+  }, [newNotifications]);
+
+  const handleClick = () => {
+    console.log("hice clickkk en handleClick");
+    dispatch(changeordersViews(actualOrders));
+  };
+
+  return (
+    <Box display={"flex"} justifyContent="end">
+      <AudioPlayer
+        preload="metadata"
+        src={"/sounds/notification-bell.wav"}
+        ref={alertSound}
+        style={{ display: "none" }}
+      />
+      <Box flexGrow={1}></Box>
+      <IconButton
+        id="iconbuttonBell"
+        sx={{ marginRight: 2 }}
+        onClick={handleClick}
+      >
+        <Badge
+          sx={{ display: "relative", right: 0 }}
+          badgeContent={newNotifications}
+          color="secondary"
+        >
+          <NotificationsNoneOutlined id="bellNotification" />
+        </Badge>
+      </IconButton>
+    </Box>
+  );
+};

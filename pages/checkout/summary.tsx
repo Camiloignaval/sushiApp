@@ -164,6 +164,7 @@ const SummaryPage = () => {
             Cookies.remove("address");
             router.replace("/");
             setDisabledSubmit(true);
+            localStorage.removeItem("coords");
           } else {
             return;
           }
@@ -175,6 +176,7 @@ const SummaryPage = () => {
         // // TODO hacer lo que se necesite como enviar whatsap o en backend
         router.replace("/");
         setDisabledSubmit(true);
+        localStorage.removeItem("coords");
       }
     } catch (error) {
       console.log({ error });

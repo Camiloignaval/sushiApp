@@ -163,6 +163,8 @@ export const AutoCompletePlace: React.FC<Props> = ({
         });
         const latlng = data?.result?.geometry?.location;
         setCoords(latlng);
+        localStorage.setItem("coords", JSON.stringify(latlng));
+
         setIsPossibleSave(true);
 
         // // ------------
@@ -207,6 +209,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
               duration: 4000,
             });
             setCoords({});
+            localStorage.removeItem("coords");
             setIsPossibleSave(false);
           }
         }
@@ -457,7 +460,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
             {" "}
             {
               <Marker
-                /* key={item.name} */ position={{
+                position={{
                   lat: (coords as any).lat,
                   lng: (coords as any).lng,
                 }}

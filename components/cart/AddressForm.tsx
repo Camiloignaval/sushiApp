@@ -60,6 +60,8 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
   } = useForm<IShippingAdress>({
     defaultValues: getAdressFromCookies(),
   });
+  const [isPossibleSave, setIsPossibleSave] = useState(false);
+  const [coords, setCoords] = useState({});
 
   // verificar que valor cotizado corresponda que la direccion guardada
   useEffect(() => {
@@ -123,7 +125,11 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
         destino: placeId,
       }
     );
-
+    const { data } = await axios.post("/api/google/detailsPlace", {
+      place_id: placeId,
+    });
+    const latlng = data?.result?.geometry?.location;
+    setCoords(latlng);
     // calcular tarifa de delivery
     let deliveryPrice = 1000;
     const { rows } = dataDistance;
@@ -138,6 +144,7 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
         selectedDirection: placeId,
       })
     );
+    setIsPossibleSave(true);
   };
 
   return (
@@ -212,6 +219,9 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
           </Grid>
           <Grid item xs={12} lg={12}>
             <AutoCompletePlace
+              coords={coords}
+              setCoords={setCoords}
+              setIsPossibleSave={setIsPossibleSave}
               addressFound={addressFound}
               register={register}
               errors={errors}
@@ -231,6 +241,7 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
               color="secondary"
               className="circular-btn"
               size="small"
+              disabled={!isPossibleSave}
             >
               Guardar dirección
             </Button>

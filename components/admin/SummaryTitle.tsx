@@ -12,6 +12,7 @@ interface Props {
   link?: string;
   isLoading?: boolean;
   sizeInMd?: number;
+  color?: string;
 }
 
 export const SummaryTitle: FC<Props> = ({
@@ -21,6 +22,7 @@ export const SummaryTitle: FC<Props> = ({
   link = undefined,
   isLoading = false,
   sizeInMd = 3,
+  color = "primary",
 }) => {
   const router = useRouter();
   return (
@@ -51,7 +53,9 @@ export const SummaryTitle: FC<Props> = ({
                 flexDirection: "column",
               }}
             >
-              <Typography variant="h3">{title}</Typography>
+              <Typography color={color} variant="h3">
+                {title}
+              </Typography>
               <Typography variant="subtitle2">{subTitle}</Typography>
             </CardContent>
           </Card>

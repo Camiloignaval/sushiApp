@@ -15,6 +15,7 @@ import {
   GroupAddOutlined,
   GroupOutlined,
   HourglassBottomOutlined,
+  InsertEmoticonOutlined,
   LocalOffer,
   MoneyOffOutlined,
   MoneyOutlined,
@@ -22,6 +23,8 @@ import {
   PriorityHighOutlined,
   ProductionQuantityLimitsOutlined,
   SaveOutlined,
+  SentimentNeutralOutlined,
+  SentimentVeryDissatisfiedOutlined,
   SsidChartOutlined,
   StarPurple500,
 } from "@mui/icons-material";
@@ -170,7 +173,25 @@ const DashBoardPage = () => {
           isLoading={isLoading}
           title={currency.format(data?.ganancias ?? 0)}
           subTitle={"Ganancia semanal"}
-          icon={<AutoGraphOutlined color="warning" sx={{ fontSize: 40 }} />}
+          icon={
+            data?.ganancias! < 0 ? (
+              <SentimentVeryDissatisfiedOutlined
+                color="error"
+                sx={{ fontSize: 40 }}
+              />
+            ) : data?.ganancias! > 0 ? (
+              <InsertEmoticonOutlined color="success" sx={{ fontSize: 40 }} />
+            ) : (
+              <SentimentNeutralOutlined color="primary" sx={{ fontSize: 40 }} />
+            )
+          }
+          color={
+            data?.ganancias! < 0
+              ? "error"
+              : data?.ganancias! > 0
+              ? "green"
+              : "black"
+          }
         />
         <SummaryTitle
           sizeInMd={6}

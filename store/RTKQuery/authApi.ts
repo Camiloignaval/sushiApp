@@ -9,7 +9,6 @@ interface IResponse {
   user: IUser;
 }
 
-// Define a service using a base URL and expected endpoints
 export const authApi = createApi({
   reducerPath: "authApi",
   baseQuery: fetchBaseQuery({ baseUrl: "/api" }),
@@ -25,7 +24,7 @@ export const authApi = createApi({
         toast.promise(queryFulfilled, {
           loading: "Iniciando sesión...",
           success: ({ data: { user, token } }) => {
-            Cookies.set("token", token, { expires: 7 });
+            Cookies.set("token", token, { expires: 60 });
             dispatch(LogIn(user));
             return "Ingreso correcto";
           },
@@ -33,27 +32,6 @@ export const authApi = createApi({
         });
       },
     }),
-    // Register: builder.mutation<
-    //   IResponse,
-    //   { email: string; password: string; name: string }
-    // >({
-    //   query: (body) => ({
-    //     url: `/admin/register`,
-    //     method: "post",
-    //     body,
-    //   }),
-    //   onQueryStarted(_, { queryFulfilled, dispatch }) {
-    //     toast.promise(queryFulfilled, {
-    //       loading: "Registrando usuario...",
-    //       success: ({ data: { user, token } }) => {
-    //         Cookies.set("token", token);
-    //         dispatch(LogIn(user));
-    //         return "Registro exitoso";
-    //       },
-    //       error: ({ error }) => error.data.message.toString(),
-    //     });
-    //   },
-    // }),
     checkToken: builder.mutation<IResponse, void>({
       query: (body) => ({
         url: `/user/validate-token`,
@@ -63,7 +41,7 @@ export const authApi = createApi({
       onQueryStarted(_, { queryFulfilled, dispatch }) {
         queryFulfilled
           .then(({ data: { token, user } }) => {
-            Cookies.set("token", token, { expires: 7 });
+            Cookies.set("token", token, { expires: 60 });
             dispatch(LogIn(user));
           })
           .catch(() => {

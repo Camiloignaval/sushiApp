@@ -22,10 +22,16 @@ import { IShippingAdress } from "../../interfaces";
 import { IPlaceResponse } from "../../interfaces/placeResponse";
 import { RootState } from "../../store";
 import { errors } from "jose";
+import { GoogleMap, Marker } from "@react-google-maps/api";
 
 const GOOGLE_MAPS_API_KEY = process.env.API_KEY_GOOGLE;
 
 const autocompleteService = { current: null };
+
+const mapContainerStyle = {
+  height: "400px",
+  width: "100%",
+};
 
 interface MainTextMatchedSubstrings {
   offset: number;
@@ -77,6 +83,9 @@ interface Props {
   addressFound: string | null;
   placeIdState: string | null;
   setPlaceIdState: Dispatch<SetStateAction<string | null>>;
+  setIsPossibleSave: Dispatch<SetStateAction<boolean>>;
+  coords: {};
+  setCoords: Dispatch<SetStateAction<{}>>;
 }
 
 export const AutoCompletePlace: React.FC<Props> = ({
@@ -88,6 +97,9 @@ export const AutoCompletePlace: React.FC<Props> = ({
   addressFound,
   placeIdState,
   setPlaceIdState,
+  setIsPossibleSave,
+  coords,
+  setCoords,
 }) => {
   const [selectedDirection, setSelectedDirection] =
     React.useState<PlaceType | null>(null);
@@ -98,11 +110,6 @@ export const AutoCompletePlace: React.FC<Props> = ({
   const [isError, setIsError] = useState(false);
   const { shippingAddress } = useSelector((state: RootState) => state.cart);
   const dispatch = useDispatch();
-  const [coords, setCoords] = React.useState({});
-
-  // const deliveryPolygon = new window.google.maps.Polygon({
-  //   paths: deliveryCoords,
-  // });
 
   const deliverPolygon =
     typeof window?.google?.maps !== "undefined"
@@ -134,8 +141,6 @@ export const AutoCompletePlace: React.FC<Props> = ({
   useEffect(() => {
     if (shippingAddress?.address) {
       setInputValue(shippingAddress?.address);
-      // setSelectedDirection(shippingAddress?.completeAddress);
-      // setOptions([shippingAddress?.completeAddress]);
     }
   }, [shippingAddress]);
 
@@ -158,6 +163,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
         });
         const latlng = data?.result?.geometry?.location;
         setCoords(latlng);
+        setIsPossibleSave(true);
 
         // // ------------
 
@@ -183,6 +189,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
             let deliveryPrice = 1000;
             const { rows } = dataDistance;
             const { distance, duration } = rows[0].elements[0];
+            console.log({ rows });
             if (distance.value > 2000) {
               deliveryPrice += (Math.round(distance.value - 2000) / 1000) * 500;
             }
@@ -199,6 +206,8 @@ export const AutoCompletePlace: React.FC<Props> = ({
             toast.error("Lo sentimos, aún no llegamos a tu dirección", {
               duration: 4000,
             });
+            setCoords({});
+            setIsPossibleSave(false);
           }
         }
       } catch (error) {
@@ -330,93 +339,94 @@ export const AutoCompletePlace: React.FC<Props> = ({
   };
   shippingAddress && inputValue !== shippingAddress.address;
   return (
-    <Box display={"flex"}>
-      <Autocomplete
-        disablePortal={options.length === 0}
-        inputValue={inputValue}
-        disabled={disableInput}
-        fullWidth
-        clearOnBlur={false}
-        clearOnEscape={false}
-        id="google-map-demo"
-        // sx={{ width: 300 }}
-        getOptionLabel={(option: PlaceType) =>
-          typeof option === "string" ? option : option.description
-        }
-        filterOptions={(x) => x}
-        options={options}
-        autoComplete
-        includeInputInList
-        filterSelectedOptions
-        value={selectedDirection}
-        onChange={(event: any, newValue: PlaceType | null) => {
-          setOptions(newValue ? [newValue, ...options] : options);
-          setSelectedDirection(newValue);
-        }}
-        onInputChange={(event, newInputValue) => {
-          setInputValue(newInputValue);
-        }}
-        renderInput={(params) => (
-          <TextField
-            required
-            {...params}
-            variant="standard"
-            label="Ingrese dirección"
-            sx={{ width: "100%" }}
-            {...register("address", {
-              required: "Debe agregar direccion",
-              validate: {
-                required: () => {
-                  if (!isSameInputWithCart())
-                    return "Para agregar dirección (o modificar), presionar botón 'Buscar', y seleccionar opción deseada de lista desplegable, de lo contrario no podrá continuar";
+    <>
+      <Box display={"flex"}>
+        <Autocomplete
+          disablePortal={options.length === 0}
+          inputValue={inputValue}
+          disabled={disableInput}
+          fullWidth
+          clearOnBlur={false}
+          clearOnEscape={false}
+          id="google-map-demo"
+          // sx={{ width: 300 }}
+          getOptionLabel={(option: PlaceType) =>
+            typeof option === "string" ? option : option.description
+          }
+          filterOptions={(x) => x}
+          options={options}
+          autoComplete
+          includeInputInList
+          filterSelectedOptions
+          value={selectedDirection}
+          onChange={(event: any, newValue: PlaceType | null) => {
+            setOptions(newValue ? [newValue, ...options] : options);
+            setSelectedDirection(newValue);
+          }}
+          onInputChange={(event, newInputValue) => {
+            setInputValue(newInputValue);
+          }}
+          renderInput={(params) => (
+            <TextField
+              required
+              {...params}
+              variant="standard"
+              label="Ingrese dirección"
+              sx={{ width: "100%" }}
+              {...register("address", {
+                required: "Debe agregar direccion",
+                validate: {
+                  required: () => {
+                    if (!isSameInputWithCart())
+                      return "Para agregar dirección (o modificar), presionar botón 'Buscar', y seleccionar opción deseada de lista desplegable, de lo contrario no podrá continuar";
+                  },
                 },
-              },
-            })}
-            error={!!errors.address}
-            helperText={errors?.address?.message}
-          />
-        )}
-        renderOption={(props, option: any) => {
-          const matches =
-            option.structured_formatting.main_text_matched_substrings;
-          const parts = parse(
-            option.structured_formatting.main_text,
-            matches.map((match: any) => [
-              match.offset,
-              match.offset + match.length,
-            ])
-          );
+              })}
+              error={!!errors.address}
+              helperText={errors?.address?.message}
+            />
+          )}
+          renderOption={(props, option: any) => {
+            const matches =
+              option.structured_formatting.main_text_matched_substrings;
+            const parts = parse(
+              option.structured_formatting.main_text,
+              matches.map((match: any) => [
+                match.offset,
+                match.offset + match.length,
+              ])
+            );
 
-          return (
-            <li {...props}>
-              <Grid container alignItems="center">
-                <Grid item>
-                  <Box
-                    component={LocationOnIcon}
-                    sx={{ color: "text.secondary", mr: 2 }}
-                  />
+            return (
+              <li {...props}>
+                <Grid container alignItems="center">
+                  <Grid item>
+                    <Box
+                      component={LocationOnIcon}
+                      sx={{ color: "text.secondary", mr: 2 }}
+                    />
+                  </Grid>
+                  <Grid item xs>
+                    {parts.map((part, index) => (
+                      <span
+                        key={index}
+                        style={{
+                          fontWeight: part.highlight ? 700 : 400,
+                        }}
+                      >
+                        {part.text}
+                      </span>
+                    ))}
+                    <Typography variant="body2" color="text.secondary">
+                      {option.structured_formatting.secondary_text}
+                    </Typography>
+                  </Grid>
                 </Grid>
-                <Grid item xs>
-                  {parts.map((part, index) => (
-                    <span
-                      key={index}
-                      style={{
-                        fontWeight: part.highlight ? 700 : 400,
-                      }}
-                    >
-                      {part.text}
-                    </span>
-                  ))}
-                  <Typography variant="body2" color="text.secondary">
-                    {option.structured_formatting.secondary_text}
-                  </Typography>
-                </Grid>
-              </Grid>
-            </li>
-          );
-        }}
-      />
-      {/* <IconButton
+              </li>
+            );
+          }}
+        />
+        {/* <IconButton
         disabled={disableInput}
         size="large"
         type="button"
@@ -425,15 +435,37 @@ export const AutoCompletePlace: React.FC<Props> = ({
       >
         <SearchOutlined />
       </IconButton> */}
-      <Button
-        disabled={disableInput}
-        size="small"
-        type="button"
-        onClick={buscarDireccion}
-        color="primary"
-      >
-        Buscar
-      </Button>
-    </Box>
+        <Button
+          disabled={disableInput}
+          size="small"
+          type="button"
+          onClick={buscarDireccion}
+          color="primary"
+        >
+          Buscar
+        </Button>
+      </Box>
+      {(coords as any)?.lat && (coords as any)?.lng && (
+        <Box className="fadeIn" mt={2}>
+          <GoogleMap
+            id="marker-example"
+            mapContainerStyle={mapContainerStyle}
+            zoom={16}
+            center={{ lat: (coords as any).lat, lng: (coords as any).lng }}
+            // center={{ lat: -33.5183808601021, lng: -70.76766249137242 }}
+          >
+            {" "}
+            {
+              <Marker
+                /* key={item.name} */ position={{
+                  lat: (coords as any).lat,
+                  lng: (coords as any).lng,
+                }}
+              />
+            }
+          </GoogleMap>
+        </Box>
+      )}
+    </>
   );
 };

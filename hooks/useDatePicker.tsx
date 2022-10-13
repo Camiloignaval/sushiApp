@@ -7,7 +7,10 @@ import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { esES } from "@mui/x-date-pickers";
 import { es } from "date-fns/locale";
 
-export const useDatePicker = ({ label = "Seleccione" }) => {
+export const useDatePicker = ({
+  label = "Seleccione",
+  disableFuture = true,
+}) => {
   const [value, setValue] = useState<any>(null);
 
   const DatePickerSelect = () => (
@@ -19,7 +22,7 @@ export const useDatePicker = ({ label = "Seleccione" }) => {
       locale={es}
     >
       <DatePicker
-        disableFuture
+        disableFuture={disableFuture}
         label={label}
         value={value}
         onChange={(newValue) => {

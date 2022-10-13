@@ -23,6 +23,7 @@ const BillsPage = () => {
   const buttonSubmitForm = useRef() as React.RefObject<HTMLButtonElement>;
   const [DatePickerSelect, selectDay, setValue] = useDatePicker({
     label: "Seleccione semana",
+    disableFuture: false,
   });
   const [dayToFind, setDayToFind] = useState(
     getMonday(new Date()).toISOString()

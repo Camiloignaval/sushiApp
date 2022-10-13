@@ -9,7 +9,7 @@ export const BellNotification = () => {
   const [newOrdersAlert, setNewOrdersAlert] = useState<number | null>(0);
   const [ordersViews, setOrdersViews] = useState<number>();
   const { data: numberOfOrders } = useCountOrdersNumberQuery(null, {
-    pollingInterval: 10000, // 1 minuto,
+    pollingInterval: 60000, // 1 minuto,
   });
   const alertSound = useRef() as React.LegacyRef<AudioPlayer>;
   const [isFirstRender, setisFirstRender] = useState(true);

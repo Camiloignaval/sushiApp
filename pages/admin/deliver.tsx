@@ -291,7 +291,7 @@ const DeliverPage = () => {
                   )}{" "}
                   minutos
                 </Typography>
-                <Typography variant="body2" sx={{ mr: 4, ml: 1 }}>
+                <Typography variant="body2" sx={{ mr: 1, ml: 1 }}>
                   <DeliveryDiningOutlined
                     sx={{ position: "relative", top: 6 }}
                   />

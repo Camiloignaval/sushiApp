@@ -93,6 +93,7 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
       return;
     }
     data.placeId = placeIdState!;
+    data.ll = `${coords?.lat ?? ""},${coords?.lng ?? ""}`;
     Cookies.set("address", JSON.stringify(data));
     setIsModificable(false);
 

@@ -70,6 +70,7 @@ const orderSchema = new Schema(
       address: { type: String, required: true },
       phone: { type: String, required: true },
       placeId: { type: String, required: true },
+      ll: { type: String, required: true },
     },
     coupon: { type: Schema.Types.ObjectId, ref: "Coupon" },
     numberOfItems: { type: Number, required: true },

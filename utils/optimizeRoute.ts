@@ -24,8 +24,11 @@ export const optimizeRoute = async (waypoints: string[]) => {
       avoidHighways: true,
       avoidTolls: true,
     });
-
-    const toReturn = resp.routes[0].legs;
+    console.log({ resp });
+    const toReturn = {
+      legs: resp.routes[0].legs,
+      orderWaipoints: resp.routes[0].waypoint_order,
+    };
     return toReturn;
     // &waypoints=via%3ACharlestown%2CMA%7Cvia%3ALexington%2CMA&departure_time=now
     //   const url = `https://maps.googleapis.com/maps/api/directions/json?${origin}&${destination}&waypoints=${JSON.stringify(

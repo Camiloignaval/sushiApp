@@ -4,4 +4,5 @@ export interface IShippingAdress {
   username: string;
   address: string;
   placeId?: string;
+  ll?: string;
 }

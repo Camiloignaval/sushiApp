@@ -1,9 +1,10 @@
 import {
+  AccessTimeOutlined,
   AddOutlined,
   DeliveryDiningOutlined,
   DoneAll,
 } from "@mui/icons-material";
-import { Box, Button, Grid, IconButton } from "@mui/material";
+import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import {
   GridRowId,
   GridColDef,
@@ -63,17 +64,19 @@ const DeliverPage = () => {
     if (dataOrders && dataOrders.docs?.length > 0) {
       const placeIds = (dataOrders.docs as IOrder[]).map(
         (order) => order.shippingAddress.placeId
+        // (order) => order.shippingAddress.ll
       );
       const orderAddress =
         placeIds?.length > 0 ? await optimizeRoute(placeIds as string[]) : null;
-      if (orderAddress) {
-        const objetoToSet = orderAddress.map(
-          ({ distance, duration, end_address, end_location }) => {
+      if (orderAddress?.legs) {
+        const objetoToSet = orderAddress.legs.map(
+          ({ distance, duration, end_address, end_location }, i) => {
             return {
               distance,
               duration,
               end_address,
               ll: `${end_location.lat()},${end_location.lng()}`,
+              placeId: placeIds[orderAddress.orderWaipoints[i]],
             };
           }
         );
@@ -221,21 +224,23 @@ const DeliverPage = () => {
   useEffect(() => {
     if (routeOptimized && dataOrders) {
       try {
+        console.log({ routeOptimized, dataOrders });
         const rowsPreparadas = routeOptimized.map((ad) => ({
           id: dataOrders?.docs?.find(
-            (d) =>
-              ad!.end_address.split(",", 1)[0] ===
-              d.shippingAddress!.address.split(",", 1)[0]
+            (d) => (ad as any)!.placeId === d.shippingAddress!.placeId
           )?._id,
           time: ad?.duration?.text,
+          timeInNumber: ad?.duration?.value,
           distance: ad?.distance?.text,
+          distanceInNumber: ad?.distance?.value,
           address: ad.end_address,
           ll: ad.ll,
         }));
-        if (rowsPreparadas.find((r) => r.id === undefined)) throw Error;
+        if (rowsPreparadas.find((r) => r.id === undefined))
+          throw Error("Una de las direcciones no tiene Id");
         setRowsInDelivery(rowsPreparadas);
       } catch (error) {
-        console.log({ error });
+        console.log({ error: error.message });
         toast.error("Ha ocurrido un error, calcule ruta nuevamente");
         onFinishDeliver();
       }
@@ -270,11 +275,40 @@ const DeliverPage = () => {
       >
         <a ref={toHouse}></a>
       </Link>
+
       <Box display={"flex"} justifyContent="end" sx={{ mb: 2 }}>
         {routeOptimized ? (
-          <Button color="error" onClick={onFinishDeliver}>
-            Finalizar ruta
-          </Button>
+          <>
+            {rowsInDelivery.length > 0 && (
+              <>
+                <Typography variant="body2">
+                  <AccessTimeOutlined sx={{ position: "relative", top: 6 }} />
+                  {Math.round(
+                    rowsInDelivery.reduce(
+                      (acc: number, curr: any) => acc + curr.timeInNumber,
+                      0
+                    ) / 60
+                  )}{" "}
+                  minutos
+                </Typography>
+                <Typography variant="body2" sx={{ mr: 4, ml: 1 }}>
+                  <DeliveryDiningOutlined
+                    sx={{ position: "relative", top: 6 }}
+                  />
+                  {Math.round(
+                    rowsInDelivery.reduce(
+                      (acc: number, curr: any) => acc + curr.distanceInNumber,
+                      0
+                    ) / 1000
+                  )}{" "}
+                  Km.
+                </Typography>
+              </>
+            )}
+            <Button color="error" onClick={onFinishDeliver}>
+              Finalizar ruta
+            </Button>
+          </>
         ) : (
           <Button color="secondary" onClick={calculateRoute}>
             Iniciar ruta!

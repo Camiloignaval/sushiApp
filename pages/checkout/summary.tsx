@@ -70,6 +70,9 @@ const SummaryPage = () => {
       toast.error("No hay dirección de entrega");
       return;
     }
+    // const coords = JSON.parse(localStorage?.getItem("coords") ?? "")
+    // const coordsToSave = `${coords?.lat ?? ""},${coords?.lng ?? ""}`
+
     const orderToSend: IOrder = {
       shippingAddress,
       numberOfItems,

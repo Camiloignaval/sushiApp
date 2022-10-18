@@ -14,16 +14,16 @@ export async function middleware(req: NextRequest) {
 
   const currentEnv = process.env.NODE_ENV as Environment;
 
-  if (
-    currentEnv === "production" &&
-    req.headers.get("x-forwarded-proto") !== "https"
-  ) {
-    return NextResponse.redirect(
-      `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
-      301
-    );
-  }
-  return NextResponse.next();
+  // if (
+  //   currentEnv === "production" &&
+  //   req.headers.get("x-forwarded-proto") !== "https"
+  // ) {
+  //   return NextResponse.redirect(
+  //     `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
+  //     301
+  //   );
+  // }
+  // return NextResponse.next();
 
   // no dejar entrar a login si tiene sesion iniciada y token correcto
   if (req.nextUrl.pathname.startsWith("/login")) {

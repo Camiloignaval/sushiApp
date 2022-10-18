@@ -22,9 +22,9 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(
       // `https://${req.nextUrl.hostname}${req.nextUrl.pathname}`,
       // `${process.env.HOST_NAME}`
-      `https://sushipanko.cl/`
+      `https://sushipanko.cl/`,
 
-      // 301
+      301
     );
   }
   // }

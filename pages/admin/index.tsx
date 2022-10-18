@@ -28,7 +28,7 @@ import {
   SsidChartOutlined,
   StarPurple500,
 } from "@mui/icons-material";
-import { Box, Button, Grid, IconButton } from "@mui/material";
+import { Box, Button, Grid, IconButton, Typography } from "@mui/material";
 import { format } from "date-fns";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -42,6 +42,7 @@ import esLocale from "date-fns/locale/es";
 import Divider from "@mui/material/Divider";
 import { GraficoDash } from "../../components/ui";
 import { useUpdateGainsMutation } from "../../store/RTKQuery/expenses";
+import { styled } from "@mui/material/styles";
 
 const DashBoardPage = () => {
   const router = useRouter();
@@ -55,12 +56,7 @@ const DashBoardPage = () => {
 
   const [queryToSend, setqueryToSend] = useState<string | null>(null);
 
-  const { data, refetch, isLoading } = useGetDashboardDataQuery(
-    queryToSend
-    //   {
-    //   pollingInterval: 300000,
-    // }
-  );
+  const { data, refetch, isLoading } = useGetDashboardDataQuery(queryToSend);
   const [updateGains] = useUpdateGainsMutation();
 
   const handleFilter = () => {
@@ -95,33 +91,8 @@ const DashBoardPage = () => {
   };
 
   const handleCloseWeek = () => {
-    console.log("entrte");
     updateGains(data?.ganancias ?? 0);
   };
-
-  // useEffect(() => {
-  //   console.log("entre a useeffecrt");
-  //   if (startDate !== null && endDate !== null) {
-  //     setqueryToSend(
-  //       `?startDate=${new Date(startDate).toISOString()}&endDate=${new Date(
-  //         endDate
-  //       ).toISOString()}`
-  //     );
-  //   } else {
-  //     setqueryToSend(null);
-  //   }
-  // }, [startDate, endDate]);
-
-  // const [refreshIn, setrefreshIn] = useState(30);
-
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setrefreshIn((prev) => (prev > 0 ? prev - 1 : 30));
-  //   }, 1000);
-
-  //   return () => clearInterval(interval);
-  // }, []);
-  // console.log({ ganancias: data?.ganancias });
 
   return (
     <AdminLayout
@@ -321,6 +292,17 @@ const DashBoardPage = () => {
           }
         />
       </Grid>
+      <Divider sx={{ my: 4, mx: 4, display: "block" }} />
+
+      <Box mt={4}>
+        <Typography
+          sx={{ display: "flex", justifyContent: "center" }}
+          variant="h5"
+        >
+          Histórico Ganancias vs Gastos
+        </Typography>
+        <GraficoDash data={data?.dataGrafico ?? []} />
+      </Box>
     </AdminLayout>
   );
 };

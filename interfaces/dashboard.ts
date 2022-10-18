@@ -1,3 +1,4 @@
+import { IExpense } from "./expense";
 export interface IDashboard {
   numberOfOrders: Number;
   numberOfOrdersIngresadas: Number;
@@ -16,4 +17,5 @@ export interface IDashboard {
   inTotal: number;
   avgTime: number;
   bills: number;
+  dataGrafico: IExpense[];
 }

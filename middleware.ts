@@ -10,27 +10,18 @@ type Environment = "production" | "development" | "other";
 export async function middleware(req: NextRequest) {
   const adminRoles = ["admin", "superadmin", "SEO"];
   const token = req.cookies.get("token");
-  const { protocol, host, pathname } = req.nextUrl;
+  const { /* protocol, */ host, pathname } = req.nextUrl;
 
-  // const currentEnv = process.env.NODE_ENV as Environment;
+  const dev = process.env.NODE_ENV !== "production";
+  const host2 = req.headers.get("host");
+  // const protocol= process.env.FORCE_HTTPS
+  const protocol = process.env.FORCE_HTTPS === "true" ? "https" : "http";
 
-  // if (
-  //   req.nextUrl.pathname === "/" &&
-  //   req.nextUrl.protocol.replaceAll(":", "") === "http"
-  // ) {
-  //   console.log({ host: process.env.HOST_NAME });
-  //   console.log({ protocol, host });
-  //   // return NextResponse
-  //   //   .redirect
-  //   //   // `https://${req.nextUrl.hostname}${req.nextUrl.pathname}`,
-  //   //   // `${process.env.HOST_NAME}`
-  //   //   // `https://sushipanko.cl/`,
-
-  //   //   // 301
-  //   //   ();
+  // TODO probando redirecicon a https
+  // if (!dev /* && !host2!.match(process?.env?.CANONICAL_HOST */) {
+  //   const newUrl = `${protocol}://${process.env.HOST_NAME}${pathname}`;
+  //   return NextResponse.redirect(newUrl, 301);
   // }
-  // // }
-
   // no dejar entrar a login si tiene sesion iniciada y token correcto
   if (req.nextUrl.pathname.startsWith("/login")) {
     try {

@@ -1,89 +1,61 @@
-import React, { useRef, useEffect, useState } from "react";
-import type { ChartData, ChartArea } from "chart.js";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend,
-} from "chart.js";
-import { Chart } from "react-chartjs-2";
-import { constants } from "crypto";
+import React, { useState, useEffect, FC } from "react";
+import { Area, DualAxes, Line } from "@ant-design/plots";
+import { IExpense } from "../../interfaces/expense";
+import { format } from "date-fns";
+import { currency } from "../../utils";
+import { color } from "@mui/system";
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Tooltip,
-  Legend
-);
-
-const labels = ["January", "February", "March", "April", "May", "June", "July"];
-const colors = [
-  "red",
-  "orange",
-  "yellow",
-  "lime",
-  "green",
-  "teal",
-  "blue",
-  "purple",
-];
-
-export const data = {
-  labels,
-  datasets: [
-    {
-      label: "Ganancias",
-      data: labels.map(() => Math.random() * 100 + 100),
-    },
-    {
-      label: "Gastos",
-      data: labels.map(() => Math.random() * 100 + 100),
-    },
-  ],
-};
-
-function createGradient(ctx: CanvasRenderingContext2D, area: ChartArea) {
-  const colorMid = "#0000ff";
-  const colorEnd = "#006600";
-  const colorStart = "#ff3300";
-
-  const gradient = ctx.createLinearGradient(0, area.bottom, 0, area.top);
-
-  gradient.addColorStop(0, colorStart);
-  gradient.addColorStop(0.5, colorMid);
-  gradient.addColorStop(1, colorEnd);
-
-  return gradient;
+interface Props {
+  data: IExpense[];
 }
 
-export const GraficoDash = () => {
-  const chartRef = useRef<ChartJS>(null);
-  const [chartData, setChartData] = useState<ChartData<"bar">>({
-    datasets: [],
-  });
+export const GraficoDash: FC<Props> = ({ data: dataFromBackend }) => {
+  const [data, setData] = useState<any>([]);
 
   useEffect(() => {
-    const chart = chartRef.current;
+    if (dataFromBackend) {
+      const dataToSet: any = [];
 
-    if (!chart) {
-      return;
+      dataFromBackend
+        .filter((d) => d?.bills?.length !== 0 && d?.gains)
+        .map((d) => {
+          const week = format(new Date(d?.week), "dd-MM-yyyy");
+          const expense = d?.bills.reduce(
+            (acc, curr) => acc + curr?.expense,
+            0
+          );
+          const gains = d?.gains;
+
+          dataToSet.push({ value: expense, week, type: "Gastos" });
+          dataToSet.push({ value: gains, week, type: "Ganancias" });
+        });
+      // setDataExpenses(dataExpenses);
+      // setDataGains(dataGains);
+      setData(dataToSet);
     }
+  }, [dataFromBackend]);
 
-    const chartData = {
-      ...data,
-      datasets: data.datasets.map((dataset) => ({
-        ...dataset,
-        borderColor: createGradient(chart.ctx, chart.chartArea),
-      })),
-    };
+  const config = {
+    data: data,
+    xField: "week",
+    yField: "value",
+    seriesField: "type",
+    smooth: true,
 
-    setChartData(chartData);
-  }, []);
+    yAxis: {
+      label: {
+        formatter: (v: string) => `${currency.format(+v)}`,
+      },
+    },
+    animation: {
+      appear: {
+        animation: "path-in",
+        duration: 5000,
+      },
+    },
+    colorField: "type", // or seriesField in some cases
+    color: ["#b30000", "#336600"],
+  };
 
-  return <Chart ref={chartRef} type="line" data={chartData} />;
+  return <Line {...config} />;
 };

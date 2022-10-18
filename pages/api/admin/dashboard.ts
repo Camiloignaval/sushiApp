@@ -4,6 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
 import { Order, User, Product, Promotion } from "../../../models";
 import Expense from "../../../models/Bills";
+import { IExpense } from "../../../interfaces/expense";
 
 type Data =
   | {
@@ -24,6 +25,7 @@ type Data =
       discount: number;
       inTotal: number;
       avgTime: number;
+      dataGrafico: IExpense[];
     }
   | {
       message: string;
@@ -76,6 +78,7 @@ export default async function handler(
       numberOfPromotions,
       productsWithNoInventory,
       promotionsWithNoInventory,
+      dataGrafico,
     ] = await Promise.all([
       Expense.findOne({ week: firstOfActualWeek }),
       Order.find({
@@ -116,6 +119,7 @@ export default async function handler(
       Promotion.count(),
       Product.find({ inStock: false }).count(),
       Promotion.find({ inStock: false }).count(),
+      Expense.find().sort("week"),
     ]);
 
     // await db.disconnect();
@@ -164,6 +168,7 @@ export default async function handler(
           return acc + diff;
         }, 0) / ganancias?.length
       ),
+      dataGrafico,
     });
   } catch (error) {
     console.log({ errorindashboard: error });

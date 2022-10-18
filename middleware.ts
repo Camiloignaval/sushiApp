@@ -24,7 +24,7 @@ export async function middleware(req: NextRequest) {
       req.nextUrl.protocol.replaceAll(":", "") !== "https"
     ) {
       return NextResponse.redirect(
-        `https://${req.nextUrl.host}${req.nextUrl.pathname}`,
+        `https://${req.nextUrl.hostname}${req.nextUrl.pathname}`,
         301
       );
       // return NextResponse.next();

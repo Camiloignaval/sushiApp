@@ -14,16 +14,23 @@ export async function middleware(req: NextRequest) {
 
   const currentEnv = process.env.NODE_ENV as Environment;
 
-  // if (
-  //   currentEnv === "production" &&
-  //   req.headers.get("x-forwarded-proto") !== "https"
-  // ) {
-  //   return NextResponse.redirect(
-  //     `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
-  //     301
-  //   );
+  if (req.nextUrl.pathname === "/") {
+    // console.log({
+    //   currentEnv: `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
+    // });
+    console.log({ bla: req.nextUrl.protocol.replaceAll(":", "") });
+    if (
+      currentEnv === "production" &&
+      req.nextUrl.protocol.replaceAll(":", "") !== "https"
+    ) {
+      return NextResponse.redirect(
+        `https://${req.nextUrl.host}${req.nextUrl.pathname}`,
+        301
+      );
+      // return NextResponse.next();
+    }
+  }
   // }
-  // return NextResponse.next();
 
   // no dejar entrar a login si tiene sesion iniciada y token correcto
   if (req.nextUrl.pathname.startsWith("/login")) {
@@ -86,5 +93,11 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/checkout/:path*", "/admin/:path*", "/api/admin/:path*", "/login"],
+  matcher: [
+    "/checkout/:path*",
+    "/admin/:path*",
+    "/api/admin/:path*",
+    "/login",
+    "/",
+  ],
 };

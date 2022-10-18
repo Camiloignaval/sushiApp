@@ -15,9 +15,9 @@ export async function middleware(req: NextRequest) {
   const currentEnv = process.env.NODE_ENV as Environment;
 
   if (req.nextUrl.pathname === "/") {
-    // console.log({
-    //   currentEnv: `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
-    // });
+    console.log({
+      currentEnv: `https://${req.nextUrl.hostname}${req.nextUrl.pathname}`,
+    });
     console.log({ bla: req.nextUrl.protocol.replaceAll(":", "") });
     if (
       currentEnv === "production" &&

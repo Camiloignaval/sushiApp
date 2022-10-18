@@ -18,9 +18,11 @@ export async function middleware(req: NextRequest) {
     req.nextUrl.pathname === "/" &&
     req.nextUrl.protocol.replaceAll(":", "") === "http"
   ) {
+    console.log({ host: process.env.HOST_NAME });
     return NextResponse.redirect(
       // `https://${req.nextUrl.hostname}${req.nextUrl.pathname}`,
-      `${process.env.HOST_NAME}`
+      // `${process.env.HOST_NAME}`
+      `https://sushipanko.cl/`
 
       // 301
     );

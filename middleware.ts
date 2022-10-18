@@ -10,12 +10,12 @@ type Environment = "production" | "development" | "other";
 export async function middleware(req: NextRequest) {
   const adminRoles = ["admin", "superadmin", "SEO"];
   const token = req.cookies.get("token");
-  const { /* protocol, */ host, pathname } = req.nextUrl;
+  const { protocol, host, pathname } = req.nextUrl;
 
   const dev = process.env.NODE_ENV !== "production";
   const host2 = req.headers.get("host");
   // const protocol= process.env.FORCE_HTTPS
-  const protocol = process.env.FORCE_HTTPS === "true" ? "https" : "http";
+  // const protocol = process.env.FORCE_HTTPS === "true" ? "https" : "http";
 
   // TODO probando redirecicon a https
   // if (!dev /* && !host2!.match(process?.env?.CANONICAL_HOST */) {
@@ -88,6 +88,6 @@ export const config = {
     "/admin/:path*",
     "/api/admin/:path*",
     "/login",
-    "/",
+    // "/",
   ],
 };

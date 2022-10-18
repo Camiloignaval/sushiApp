@@ -5,10 +5,25 @@ import { analizeIfStoreIsOpen } from "./utils/analizeIfStoreIsOpen";
 import { useState } from "react";
 import Cookies from "js-cookie";
 
+type Environment = "production" | "development" | "other";
+
 export async function middleware(req: NextRequest) {
   const adminRoles = ["admin", "superadmin", "SEO"];
   const token = req.cookies.get("token");
   const { protocol, host, pathname } = req.nextUrl;
+
+  const currentEnv = process.env.NODE_ENV as Environment;
+
+  if (
+    currentEnv === "production" &&
+    req.headers.get("x-forwarded-proto") !== "https"
+  ) {
+    return NextResponse.redirect(
+      `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
+      301
+    );
+  }
+  return NextResponse.next();
 
   // no dejar entrar a login si tiene sesion iniciada y token correcto
   if (req.nextUrl.pathname.startsWith("/login")) {

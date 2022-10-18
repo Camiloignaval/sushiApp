@@ -14,38 +14,16 @@ export async function middleware(req: NextRequest) {
 
   const currentEnv = process.env.NODE_ENV as Environment;
 
-  // if (req.nextUrl.pathname === "/") {
-  //   console.log({
-  //     currentEnv: `https://${req.nextUrl.hostname}${req.nextUrl.pathname}`,
-  //   });
-  //   console.log({ bla: req.nextUrl.protocol.replaceAll(":", "") });
-  //   if (
-  //     currentEnv === "production" &&
-  //     req.nextUrl.protocol.replaceAll(":", "") !== "https"
-  //   ) {
-  //     return NextResponse.redirect(
-  //       `https://${req.nextUrl.hostname}${req.nextUrl.pathname}`,
-  //       301
-  //     );
-  //     // return NextResponse.next();
-  //   }
+  // if (
+  //   process.env.NODE_ENV === "production" &&
+  //   req.headers.get("x-forwarded-proto") !== "https" &&
+  //   !req.headers.get("host")?.includes("localhost")
+  // ) {
+  //   return NextResponse.redirect(
+  //     `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
+  //     301
+  //   );
   // }
-  // }
-  if (
-    process.env.NODE_ENV === "production" &&
-    req.headers.get("x-forwarded-proto") !== "https" &&
-    // This check prevents us from getting trapped in HTTPS localhost if we are
-    // testing a production build locally via `next build && next start`; we
-    // can use `req.headers.get('host')` to get the true host (e.g.
-    // 'faithdashboard.com'), whereas `req.nextUrl.host` is always
-    // 'localhost:3000'
-    !req.headers.get("host")?.includes("localhost")
-  ) {
-    return NextResponse.redirect(
-      `https://${req.headers.get("host")}${req.nextUrl.pathname}`,
-      301
-    );
-  }
 
   // no dejar entrar a login si tiene sesion iniciada y token correcto
   if (req.nextUrl.pathname.startsWith("/login")) {

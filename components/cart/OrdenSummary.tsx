@@ -179,7 +179,10 @@ export const OrdenSummary: FC<Props> = ({
               </Grid>{" "}
               <Grid item xs={1}>
                 <IconButton
-                  onClick={() => dispatch(removeCoupon())}
+                  onClick={() => {
+                    dispatch(removeCoupon());
+                    localStorage.removeItem("coupon");
+                  }}
                   size="small"
                   sx={{ position: "relative", top: -3 }}
                 >

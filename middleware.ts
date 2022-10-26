@@ -14,6 +14,8 @@ export async function middleware(req: NextRequest) {
 
   const dev = process.env.NODE_ENV !== "production";
   const host2 = req.headers.get("host");
+
+  console.log("entre a middleware");
   // const protocol= process.env.FORCE_HTTPS
   // const protocol = process.env.FORCE_HTTPS === "true" ? "https" : "http";
 

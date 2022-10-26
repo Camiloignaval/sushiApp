@@ -170,16 +170,13 @@ export const AutoCompletePlace: React.FC<Props> = ({
         // // ------------
 
         if (latlng) {
-          const isInPolygon = window.google.maps.geometry.poly.containsLocation(
-            latlng,
-            deliverPolygon!
-          );
+          const isInPolygon =
+            window?.google?.maps.geometry.poly.containsLocation(
+              latlng,
+              deliverPolygon!
+            );
           if (isInPolygon) {
             // si esta en zona de reparto
-
-            // const respMatrix = await axios(
-            //   `https://maps.googleapis.com/maps/api/distancematrix/json?destinations=place_id:${selectedDirection?.place_id}&origins=place_id:${placeIdDesire}&units=imperial&key=AIzaSyA6ZUaSv2WnL_BSqQEzvGoVrPkHAYRD2bw`
-            // );
             const { data: dataDistance } = await axios.post(
               "/api/google/distancePlaces",
               {
@@ -241,7 +238,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
 
   useEffect(() => {
     selectedDirection?.place_id && searchLatLngByPlaceId();
-  }, [selectedDirection, window.google]);
+  }, [selectedDirection, window?.google]);
 
   const buscarDireccion = () => {
     let active = true;
@@ -257,7 +254,7 @@ export const AutoCompletePlace: React.FC<Props> = ({
     }
     setIsError(false);
 
-    if (!autocompleteService.current && (window as any).google) {
+    if (!autocompleteService.current && (window as any)?.google) {
       autocompleteService.current = new (
         window as any
       ).google.maps.places.AutocompleteService();

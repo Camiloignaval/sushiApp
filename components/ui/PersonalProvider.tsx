@@ -74,7 +74,6 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     if (settingsData) {
       const status = analizeIfStoreIsOpen(settingsData);
       dispatch(storeState(status as any));
-
       Cookie.set("settings", JSON.stringify(settingsData));
     }
   }, [settingsData]);
@@ -109,9 +108,12 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     try {
       setFirstRender(false);
       const couponSaved = localStorage.getItem("coupon")
-        ? JSON.parse(localStorage.getItem("coupon")!)
+        ? localStorage.getItem("coupon")!
         : undefined;
-      couponSaved !== undefined && addCoupon(couponSaved);
+
+      if (couponSaved && couponSaved !== "undefined") {
+        dispatch(addCoupon(JSON.parse(couponSaved)));
+      }
       // dispatch(addCoupon(couponSaved));
     } catch (error) {
       console.log(error);
@@ -141,7 +143,7 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
   }, [cart, firstRender]);
   useEffect(() => {
     if (firstRender) return;
-    localStorage.setItem("coupon", JSON.stringify(coupon));
+    coupon && localStorage.setItem("coupon", JSON.stringify(coupon));
   }, [coupon, firstRender]);
 
   useEffect(() => {
@@ -214,7 +216,6 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
       }
       if (coupon.type === "percentage") {
         discount = Math.ceil((subTotal * (coupon.discount / 100)) / 100) * 100;
-        console.log({ discount });
         if (coupon.maxDiscount) {
           if (discount > coupon.maxDiscount) {
             discount = coupon.maxDiscount;
@@ -247,7 +248,6 @@ export const PersonalProvider: FC<Props> = ({ children }) => {
     if (firstRender) {
       try {
         const token = Cookie.get("token");
-        console.log({ token });
         if (token) {
           checkToken();
         }

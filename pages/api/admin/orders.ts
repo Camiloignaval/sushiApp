@@ -134,7 +134,8 @@ const changeStatus = async (
           )
         );
       } catch (error) {
-        throw new Error("Favor revise la conección con Whatsapp");
+        // throw new Error("Favor revise la conección con Whatsapp");
+        console.log("Favor revise la conección con Whatsapp");
       }
     }
     if (newStatus === "delivered") {

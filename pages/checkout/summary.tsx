@@ -162,24 +162,53 @@ const SummaryPage = () => {
           cancelButtonText: "Cancelar",
         }).then(async (result) => {
           if (result.isConfirmed) {
-            await createNewOrder(orderToSend).unwrap();
-            dispatch(cleanCart());
-            Cookies.remove("address");
-            router.replace("/");
-            setDisabledSubmit(true);
-            localStorage.removeItem("coords");
+            await createNewOrder(orderToSend)
+              .unwrap()
+              .then(() => {
+                dispatch(cleanCart());
+                Cookies.remove("address");
+                router.replace("/");
+                setDisabledSubmit(true);
+                localStorage.removeItem("coords");
+              })
+              .catch((e) => {
+                if (
+                  e?.data?.message ===
+                  "Ha ocurrido un error, valores han sido alterados, favor reingrese orden"
+                ) {
+                  dispatch(cleanCart());
+                  Cookies.remove("address");
+                  router.replace("/");
+                  setDisabledSubmit(true);
+                  localStorage.removeItem("coords");
+                }
+              });
           } else {
             return;
           }
         });
       } else {
-        await createNewOrder(orderToSend).unwrap();
-        dispatch(cleanCart());
-        Cookies.remove("address");
-        // // TODO hacer lo que se necesite como enviar whatsap o en backend
-        router.replace("/");
-        setDisabledSubmit(true);
-        localStorage.removeItem("coords");
+        await createNewOrder(orderToSend)
+          .unwrap()
+          .then(() => {
+            dispatch(cleanCart());
+            Cookies.remove("address");
+            router.replace("/");
+            setDisabledSubmit(true);
+            localStorage.removeItem("coords");
+          })
+          .catch((e) => {
+            if (
+              e?.data?.message ===
+              "Ha ocurrido un error, valores han sido alterados, favor reingrese orden"
+            ) {
+              dispatch(cleanCart());
+              Cookies.remove("address");
+              router.replace("/");
+              setDisabledSubmit(true);
+              localStorage.removeItem("coords");
+            }
+          });
       }
     } catch (error) {
       console.log({ error });

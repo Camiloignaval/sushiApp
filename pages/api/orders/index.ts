@@ -107,7 +107,9 @@ const createNewOrder = async (
 
     // TODO falta sumar despacho
     if (subTotal !== body.subTotal) {
-      throw new Error("Ha ocurrido un error, valores han sido alterados");
+      throw new Error(
+        "Ha ocurrido un error, valores han sido alterados, favor reingrese orden"
+      );
     }
 
     // validar cupon
@@ -151,7 +153,9 @@ const createNewOrder = async (
     }
 
     if (total + body.deliverPrice !== body.total) {
-      throw new Error("Ha ocurrido un error, valores han sido alterados");
+      throw new Error(
+        "Ha ocurrido un error, valores han sido alterados, favor reingrese orden"
+      );
     }
 
     // si todo ha salido bien

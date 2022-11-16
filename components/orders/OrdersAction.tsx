@@ -100,9 +100,6 @@ export const OrdersActions: React.FC<Props> = ({ data = [], rowsId = [] }) => {
   };
   const handleDispatch = () => {
     changeStatus({ ids: rowsId, newStatus: "dispatched" });
-    data.forEach((orden) => {
-      printOrder(orden);
-    });
     handleClose();
   };
   const handleDeliver = () => {

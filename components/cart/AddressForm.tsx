@@ -62,8 +62,8 @@ export const AddressForm: FC<Props> = ({ isModificable, setIsModificable }) => {
   });
   const [isPossibleSave, setIsPossibleSave] = useState(false);
   const [coords, setCoords] = useState(
-    localStorage.getItem("coords")
-      ? JSON.parse(localStorage.getItem("coords")!)
+    localStorage?.getItem("coords") !== undefined
+      ? JSON.parse(localStorage?.getItem("coords")!)
       : {}
   );
 

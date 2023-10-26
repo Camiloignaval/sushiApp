@@ -50,10 +50,6 @@ const BillsPage = () => {
     refetch();
   }, [dayToFind]);
 
-  useEffect(() => {
-    console.log({ isFetching });
-  }, [isFetching]);
-
   return (
     <AdminLayout
       title="Gastos"

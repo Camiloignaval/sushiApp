@@ -9,6 +9,7 @@ import React, { FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { useMultipleSelect, useDatePicker } from "../../hooks";
 import { setFilters } from "../../store/Slices/UISlice";
+import { endOfWeek, startOfWeek } from "date-fns";
 
 const statusValues = [
   { name: "Ingresada", value: "ingested" },
@@ -36,6 +37,13 @@ export const FilterTabOrders: FC<Props> = ({ refetch }) => {
     label: "Fecha de término",
   });
   const [phoneToFind, setPhoneToFind] = useState("");
+
+  useEffect(() => {
+    if (router?.query?.onlyWeek) {
+      setStart(startOfWeek(new Date(), { weekStartsOn: 1 }));
+      setEnd(new Date());
+    }
+  }, [router]);
 
   const handleFilter = () => {
     dispatch(
@@ -70,8 +78,12 @@ export const FilterTabOrders: FC<Props> = ({ refetch }) => {
       dispatch(
         setFilters({
           status: (router?.query?.status as any).split(","),
-          startDate: null,
-          endDate: null,
+          startDate: (router?.query?.onlyWeek as string | null)
+            ? `${startOfWeek(new Date(), { weekStartsOn: 1 })}`
+            : null,
+          endDate: (router?.query?.onlyWeek as string | null)
+            ? `${new Date()}`
+            : null,
           phoneToFind: "",
         })
       );

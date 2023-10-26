@@ -382,6 +382,7 @@ const OrdersPage = () => {
             return "";
           }}
           isRowSelectable={(params: GridRowParams) => {
+            if (params?.row?.status === "delivered") return false;
             if (params?.row?.reservedHour) {
               const reserveIsToday = isSameDay(
                 new Date(params?.row?.reservedHour),

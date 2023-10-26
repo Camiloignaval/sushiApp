@@ -224,7 +224,6 @@ const DeliverPage = () => {
   useEffect(() => {
     if (routeOptimized && dataOrders) {
       try {
-        console.log({ routeOptimized, dataOrders });
         const rowsPreparadas = routeOptimized.map((ad) => ({
           id: dataOrders?.docs?.find(
             (d) => (ad as any)!.placeId === d.shippingAddress!.placeId

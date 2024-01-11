@@ -1,0 +1,30 @@
+.item {
+  width: 100%;
+  overflow: visible;
+  stroke: #000000;
+  stroke-width: 7;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+.fondoSvg {
+  position: absolute;
+  z-index: -2 !important;
+  animation: aparecer 8s ease-in-out forwards;
+}
+
+@keyframes aparecer {
+  0% {
+    filter: grayscale(100%);
+    opacity: 0;
+  }
+  50% {
+    filter: grayscale(0%);
+    opacity: 0.8;
+  }
+  100% {
+    filter: grayscale(100%);
+    opacity: 0;
+    display: none;
+  }
+}

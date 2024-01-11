@@ -51,6 +51,7 @@
     "dotenv": "^16.0.1",
     "faker": "^6.6.6",
     "formidable": "^2.0.1",
+    "framer-motion": "^10.18.0",
     "google-libphonenumber": "^3.2.30",
     "install": "^0.13.0",
     "jest-environment-jsdom": "^29.7.0",

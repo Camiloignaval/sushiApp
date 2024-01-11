@@ -27,6 +27,7 @@ import { dbCategories, dbPromotions } from "../database";
 import { useState, useEffect } from "react";
 import { CartInMobile } from "../components/cart/CartInMobile";
 import { optimizeRoute } from "../utils/optimizeRoute";
+import { LogoSvg } from "../components/ui/svg/LogoSvg";
 
 interface Props {
   promotions: IPromotion[];
@@ -99,6 +100,7 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
       imageFullUrl="https://res.cloudinary.com/dc6vako2z/image/upload/v1664357167/SushiApp/logo-sushi-panko_qtifjs.webp"
     >
       <DrawerCustomRoll open={open} setOpen={setOpen} />
+      <LogoSvg />
       <Tabs
         id="tabsCategorys"
         sx={{

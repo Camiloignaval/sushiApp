@@ -7,6 +7,9 @@ import {
   Badge,
   IconButton,
   Card,
+  TextField,
+  InputBase,
+  Grid,
 } from "@mui/material";
 import type { GetServerSideProps, NextPage } from "next";
 import { Link } from "react-scroll";
@@ -28,6 +31,7 @@ import { useState, useEffect } from "react";
 import { CartInMobile } from "../components/cart/CartInMobile";
 import { optimizeRoute } from "../utils/optimizeRoute";
 import { LogoSvg } from "../components/ui/svg/LogoSvg";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface Props {
   promotions: IPromotion[];
@@ -38,6 +42,7 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
   const { scrollIsDown } = useSelector((state: RootState) => state.ui);
   const [promosByCategory, setPromosByCategory] = useState({});
   const [open, setOpen] = useState(false);
+  const [searchProduct, setSearchProduct] = useState<string>("");
   const [positionOfMobileCart, setpositionOfMobileCart] = useState(40);
   const dispatch = useDispatch();
   const { store } = useSelector((state: RootState) => state.ui);
@@ -93,6 +98,10 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
     }
   }, [promotions]);
 
+  const prodFilters = promotions.filter((promo) =>
+    promo?.name?.toLowerCase().includes(searchProduct?.toLowerCase())
+  );
+
   return (
     <MainShopLayout
       title="SushiPanko"
@@ -137,14 +146,20 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
               }}
               offset={-120}
             >
-              {category.name}
+              <Typography
+                sx={{ fontStyle: "italic", fontWeight: 500 }}
+                variant="h5"
+              >
+                {category.name}
+              </Typography>
+              {/* {category.name} */}
             </Link>
             <FaCircle
               style={{
                 width: "10px",
                 position: "relative",
-                top: 18,
-                color: "red",
+                top: -11,
+                color: scrollIsDown ? "white" : "red",
                 zIndex: 1000,
               }}
             />
@@ -162,17 +177,46 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
           onClick={() => setOpen(true)}
         >
           <Typography
+            variant="h5"
             sx={{
               top: -15,
-              fontSize: "1.7rem",
-              letterSpacing: 4,
+              // fontSize: "1.7rem",
+              // letterSpacing: 4,
               cursor: "pointer",
+              fontStyle: "italic",
+              fontWeight: 500,
             }}
           >
             Arma tu roll
           </Typography>
         </Box>
       </Tabs>
+
+      <Grid
+        container
+        justifyContent={"end"} /* display={"flex"} justifyContent={"end"} */
+      >
+        <Grid container item xs={12} sm={6} md={4}>
+          <Grid item xs={11}>
+            <InputBase
+              onChange={(e) => setSearchProduct(e.target.value)}
+              value={searchProduct}
+              fullWidth
+              // sx={{ ml: 1, flex: 1 }}
+              placeholder="Busca tu producto"
+              // inputProps={{ "aria-label": "search google maps" }}
+            />
+          </Grid>
+          <Grid item xs={1}>
+            <IconButton
+              type="button"
+              /* sx={{ p: "10px" }} */ aria-label="search"
+            >
+              <SearchIcon />
+            </IconButton>
+          </Grid>
+        </Grid>
+      </Grid>
       {/* carrito para mobiles */}
 
       {store.type !== "close" && (
@@ -182,11 +226,22 @@ const HomePage: NextPage<Props> = ({ promotions, categories }) => {
       {store.type === "close" && (
         <Box height={store.type === "close" ? "60px" : ""}></Box>
       )}
-      {Object.values(promosByCategory).length > 0
-        ? Object.entries(promosByCategory)?.map((promotion, i) => (
-            <PromotionCategory key={i} promotions={promotion} />
-          ))
-        : undefined}
+      {searchProduct ? (
+        <>
+          <PromotionCategory
+            promotions={["Productos encontrados", prodFilters]}
+          />
+          {!prodFilters.length && (
+            <Typography sx={{ fontStyle: "italic", mt: 4 }}>
+              No se han encontrado productos para {searchProduct}{" "}
+            </Typography>
+          )}
+        </>
+      ) : Object.values(promosByCategory).length > 0 ? (
+        Object.entries(promosByCategory)?.map((promotion, i) => (
+          <PromotionCategory key={i} promotions={promotion} />
+        ))
+      ) : undefined}
     </MainShopLayout>
   );
 };

@@ -14,8 +14,8 @@ import { useEffect } from "react";
 function MyApp({ Component, pageProps }: AppProps) {
   useEffect(() => {
     AOS.init({
-      delay: 200,
-      duration: 3000,
+      // delay: 200,
+      duration: 2000,
     });
   }, []);
   setTimeout(() => {

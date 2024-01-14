@@ -1,15 +1,32 @@
+.boxLogo {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+}
+
 .item {
   width: 100%;
   overflow: visible;
   stroke: #000000;
-  stroke-width: 7;
+  stroke-width: 10;
   stroke-linejoin: round;
   stroke-linecap: round;
 }
 
 .fondoSvg {
+  width: 96%;
   position: absolute;
-  z-index: -2 !important;
+  display: flex;
+  justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: -2;
   animation: aparecer 8s ease-in-out forwards;
 }
 
@@ -17,14 +34,16 @@
   0% {
     filter: grayscale(100%);
     opacity: 0;
+    scale: 1;
   }
   50% {
     filter: grayscale(0%);
     opacity: 0.8;
+    scale: 1;
   }
   100% {
     filter: grayscale(100%);
     opacity: 0;
-    display: none;
+    scale: 1;
   }
 }

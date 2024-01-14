@@ -7,8 +7,21 @@ import { Provider } from "react-redux";
 import { store } from "../store";
 import { Toaster } from "react-hot-toast";
 import { PersonalProvider } from "../components/ui/PersonalProvider";
+import AOS from "aos";
+import "aos/dist/aos.css";
+import { useEffect } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
+  useEffect(() => {
+    AOS.init({
+      delay: 200,
+      duration: 3000,
+    });
+  }, []);
+  setTimeout(() => {
+    AOS.refresh();
+  }, 2000);
+
   return (
     <Provider store={store}>
       <SWRConfig

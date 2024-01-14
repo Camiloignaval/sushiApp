@@ -96,7 +96,6 @@ const CardInfo: FC<Props> = ({ promotion }) => {
         {/* </Grid> */}
       </CardActions>
     </Grid>
-    // </Box>
   );
 };
 

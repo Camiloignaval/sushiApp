@@ -83,62 +83,78 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
         onMouseEnter={() => setisHovered(true)}
         onMouseLeave={() => setisHovered(false)}
       >
-        <Box className="itemAos" data-aos="fade-up">
-          <Card className={isInCart ? style["borderSelected"] : undefined}>
-            <Grid item container display={"flex"} alignItems="stretch">
-              <Grid item xs={12} /*  sm={6} */>
-                <CardActionArea disabled={!promotion.inStock}>
-                  <Box
-                    className={style["glass-buttons"]}
+        {/* <Box className="itemAos" data-aos="fade-up"> */}
+        <Card className={isInCart ? style["borderSelected"] : undefined}>
+          <Grid item container display={"flex"} alignItems="stretch">
+            <Grid item xs={12} /*  sm={6} */>
+              <CardActionArea disabled={!promotion.inStock}>
+                <Box
+                  className={style["glass-buttons"]}
+                  sx={{
+                    position: "absolute",
+                    zIndex: 50,
+                    top: 0,
+                    width: "100%",
+                    height: "50px",
+                  }}
+                ></Box>
+                {/* si esta en oferta */}
+                {promotion?.inOffer && (
+                  <Chip
+                    variant="outlined"
+                    color="error"
+                    icon={<LocalOfferIcon />}
+                    label="OFERTA"
+                    size="small"
                     sx={{
                       position: "absolute",
-                      zIndex: 50,
-                      top: 0,
-                      width: "100%",
-                      height: "50px",
+                      zIndex: 99,
+                      top: 10,
+                      left: 10,
+                      fontWeight: "600",
                     }}
-                  ></Box>
-                  {/* si esta en oferta */}
-                  {promotion?.inOffer && (
-                    <Chip
-                      variant="outlined"
-                      color="error"
-                      icon={<LocalOfferIcon />}
-                      label="OFERTA"
-                      size="small"
+                  />
+                )}
+                {!promotion.inStock ? (
+                  <>
+                    <Box
+                      className={style["withOutStock"]}
                       sx={{
                         position: "absolute",
-                        zIndex: 99,
-                        top: 10,
-                        left: 10,
-                        fontWeight: "600",
+                        zIndex: 150,
+                        width: "100%",
+                        height: "100%",
                       }}
-                    />
-                  )}
-                  {!promotion.inStock ? (
-                    <>
-                      <Box
-                        className={style["withOutStock"]}
-                        sx={{
-                          position: "absolute",
-                          zIndex: 150,
-                          width: "100%",
-                          height: "100%",
-                        }}
-                        display="flex"
-                        flexDirection={"column"}
-                        alignContent={"center"}
-                        justifyContent={"center"}
-                      >
-                        <p className={style["labelWithoutStock"]}>Agotado</p>
-                      </Box>
-                    </>
-                  ) : !isInCart ? (
+                      display="flex"
+                      flexDirection={"column"}
+                      alignContent={"center"}
+                      justifyContent={"center"}
+                    >
+                      <p className={style["labelWithoutStock"]}>Agotado</p>
+                    </Box>
+                  </>
+                ) : !isInCart ? (
+                  <Button
+                    disabled={!store.isOpen && store.type === "close"}
+                    onClick={() => setOpen((prev) => !prev)}
+                    variant="contained"
+                    color="success"
+                    sx={{
+                      position: "absolute",
+                      zIndex: 99,
+                      top: 10,
+                      right: 10,
+                    }}
+                  >
+                    Agregar
+                  </Button>
+                ) : (
+                  <>
                     <Button
                       disabled={!store.isOpen && store.type === "close"}
-                      onClick={() => setOpen((prev) => !prev)}
-                      variant="contained"
-                      color="success"
+                      onClick={onDelete}
+                      color="error"
+                      className={style["roundedButtonDelete"]}
                       sx={{
                         position: "absolute",
                         zIndex: 99,
@@ -146,42 +162,26 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                         right: 10,
                       }}
                     >
-                      Agregar
+                      {" "}
+                      <DeleteIcon color="info" />
                     </Button>
-                  ) : (
-                    <>
-                      <Button
-                        disabled={!store.isOpen && store.type === "close"}
-                        onClick={onDelete}
-                        color="error"
-                        className={style["roundedButtonDelete"]}
-                        sx={{
-                          position: "absolute",
-                          zIndex: 99,
-                          top: 10,
-                          right: 10,
-                        }}
-                      >
-                        {" "}
-                        <DeleteIcon color="info" />
-                      </Button>
-                      <Button
-                        disabled={!store.isOpen && store.type === "close"}
-                        onClick={() => setOpen((prev) => !prev)}
-                        className={style["roundedButtonEdit"]}
-                        color="warning"
-                        sx={{
-                          position: "absolute",
-                          zIndex: 99,
-                          top: 10,
-                          right: 90,
-                        }}
-                      >
-                        <ModeEditIcon color="info" />
-                      </Button>
-                    </>
-                  )}
-                  {/* <CardMedia
+                    <Button
+                      disabled={!store.isOpen && store.type === "close"}
+                      onClick={() => setOpen((prev) => !prev)}
+                      className={style["roundedButtonEdit"]}
+                      color="warning"
+                      sx={{
+                        position: "absolute",
+                        zIndex: 99,
+                        top: 10,
+                        right: 90,
+                      }}
+                    >
+                      <ModeEditIcon color="info" />
+                    </Button>
+                  </>
+                )}
+                {/* <CardMedia
                   className="fadeIn"
                   image={productImage}
                   component="img"
@@ -192,19 +192,19 @@ export const PromotionCard: FC<Props> = ({ promotion }) => {
                   height="300px"
                   // onLoad={() => setIsImageLoaded(true)}
                 /> */}
-                  <ProductSlideShow images={promotion.images as string[]} />
-                </CardActionArea>
-              </Grid>
-              <Grid item xs={12} /* sm={6} */>
-                <CardInfo
-                  promotion={promotion}
-                  // isSelected={isSelected}
-                  // setIsSelected={setIsSelected}
-                />
-              </Grid>
+                <ProductSlideShow images={promotion.images as string[]} />
+              </CardActionArea>
             </Grid>
-          </Card>
-        </Box>
+            <Grid item xs={12} /* sm={6} */>
+              <CardInfo
+                promotion={promotion}
+                // isSelected={isSelected}
+                // setIsSelected={setIsSelected}
+              />
+            </Grid>
+          </Grid>
+        </Card>
+        {/* </Box> */}
       </Grid>
     </>
   );
